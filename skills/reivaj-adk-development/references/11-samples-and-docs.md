@@ -30,6 +30,11 @@ Skills y referencias ya disponibles localmente:
 | `https://docs.ag-ui.com/llms.txt` | Indice docs AG-UI |
 | `https://adk.dev/integrations/a2ui/` | Integracion A2UI con ADK |
 | `https://a2ui.org/` | A2UI spec/site |
+| `https://adk.dev/skills/` | ADK Skills, SkillToolset y progressive disclosure |
+| `https://agentskills.io/specification` | Especificacion Agent Skills y formato `SKILL.md` |
+| `https://developers.googleblog.com/developers-guide-to-building-adk-agents-with-skills/` | Guia oficial con patrones inline, file-based, external y meta |
+| `https://adk.dev/integrations/` | Catalogo oficial de herramientas e integraciones ADK |
+| `https://adk.dev/api-reference/python/` | Referencia API Python `google.adk.*` |
 
 ## ADK Samples Estudiados
 
@@ -51,7 +56,7 @@ fuentes y muestras especialmente reutilizables.
 | `plugin_reflect_tool_retry` | Plugin de retry/reflection para tools |
 | `skills_agent` | ADK SkillToolset local |
 | `skills_agent_gcs` | ADK SkillToolset desde GCS |
-| `agent-skills-tutorial` | Tutorial skills |
+| `agent-skills-tutorial` | SkillToolset con progressive disclosure e inline/file/external/meta skills |
 | `a2a_basic` | A2A basico |
 | `a2a_root` | A2A root agent |
 | `fields_planner` | Planner field/sample patterns |
@@ -74,7 +79,8 @@ Otros samples oficiales relevantes por fase:
 | Research con citaciones | `deep-search` |
 | Research paralelo | `workflow-concurrent_research_writer` |
 | Auditoria/fact-check | `llm-auditor` |
-| SkillToolset | `skills_agent`, `skills_agent_gcs` |
+| SkillToolset local/GCS | `skills_agent`, `skills_agent_gcs` |
+| SkillToolset progressive disclosure y meta skills | `agent-skills-tutorial` |
 | A2A | `a2a_basic`, `a2a_root` |
 | Tool retry | `plugin_reflect_tool_retry` |
 | Grounding metadata anidada | `agent_tool_with_grounding_metadata` |

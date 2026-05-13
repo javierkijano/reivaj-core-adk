@@ -32,7 +32,9 @@ referencia donde profundizar.
 | `FunctionTool` | Funcion Python expuesta al modelo | `02-core-adk-concepts.md` |
 | Built-in tool | Tool incluida en ADK, como `google_search` | `05-tools-grounding-citations.md` |
 | `AgentTool` | Subagente usado como tool | `03-agent-config-yaml.md`, `05-tools-grounding-citations.md` |
-| Toolset | Coleccion de tools: MCP, OpenAPI, SkillToolset, retrieval | `02-core-adk-concepts.md`, `07-adk-skills.md` |
+| Toolset | Coleccion de tools: MCP, OpenAPI, SkillToolset, retrieval, Google/API integrations | `02-core-adk-concepts.md`, `07-adk-skills.md`, `15-adk-integrations-python-api.md` |
+| ADK integrations catalog | Catalogo oficial de herramientas e integraciones prebuilt | `15-adk-integrations-python-api.md` |
+| Python API reference | Mapa autoritativo de modulos/clases `google.adk.*` | `15-adk-integrations-python-api.md` |
 | MCP | Protocolo agente-herramientas/datos | `10-ui-protocols.md` |
 | Plugin | Interceptor/transversal para runtime/tool/model behavior | `02-core-adk-concepts.md` |
 | Callback | Hook antes/despues de agent/model/tool | `02-core-adk-concepts.md` |
@@ -54,6 +56,10 @@ referencia donde profundizar.
 | Agent Runtime | Runtime gestionado de Google para agentes | `06-a2a-runtime.md`, `09-deploy-observability.md` |
 | ADK Skill | Skill cargable por un agente ADK | `07-adk-skills.md` |
 | SkillToolset | Tools para listar/cargar/ejecutar ADK Skills | `07-adk-skills.md` |
+| Progressive disclosure | Carga L1 metadata, L2 instrucciones y L3 recursos solo cuando hacen falta | `07-adk-skills.md`, `14-agent-skills-tutorial-analysis.md` |
+| Skill inline | `models.Skill` definido en Python para reglas pequenas y estables | `07-adk-skills.md`, `14-agent-skills-tutorial-analysis.md` |
+| Skill file-based | Directorio con `SKILL.md` y recursos cargado con `load_skill_from_dir` | `07-adk-skills.md`, `14-agent-skills-tutorial-analysis.md` |
+| Meta skill | Skill que genera nuevas definiciones `SKILL.md` desde requisitos | `07-adk-skills.md`, `14-agent-skills-tutorial-analysis.md` |
 | Evalset | Casos y criterios de evaluacion de comportamiento | `08-evaluation.md` |
 | LLM-as-judge | Evaluacion cualitativa con modelo juez | `08-evaluation.md` |
 | Tool trajectory | Secuencia esperada de tools | `08-evaluation.md` |
@@ -65,6 +71,7 @@ referencia donde profundizar.
 | A2UI | Payload UI declarativo generado por agente | `10-ui-protocols.md` |
 | Samples | Repos y ejemplos oficiales estudiados | `11-samples-and-docs.md` |
 | Google ADK sample agents | Inventario completo de `google/adk-samples/python/agents` | `13-google-adk-sample-agents.md` |
+| Integrations/API | Integraciones oficiales, categorias y mapa de API Python | `15-adk-integrations-python-api.md` |
 | Runbook | Comandos, aprobaciones y diagnostico | `12-runbook.md` |
 
 ## Relaciones Clave
@@ -75,8 +82,11 @@ referencia donde profundizar.
 | Agent Config + Python | YAML para declarativo; Python para objetos, wrappers y control avanzado |
 | Classic agents + Workflow | Classic orchestration sirve para casos simples; Workflow para grafos complejos |
 | Tools + Grounding | Tools recuperan datos; grounding metadata prueba fuentes y soportes |
+| Integrations + Toolsets | Antes de crear tools custom, revisar si existe built-in, MCP, OpenAPI, API Hub, Application Integration o conector oficial |
+| API reference + imports | Confirmar imports contra `adk.dev/api-reference/python`; no inferir rutas desde ejemplos antiguos |
 | A2A + Agent Runtime | A2A define interoperabilidad; Agent Runtime aloja y opera agentes |
 | MCP + A2A + AG-UI | MCP conecta tools, A2A conecta agentes, AG-UI conecta UI de usuario |
 | AG-UI + A2UI | AG-UI transporta eventos/estado; A2UI describe componentes renderizables |
 | Pytest + Eval | Pytest valida codigo determinista; eval valida comportamiento LLM |
 | Skills OpenCode + ADK Skills | OpenCode skills guian al coding agent; ADK Skills son tools/conocimiento para agentes ADK |
+| Skills + contexto | SkillToolset evita prompts monoliticos cargando solo catalogo, instrucciones y recursos relevantes |

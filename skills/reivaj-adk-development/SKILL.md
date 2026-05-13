@@ -80,13 +80,15 @@ skill oficial correspondiente si esta disponible:
 | ADK 2.0 Workflow | grafo, nodos, rutas, eventos, HITL, paralelismo, migracion | `references/04-workflow-2.md` |
 | Herramientas y grounding | built-ins, Google Search, Vertex AI Search, metadata, citaciones | `references/05-tools-grounding-citations.md` |
 | A2A y runtime | Agent Card, executor, RemoteA2aAgent, Agent Runtime, extensiones | `references/06-a2a-runtime.md` |
-| ADK Skills | SkillToolset, recursos, scripts, diferencias con OpenCode skills | `references/07-adk-skills.md` |
+| ADK Skills | SkillToolset, recursos, scripts, progressive disclosure, patrones inline/file/external/meta | `references/07-adk-skills.md`, `references/14-agent-skills-tutorial-analysis.md` |
 | Evaluacion | evalsets, criterios, tool trajectory, pytest vs eval, bucle eval-fix | `references/08-evaluation.md` |
 | Deploy y observabilidad | Agent Runtime, Cloud Run, GKE, secrets, tracing, logs, analytics | `references/09-deploy-observability.md` |
 | UI protocols | AG-UI, A2UI, relacion con MCP y A2A | `references/10-ui-protocols.md` |
 | Muestras y docs | samples estudiados, docs oficiales, referencias locales | `references/11-samples-and-docs.md` |
 | Runbook | comandos, aprobaciones, diagnostico, checklist | `references/12-runbook.md` |
 | Google ADK samples | inventario completo y seleccion de `google/adk-samples/python/agents` | `references/13-google-adk-sample-agents.md` |
+| Agent Skills tutorial | analisis profundo de `agent-skills-tutorial` y como reutilizar sus patrones | `references/14-agent-skills-tutorial-analysis.md` |
+| Integraciones y API Python | catalogo `adk.dev/integrations`, mapa de modulos `google.adk.*`, decision tool/integration | `references/15-adk-integrations-python-api.md` |
 
 ## Flujo De Trabajo Recomendado
 
@@ -114,8 +116,15 @@ skill oficial correspondiente si esta disponible:
 | Herramienta Python directa | `FunctionTool` o funcion importable |
 | Subagente como herramienta | `AgentTool` |
 | Agente remoto | `RemoteA2aAgent` o A2A runtime |
+| Conocimiento modular cargado bajo demanda | `SkillToolset` con ADK Skills |
+| Skill pequena y estable | Skill inline con `models.Skill` |
+| Skill compleja o reusable | Skill file-based con `SKILL.md`, `references/`, `assets/`, `scripts/` |
+| Reutilizar skills de terceros | Cargar directorio validado con `load_skill_from_dir` |
+| Generar nuevas skills | Meta skill tipo `skill-creator` con revision humana |
 | Busqueda web publica | `google_search` |
 | Busqueda sobre corpus propio | Vertex AI Search / Agent Platform Search |
+| Integracion Google/enterprise prebuilt | Revisar `references/15-adk-integrations-python-api.md` antes de crear tool custom |
+| API Python concreta | Confirmar modulo/clase en `https://adk.dev/api-reference/python/` antes de importar |
 | UI por eventos y estado | AG-UI |
 | UI declarativa generada por agente | A2UI |
 | Validar codigo determinista | pytest |

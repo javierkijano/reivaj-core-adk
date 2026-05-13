@@ -67,8 +67,12 @@ Reglas:
 | `FunctionTool` | Wrapper explicito de funcion |
 | Built-in tools | `google_search`, `load_web_page`, retrieval, etc. |
 | `AgentTool` | Usar un subagente como herramienta |
-| Toolsets | MCP, OpenAPI, Google API, SkillToolset, retrieval |
+| Toolsets | MCP, OpenAPI, Google API, SkillToolset, retrieval, API Hub, Application Integration |
 | Plugins | Modificar comportamiento transversal de app/model/tool calls |
+
+Antes de crear una tool custom, revisar el catalogo de integraciones y el mapa de
+API Python en `15-adk-integrations-python-api.md`. Muchas capacidades comunes ya
+existen como built-ins, toolsets, MCP servers o conectores.
 
 Import correcto para algunos built-ins:
 
@@ -129,6 +133,10 @@ Patrones investigados:
 - `ReflectAndRetryToolPlugin` para robustez de tool calls.
 - Debug logging plugin para inspeccion de requests/responses.
 - Safety plugins o guardrails cuando el agente opera en dominios sensibles.
+
+La API Python expone `BasePlugin`, `PluginManager`, `LoggingPlugin`,
+`DebugLoggingPlugin` y `ReflectAndRetryToolPlugin`; confirmar firmas actuales en
+`https://adk.dev/api-reference/python/` antes de implementar.
 
 Usar plugins cuando una politica aplica transversalmente a muchos agentes o
 herramientas.

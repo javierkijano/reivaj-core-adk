@@ -1,0 +1,172 @@
+taxonomy:
+  entity_types:
+  - tag: entity:agent
+    meaning: Runnable ADK agent or sample root
+  - tag: entity:sub-agent
+    meaning: Agent intended to be orchestrated by another agent
+  - tag: entity:tool
+    meaning: Python function/tool, MCP tool, connector, or toolset
+  - tag: entity:skill
+    meaning: ADK Skill / SKILL.md package
+  - tag: entity:prompt
+    meaning: Prompt, instruction pack, dynamic instruction logic
+  - tag: entity:workflow
+    meaning: Sequential, parallel, HITL, graph, or long-running orchestration
+  - tag: entity:plugin
+    meaning: ADK plugin, guardrail, analytics, instrumentation
+  - tag: entity:ui
+    meaning: Frontend, streaming UI, multimodal UI, AG-UI/A2UI-adjacent surface
+  - tag: entity:deployment
+    meaning: Deployment, runtime, infra, auth, or CI/CD asset
+  - tag: entity:evaluation
+    meaning: Evalset, benchmark, test harness, judge, or scoring workflow
+  - tag: entity:data-pipeline
+    meaning: Data ingestion, transformation, retrieval, or analytics pipeline
+  capability_tags:
+  - tag: capability:research
+    meaning: Search, evidence gathering, synthesis, report generation
+  - tag: capability:rag
+    meaning: Retrieval-augmented generation over documents or databases
+  - tag: capability:grounding
+    meaning: Google Search, citations, grounding metadata, source attribution
+  - tag: capability:data-analysis
+    meaning: SQL, BigQuery, analytics, metrics, visualization
+  - tag: capability:data-engineering
+    meaning: Dataflow, Dataproc, dbt, Dataform, ETL/ELT
+  - tag: capability:document-processing
+    meaning: PDF, transcript, invoice, policy, medical record processing
+  - tag: capability:content-generation
+    meaning: Writing, marketing, presentations, ads, websites
+  - tag: capability:media-generation
+    meaning: Imagen, video, VTO, image scoring, brand-aligned media
+  - tag: capability:planning
+    meaning: Task decomposition, scheduling, itineraries, action plans
+  - tag: capability:decisioning
+    meaning: Eligibility, underwriting, claim adjudication, policy decisions
+  - tag: capability:compliance
+    meaning: KYC, safety, policy-as-code, risk controls
+  - tag: capability:security
+    meaning: Red-team, threat intel, cyber investigation, guardrails
+  - tag: capability:customer-ops
+    meaning: Customer service, order management, incident management
+  - tag: capability:finance
+    meaning: Investments, payments, loans, insurance, market analysis
+  - tag: capability:geospatial
+    meaning: Maps, Earth Engine, location strategy, route planning
+  - tag: capability:observability
+    meaning: Logging, tracing, analytics, monitoring
+  - tag: capability:memory
+    meaning: Cross-session memory, user facts, preferences
+  - tag: capability:oauth
+    meaning: OAuth, delegated auth, user consent
+  - tag: capability:skills
+    meaning: ADK Skills, SkillToolset, progressive disclosure
+  pattern_tags:
+  - tag: pattern:single-agent
+    meaning: Single main agent
+  - tag: pattern:multi-agent
+    meaning: Multiple coordinated agents
+  - tag: pattern:sub-agent-team
+    meaning: Root agent delegates to specialized subagents
+  - tag: pattern:agent-tool
+    meaning: Agent used as a tool
+  - tag: pattern:function-tool
+    meaning: Python function exposed as a tool
+  - tag: pattern:mcp
+    meaning: MCP server/client integration
+  - tag: pattern:a2a
+    meaning: Agent-to-Agent protocol integration
+  - tag: pattern:workflow-sequential
+    meaning: Sequential orchestration
+  - tag: pattern:workflow-parallel
+    meaning: Fan-out/fan-in or concurrent execution
+  - tag: pattern:workflow-loop
+    meaning: Iterative loop until condition or score
+  - tag: pattern:hitl
+    meaning: Human-in-the-loop step or approval
+  - tag: pattern:long-running
+    meaning: Pause/resume, ambient, scheduled, event-driven execution
+  - tag: pattern:streaming
+    meaning: Live streaming, websocket, realtime, Gemini Live
+  - tag: pattern:multimodal
+    meaning: Image, audio, video, or mixed input/output
+  - tag: pattern:skilltoolset
+    meaning: ADK SkillToolset progressive disclosure
+  - tag: pattern:plugin
+    meaning: ADK plugin-based extension
+  interface_and_integration_tags:
+  - tag: integration:bigquery
+    meaning: BigQuery APIs or datasets
+  - tag: integration:vertex-ai
+    meaning: Vertex AI, RAG Engine, Vector Search, Agent Runtime
+  - tag: integration:google-search
+    meaning: Google Search grounding or web search
+  - tag: integration:google-maps
+    meaning: Maps / Places / routing
+  - tag: integration:apigee
+    meaning: Apigee API Hub or Apigee-managed APIs
+  - tag: integration:application-integration
+    meaning: Google Cloud Application Integration connectors
+  - tag: integration:servicenow
+    meaning: ServiceNow connectors or workflows
+  - tag: integration:github
+    meaning: GitHub APIs or repository operations
+  - tag: integration:dataflow
+    meaning: Dataflow pipeline tooling
+  - tag: integration:dataproc
+    meaning: Dataproc jobs, batches, clusters
+  - tag: integration:dbt
+    meaning: dbt project generation or execution
+  - tag: integration:dataform
+    meaning: Dataform pipelines
+  - tag: integration:alloydb
+    meaning: AlloyDB tools or NL2SQL
+  - tag: integration:youtube
+    meaning: YouTube APIs and analysis
+  - tag: integration:payment-api
+    meaning: Payment/refund APIs
+  - tag: integration:model-armor
+    meaning: Model Armor safety checks
+  domain_tags:
+  - tag: domain:horizontal
+    meaning: General-purpose reusable pattern
+  - tag: domain:retail
+    meaning: Retail, ecommerce, product catalog, shopping
+  - tag: domain:finance
+    meaning: Finance, markets, banking, payments, insurance
+  - tag: domain:healthcare
+    meaning: Healthcare, clinical, claims, medical authorization
+  - tag: domain:travel
+    meaning: Travel, local discovery, routes, concierge
+  - tag: domain:media
+    meaning: Media analytics, video, image, presentations
+  - tag: domain:marketing
+    meaning: Marketing, brand, SEO, content, ads
+  - tag: domain:data
+    meaning: Data science, engineering, analytics
+  - tag: domain:software-engineering
+    meaning: SDLC, bug triage, SWE benchmarks, code migration
+  - tag: domain:security
+    meaning: AI safety, cyber, compliance, KYC
+  - tag: domain:operations
+    meaning: Supply chain, order processing, incident management
+  - tag: domain:education-research
+    meaning: Academic and research workflows
+  - tag: domain:geospatial
+    meaning: Maps, location, Earth Engine
+  lifecycle_tags:
+  - tag: maturity:observed
+    meaning: Identified in source, not reviewed deeply
+  - tag: maturity:candidate
+    meaning: Reviewed and likely reusable
+  - tag: maturity:extracted
+    meaning: Extracted into internal reusable component
+  - tag: maturity:adapted
+    meaning: Adapted to Reivaj conventions
+  - tag: maturity:productionized
+    meaning: Tested, evaluated, documented, and ready for production use
+  knowledge_source_types:
+  - tag: source_type:external
+    meaning: Source is outside this repository and registry entries must point to web URLs
+  - tag: source_type:internal
+    meaning: Source is owned by this repository and registry entries must point to repository-relative paths

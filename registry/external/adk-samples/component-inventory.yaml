@@ -1,0 +1,955 @@
+source:
+  id: adk-sample-components
+  label: External ADK sample components
+  source_type: external
+  upstream_root: https://github.com/google/adk-samples/tree/main/python/agents
+items:
+- id: RAG
+  name: RAG
+  source: https://github.com/google/adk-samples/tree/main/python/agents/RAG
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=1; flags=eval, tests, deployment.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 1
+    flags: eval, tests, deployment
+- id: academic-research
+  name: academic-research
+  source: https://github.com/google/adk-samples/tree/main/python/agents/academic-research
+  summary: 'Component counts: agent.py=3, tools=0, skills=0, prompts=3; flags=eval, tests, deployment, sub_agents.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 3
+    tools: 0
+    skills: 0
+    prompts: 3
+    flags: eval, tests, deployment, sub_agents
+- id: adk-ae-oauth
+  name: adk-ae-oauth
+  source: https://github.com/google/adk-samples/tree/main/python/agents/adk-ae-oauth
+  summary: 'Component counts: agent.py=1, tools=1, skills=0, prompts=0; flags=eval, tests, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 1
+    skills: 0
+    prompts: 0
+    flags: eval, tests, tools
+- id: agent-observability-bq
+  name: agent-observability-bq
+  source: https://github.com/google/adk-samples/tree/main/python/agents/agent-observability-bq
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=tests.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: tests
+- id: agent-skills-tutorial
+  name: agent-skills-tutorial
+  source: https://github.com/google/adk-samples/tree/main/python/agents/agent-skills-tutorial
+  summary: 'Component counts: agent.py=1, tools=0, skills=2, prompts=0; flags=skills.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 2
+    prompts: 0
+    flags: skills
+- id: ai-security-agent
+  name: ai-security-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/ai-security-agent
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=tests, sub_agents.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: tests, sub_agents
+- id: airflow_version_upgrade_agent
+  name: airflow_version_upgrade_agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/airflow_version_upgrade_agent
+  summary: 'Component counts: agent.py=1, tools=6, skills=0, prompts=1; flags=deployment, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 6
+    skills: 0
+    prompts: 1
+    flags: deployment, tools
+- id: ambient-expense-agent
+  name: ambient-expense-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/ambient-expense-agent
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=tests, frontend.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: tests, frontend
+- id: antom-payment
+  name: antom-payment
+  source: https://github.com/google/adk-samples/tree/main/python/agents/antom-payment
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: none
+- id: auto-insurance-agent
+  name: auto-insurance-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/auto-insurance-agent
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=deployment.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: deployment
+- id: bidi-demo
+  name: bidi-demo
+  source: https://github.com/google/adk-samples/tree/main/python/agents/bidi-demo
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=tests.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: tests
+- id: blog-writer
+  name: blog-writer
+  source: https://github.com/google/adk-samples/tree/main/python/agents/blog-writer
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=eval, tests, sub_agents.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: eval, tests, sub_agents
+- id: brand-aligned-presentations
+  name: brand-aligned-presentations
+  source: https://github.com/google/adk-samples/tree/main/python/agents/brand-aligned-presentations
+  summary: 'Component counts: agent.py=5, tools=5, skills=0, prompts=5; flags=eval, tests, deployment, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 5
+    tools: 5
+    skills: 0
+    prompts: 5
+    flags: eval, tests, deployment, sub_agents, tools
+- id: brand-aligner
+  name: brand-aligner
+  source: https://github.com/google/adk-samples/tree/main/python/agents/brand-aligner
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=tests, deployment.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: tests, deployment
+- id: brand-search-optimization
+  name: brand-search-optimization
+  source: https://github.com/google/adk-samples/tree/main/python/agents/brand-search-optimization
+  summary: 'Component counts: agent.py=4, tools=1, skills=0, prompts=4; flags=eval, tests, deployment, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 4
+    tools: 1
+    skills: 0
+    prompts: 4
+    flags: eval, tests, deployment, sub_agents, tools
+- id: camel
+  name: camel
+  source: https://github.com/google/adk-samples/tree/main/python/agents/camel
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=2; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 2
+    flags: none
+- id: claim-adjudication-agent
+  name: claim-adjudication-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/claim-adjudication-agent
+  summary: 'Component counts: agent.py=4, tools=1, skills=0, prompts=4; flags=eval, tests, deployment, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 4
+    tools: 1
+    skills: 0
+    prompts: 4
+    flags: eval, tests, deployment, sub_agents, tools
+- id: currency-agent
+  name: currency-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/currency-agent
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: none
+- id: customer-service
+  name: customer-service
+  source: https://github.com/google/adk-samples/tree/main/python/agents/customer-service
+  summary: 'Component counts: agent.py=1, tools=1, skills=0, prompts=1; flags=eval, tests, deployment, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 1
+    skills: 0
+    prompts: 1
+    flags: eval, tests, deployment, tools
+- id: cyber-guardian-agent
+  name: cyber-guardian-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/cyber-guardian-agent
+  summary: 'Component counts: agent.py=5, tools=0, skills=0, prompts=5; flags=sub_agents.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 5
+    tools: 0
+    skills: 0
+    prompts: 5
+    flags: sub_agents
+- id: data-engineering
+  name: data-engineering
+  source: https://github.com/google/adk-samples/tree/main/python/agents/data-engineering
+  summary: 'Component counts: agent.py=1, tools=3, skills=0, prompts=0; flags=eval, tests, deployment, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 3
+    skills: 0
+    prompts: 0
+    flags: eval, tests, deployment, tools
+- id: data-science
+  name: data-science
+  source: https://github.com/google/adk-samples/tree/main/python/agents/data-science
+  summary: 'Component counts: agent.py=5, tools=0, skills=0, prompts=8; flags=eval, tests, deployment, sub_agents.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 5
+    tools: 0
+    skills: 0
+    prompts: 8
+    flags: eval, tests, deployment, sub_agents
+- id: deep-search
+  name: deep-search
+  source: https://github.com/google/adk-samples/tree/main/python/agents/deep-search
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=frontend.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: frontend
+- id: earth-engine-geospatial
+  name: earth-engine-geospatial
+  source: https://github.com/google/adk-samples/tree/main/python/agents/earth-engine-geospatial
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=1; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 1
+    flags: none
+- id: economic-research-agent
+  name: economic-research-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/economic-research-agent
+  summary: 'Component counts: agent.py=2, tools=29, skills=0, prompts=2; flags=eval, tests, deployment, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 2
+    tools: 29
+    skills: 0
+    prompts: 2
+    flags: eval, tests, deployment, sub_agents, tools
+- id: financial-advisor
+  name: financial-advisor
+  source: https://github.com/google/adk-samples/tree/main/python/agents/financial-advisor
+  summary: 'Component counts: agent.py=5, tools=0, skills=0, prompts=5; flags=eval, tests, deployment, sub_agents.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 5
+    tools: 0
+    skills: 0
+    prompts: 5
+    flags: eval, tests, deployment, sub_agents
+- id: fomc-research
+  name: fomc-research
+  source: https://github.com/google/adk-samples/tree/main/python/agents/fomc-research
+  summary: 'Component counts: agent.py=1, tools=5, skills=0, prompts=6; flags=deployment, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 5
+    skills: 0
+    prompts: 6
+    flags: deployment, sub_agents, tools
+- id: fun-facts
+  name: fun-facts
+  source: https://github.com/google/adk-samples/tree/main/python/agents/fun-facts
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: none
+- id: gemini-fullstack
+  name: gemini-fullstack
+  source: https://github.com/google/adk-samples/tree/main/python/agents/gemini-fullstack
+  summary: 'Component counts: agent.py=0, tools=0, skills=0, prompts=0; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 0
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: none
+- id: gemma-food-tour-guide
+  name: gemma-food-tour-guide
+  source: https://github.com/google/adk-samples/tree/main/python/agents/gemma-food-tour-guide
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: none
+- id: genmedia-for-commerce
+  name: genmedia-for-commerce
+  source: https://github.com/google/adk-samples/tree/main/python/agents/genmedia-for-commerce
+  summary: 'Component counts: agent.py=2, tools=0, skills=0, prompts=1; flags=eval, tests, frontend, workflows.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 2
+    tools: 0
+    skills: 0
+    prompts: 1
+    flags: eval, tests, frontend, workflows
+- id: global-kyc-agent
+  name: global-kyc-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/global-kyc-agent
+  summary: 'Component counts: agent.py=3, tools=3, skills=0, prompts=3; flags=eval, deployment, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 3
+    tools: 3
+    skills: 0
+    prompts: 3
+    flags: eval, deployment, sub_agents, tools
+- id: google-trends-agent
+  name: google-trends-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/google-trends-agent
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=1; flags=deployment.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 1
+    flags: deployment
+- id: hierarchical-workflow-automation
+  name: hierarchical-workflow-automation
+  source: https://github.com/google/adk-samples/tree/main/python/agents/hierarchical-workflow-automation
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: none
+- id: high-volume-document-analyzer
+  name: high-volume-document-analyzer
+  source: https://github.com/google/adk-samples/tree/main/python/agents/high-volume-document-analyzer
+  summary: 'Component counts: agent.py=1, tools=2, skills=0, prompts=1; flags=tests, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 2
+    skills: 0
+    prompts: 1
+    flags: tests, tools
+- id: image-scoring
+  name: image-scoring
+  source: https://github.com/google/adk-samples/tree/main/python/agents/image-scoring
+  summary: 'Component counts: agent.py=1, tools=5, skills=0, prompts=5; flags=eval, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 5
+    skills: 0
+    prompts: 5
+    flags: eval, sub_agents, tools
+- id: incident-management
+  name: incident-management
+  source: https://github.com/google/adk-samples/tree/main/python/agents/incident-management
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: none
+- id: invoice-processing
+  name: invoice-processing
+  source: https://github.com/google/adk-samples/tree/main/python/agents/invoice-processing
+  summary: 'Component counts: agent.py=1, tools=1, skills=0, prompts=2; flags=eval, tests, deployment, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 1
+    skills: 0
+    prompts: 2
+    flags: eval, tests, deployment, sub_agents, tools
+- id: llm-auditor
+  name: llm-auditor
+  source: https://github.com/google/adk-samples/tree/main/python/agents/llm-auditor
+  summary: 'Component counts: agent.py=3, tools=0, skills=0, prompts=2; flags=eval, tests, deployment, sub_agents.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 3
+    tools: 0
+    skills: 0
+    prompts: 2
+    flags: eval, tests, deployment, sub_agents
+- id: machine-learning-engineering
+  name: machine-learning-engineering
+  source: https://github.com/google/adk-samples/tree/main/python/agents/machine-learning-engineering
+  summary: 'Component counts: agent.py=5, tools=0, skills=0, prompts=7; flags=eval, tests, deployment, sub_agents.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 5
+    tools: 0
+    skills: 0
+    prompts: 7
+    flags: eval, tests, deployment, sub_agents
+- id: marketing-agency
+  name: marketing-agency
+  source: https://github.com/google/adk-samples/tree/main/python/agents/marketing-agency
+  summary: 'Component counts: agent.py=5, tools=0, skills=0, prompts=5; flags=eval, tests, deployment, sub_agents.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 5
+    tools: 0
+    skills: 0
+    prompts: 5
+    flags: eval, tests, deployment, sub_agents
+- id: medical-pre-authorization
+  name: medical-pre-authorization
+  source: https://github.com/google/adk-samples/tree/main/python/agents/medical-pre-authorization
+  summary: 'Component counts: agent.py=3, tools=2, skills=0, prompts=3; flags=eval, tests, deployment, subagents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 3
+    tools: 2
+    skills: 0
+    prompts: 3
+    flags: eval, tests, deployment, subagents, tools
+- id: memory-bank
+  name: memory-bank
+  source: https://github.com/google/adk-samples/tree/main/python/agents/memory-bank
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=tests.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: tests
+- id: multiformat-hybrid-rag
+  name: multiformat-hybrid-rag
+  source: https://github.com/google/adk-samples/tree/main/python/agents/multiformat-hybrid-rag
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=eval, tests.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: eval, tests
+- id: nexshift-agent
+  name: nexshift-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/nexshift-agent
+  summary: 'Component counts: agent.py=1, tools=9, skills=0, prompts=0; flags=eval, deployment, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 9
+    skills: 0
+    prompts: 0
+    flags: eval, deployment, sub_agents, tools
+- id: nurse-handover
+  name: nurse-handover
+  source: https://github.com/google/adk-samples/tree/main/python/agents/nurse-handover
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=tests.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: tests
+- id: on-brand-genmedia
+  name: on-brand-genmedia
+  source: https://github.com/google/adk-samples/tree/main/python/agents/on-brand-genmedia
+  summary: 'Component counts: agent.py=1, tools=6, skills=0, prompts=5; flags=eval, deployment, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 6
+    skills: 0
+    prompts: 5
+    flags: eval, deployment, sub_agents, tools
+- id: order-processing
+  name: order-processing
+  source: https://github.com/google/adk-samples/tree/main/python/agents/order-processing
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=deployment.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: deployment
+- id: parallel_task_decomposition_execution
+  name: parallel_task_decomposition_execution
+  source: https://github.com/google/adk-samples/tree/main/python/agents/parallel_task_decomposition_execution
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=1; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 1
+    flags: none
+- id: personalized-shopping
+  name: personalized-shopping
+  source: https://github.com/google/adk-samples/tree/main/python/agents/personalized-shopping
+  summary: 'Component counts: agent.py=1, tools=2, skills=0, prompts=1; flags=eval, tests, deployment, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 2
+    skills: 0
+    prompts: 1
+    flags: eval, tests, deployment, tools
+- id: plumber-data-engineering-assistant
+  name: plumber-data-engineering-assistant
+  source: https://github.com/google/adk-samples/tree/main/python/agents/plumber-data-engineering-assistant
+  summary: 'Component counts: agent.py=7, tools=17, skills=0, prompts=7; flags=sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 7
+    tools: 17
+    skills: 0
+    prompts: 7
+    flags: sub_agents, tools
+- id: podcast_transcript_agent
+  name: podcast_transcript_agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/podcast_transcript_agent
+  summary: 'Component counts: agent.py=4, tools=0, skills=0, prompts=3; flags=tests, sub_agents.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 4
+    tools: 0
+    skills: 0
+    prompts: 3
+    flags: tests, sub_agents
+- id: policy-as-code
+  name: policy-as-code
+  source: https://github.com/google/adk-samples/tree/main/python/agents/policy-as-code
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=tests.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: tests
+- id: product-catalog-ad-generation
+  name: product-catalog-ad-generation
+  source: https://github.com/google/adk-samples/tree/main/python/agents/product-catalog-ad-generation
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=1; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 1
+    flags: none
+- id: realtime-conversational-agent
+  name: realtime-conversational-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/realtime-conversational-agent
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=1; flags=server.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 1
+    flags: server
+- id: retail-ai-location-strategy
+  name: retail-ai-location-strategy
+  source: https://github.com/google/adk-samples/tree/main/python/agents/retail-ai-location-strategy
+  summary: 'Component counts: agent.py=8, tools=3, skills=0, prompts=0; flags=frontend, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 8
+    tools: 3
+    skills: 0
+    prompts: 0
+    flags: frontend, sub_agents, tools
+- id: safety-plugins
+  name: safety-plugins
+  source: https://github.com/google/adk-samples/tree/main/python/agents/safety-plugins
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=1; flags=tests.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 1
+    flags: tests
+- id: sdlc-task-planner
+  name: sdlc-task-planner
+  source: https://github.com/google/adk-samples/tree/main/python/agents/sdlc-task-planner
+  summary: 'Component counts: agent.py=1, tools=1, skills=0, prompts=1; flags=tests, deployment, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 1
+    skills: 0
+    prompts: 1
+    flags: tests, deployment, tools
+- id: sdlc-technical-designer
+  name: sdlc-technical-designer
+  source: https://github.com/google/adk-samples/tree/main/python/agents/sdlc-technical-designer
+  summary: 'Component counts: agent.py=1, tools=2, skills=0, prompts=1; flags=tests, deployment, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 2
+    skills: 0
+    prompts: 1
+    flags: tests, deployment, tools
+- id: sdlc-user-story-refiner
+  name: sdlc-user-story-refiner
+  source: https://github.com/google/adk-samples/tree/main/python/agents/sdlc-user-story-refiner
+  summary: 'Component counts: agent.py=1, tools=2, skills=0, prompts=1; flags=tests, deployment, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 2
+    skills: 0
+    prompts: 1
+    flags: tests, deployment, tools
+- id: short-movie-agents
+  name: short-movie-agents
+  source: https://github.com/google/adk-samples/tree/main/python/agents/short-movie-agents
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: none
+- id: small-business-loan-agent
+  name: small-business-loan-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/small-business-loan-agent
+  summary: 'Component counts: agent.py=5, tools=1, skills=0, prompts=6; flags=tests, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 5
+    tools: 1
+    skills: 0
+    prompts: 6
+    flags: tests, sub_agents, tools
+- id: software-bug-assistant
+  name: software-bug-assistant
+  source: https://github.com/google/adk-samples/tree/main/python/agents/software-bug-assistant
+  summary: 'Component counts: agent.py=1, tools=1, skills=0, prompts=1; flags=deployment, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 1
+    skills: 0
+    prompts: 1
+    flags: deployment, tools
+- id: story_teller
+  name: story_teller
+  source: https://github.com/google/adk-samples/tree/main/python/agents/story_teller
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: none
+- id: supply-chain
+  name: supply-chain
+  source: https://github.com/google/adk-samples/tree/main/python/agents/supply-chain
+  summary: 'Component counts: agent.py=6, tools=6, skills=0, prompts=7; flags=eval, tests, deployment, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 6
+    tools: 6
+    skills: 0
+    prompts: 7
+    flags: eval, tests, deployment, sub_agents, tools
+- id: swe-benchmark-agent
+  name: swe-benchmark-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/swe-benchmark-agent
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=tests.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: tests
+- id: tau2-benchmark-agent
+  name: tau2-benchmark-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/tau2-benchmark-agent
+  summary: 'Component counts: agent.py=0, tools=0, skills=0, prompts=0; flags=tests.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 0
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: tests
+- id: travel-concierge
+  name: travel-concierge
+  source: https://github.com/google/adk-samples/tree/main/python/agents/travel-concierge
+  summary: 'Component counts: agent.py=7, tools=3, skills=0, prompts=7; flags=eval, tests, deployment, sub_agents, tools.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 7
+    tools: 3
+    skills: 0
+    prompts: 7
+    flags: eval, tests, deployment, sub_agents, tools
+- id: workflow-concurrent_research_writer
+  name: workflow-concurrent_research_writer
+  source: https://github.com/google/adk-samples/tree/main/python/agents/workflow-concurrent_research_writer
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=1; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 1
+    flags: none
+- id: workflow-morning_email_debrief
+  name: workflow-morning_email_debrief
+  source: https://github.com/google/adk-samples/tree/main/python/agents/workflow-morning_email_debrief
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: none
+- id: workflows-HITL_concierge
+  name: workflows-HITL_concierge
+  source: https://github.com/google/adk-samples/tree/main/python/agents/workflows-HITL_concierge
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: none
+- id: workflows-sequential
+  name: workflows-sequential
+  source: https://github.com/google/adk-samples/tree/main/python/agents/workflows-sequential
+  summary: 'Component counts: agent.py=1, tools=0, skills=0, prompts=0; flags=none.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 0
+    prompts: 0
+    flags: none
+- id: youtube-analyst
+  name: youtube-analyst
+  source: https://github.com/google/adk-samples/tree/main/python/agents/youtube-analyst
+  summary: 'Component counts: agent.py=1, tools=0, skills=12, prompts=0; flags=tests, deployment, skills.'
+  tags:
+  - entity:agent
+  maturity: maturity:observed
+  metadata:
+    agent_py: 1
+    tools: 0
+    skills: 12
+    prompts: 0
+    flags: tests, deployment, skills

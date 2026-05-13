@@ -1,0 +1,735 @@
+source:
+  id: adk-sample-agents
+  label: External ADK sample agents
+  source_type: external
+  upstream_root: https://github.com/google/adk-samples/tree/main/python/agents
+items:
+- id: RAG
+  name: RAG
+  source: https://github.com/google/adk-samples/tree/main/python/agents/RAG
+  summary: Vertex AI RAG Engine question-answering with citations over uploaded documents.
+  tags:
+  - entity:agent
+  - capability:rag
+  - capability:grounding
+  - integration:vertex-ai
+  - domain:horizontal
+  maturity: maturity:observed
+- id: academic-research
+  name: academic-research
+  source: https://github.com/google/adk-samples/tree/main/python/agents/academic-research
+  summary: Research assistant for publications and emerging academic areas.
+  tags:
+  - entity:agent
+  - pattern:multi-agent
+  - capability:research
+  - domain:education-research
+  maturity: maturity:observed
+- id: adk-ae-oauth
+  name: adk-ae-oauth
+  source: https://github.com/google/adk-samples/tree/main/python/agents/adk-ae-oauth
+  summary: Agent Runtime and OAuth delegated auth sample.
+  tags:
+  - entity:agent
+  - capability:oauth
+  - entity:deployment
+  - integration:vertex-ai
+  - domain:horizontal
+  maturity: maturity:observed
+- id: agent-observability-bq
+  name: agent-observability-bq
+  source: https://github.com/google/adk-samples/tree/main/python/agents/agent-observability-bq
+  summary: BigQuery-backed observability and analytics for ADK agents.
+  tags:
+  - entity:agent
+  - capability:observability
+  - integration:bigquery
+  - domain:horizontal
+  maturity: maturity:observed
+- id: agent-skills-tutorial
+  name: agent-skills-tutorial
+  source: https://github.com/google/adk-samples/tree/main/python/agents/agent-skills-tutorial
+  summary: ADK SkillToolset tutorial with inline, file-based, external, and meta skills.
+  tags:
+  - entity:agent
+  - entity:skill
+  - capability:skills
+  - pattern:skilltoolset
+  - domain:horizontal
+  maturity: maturity:observed
+- id: ai-security-agent
+  name: ai-security-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/ai-security-agent
+  summary: AI red-team and vulnerability assessment agent.
+  tags:
+  - entity:agent
+  - capability:security
+  - capability:compliance
+  - domain:security
+  maturity: maturity:observed
+- id: airflow_version_upgrade_agent
+  name: airflow_version_upgrade_agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/airflow_version_upgrade_agent
+  summary: Agentic Airflow DAG migration and version upgrade workflow.
+  tags:
+  - entity:agent
+  - capability:data-engineering
+  - domain:software-engineering
+  - domain:data
+  maturity: maturity:observed
+- id: ambient-expense-agent
+  name: ambient-expense-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/ambient-expense-agent
+  summary: Ambient scheduled/event-driven expense processing.
+  tags:
+  - entity:agent
+  - pattern:long-running
+  - domain:finance
+  - domain:operations
+  maturity: maturity:observed
+- id: antom-payment
+  name: antom-payment
+  source: https://github.com/google/adk-samples/tree/main/python/agents/antom-payment
+  summary: Antom payment and refund operations through MCP tools.
+  tags:
+  - entity:agent
+  - pattern:mcp
+  - integration:payment-api
+  - domain:finance
+  maturity: maturity:observed
+- id: auto-insurance-agent
+  name: auto-insurance-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/auto-insurance-agent
+  summary: Auto insurance operations for members, claims, rewards, and roadside assistance.
+  tags:
+  - entity:agent
+  - pattern:agent-tool
+  - integration:apigee
+  - domain:finance
+  maturity: maturity:observed
+- id: bidi-demo
+  name: bidi-demo
+  source: https://github.com/google/adk-samples/tree/main/python/agents/bidi-demo
+  summary: Bidirectional realtime demo with search agent.
+  tags:
+  - entity:agent
+  - pattern:streaming
+  - pattern:multimodal
+  - domain:horizontal
+  maturity: maturity:observed
+- id: blog-writer
+  name: blog-writer
+  source: https://github.com/google/adk-samples/tree/main/python/agents/blog-writer
+  summary: Blog writing multi-agent for ideation, drafting, and review.
+  tags:
+  - entity:agent
+  - capability:content-generation
+  - domain:marketing
+  maturity: maturity:observed
+- id: brand-aligned-presentations
+  name: brand-aligned-presentations
+  source: https://github.com/google/adk-samples/tree/main/python/agents/brand-aligned-presentations
+  summary: Brand-aligned presentation generation with research and visual tooling.
+  tags:
+  - entity:agent
+  - capability:content-generation
+  - capability:media-generation
+  - domain:marketing
+  maturity: maturity:observed
+- id: brand-aligner
+  name: brand-aligner
+  source: https://github.com/google/adk-samples/tree/main/python/agents/brand-aligner
+  summary: Evaluation of visual assets against brand guidelines.
+  tags:
+  - entity:agent
+  - capability:media-generation
+  - capability:compliance
+  - domain:marketing
+  maturity: maturity:observed
+- id: brand-search-optimization
+  name: brand-search-optimization
+  source: https://github.com/google/adk-samples/tree/main/python/agents/brand-search-optimization
+  summary: Retail search result comparison and product data enrichment.
+  tags:
+  - entity:agent
+  - capability:data-analysis
+  - integration:bigquery
+  - domain:retail
+  maturity: maturity:observed
+- id: camel
+  name: camel
+  source: https://github.com/google/adk-samples/tree/main/python/agents/camel
+  summary: CaMeL secure agent demo for data-flow control.
+  tags:
+  - entity:agent
+  - capability:security
+  - domain:security
+  maturity: maturity:observed
+- id: claim-adjudication-agent
+  name: claim-adjudication-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/claim-adjudication-agent
+  summary: Healthcare claim admissibility, adjudication, and summary workflow.
+  tags:
+  - entity:agent
+  - capability:decisioning
+  - capability:document-processing
+  - domain:healthcare
+  maturity: maturity:observed
+- id: currency-agent
+  name: currency-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/currency-agent
+  summary: Currency exchange lookup and conversion with A2A/MCP patterns.
+  tags:
+  - entity:agent
+  - pattern:a2a
+  - pattern:mcp
+  - domain:finance
+  maturity: maturity:observed
+- id: customer-service
+  name: customer-service
+  source: https://github.com/google/adk-samples/tree/main/python/agents/customer-service
+  summary: Retail customer service with async tools, external systems, live streaming, and multimodal features.
+  tags:
+  - entity:agent
+  - capability:customer-ops
+  - pattern:streaming
+  - domain:retail
+  maturity: maturity:observed
+- id: cyber-guardian-agent
+  name: cyber-guardian-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/cyber-guardian-agent
+  summary: Cyber incident triage, investigation, threat intel, and response.
+  tags:
+  - entity:agent
+  - pattern:multi-agent
+  - capability:security
+  - domain:security
+  maturity: maturity:observed
+- id: data-engineering
+  name: data-engineering
+  source: https://github.com/google/adk-samples/tree/main/python/agents/data-engineering
+  summary: BigQuery and Dataform data engineering assistant.
+  tags:
+  - entity:agent
+  - capability:data-engineering
+  - integration:bigquery
+  - integration:dataform
+  - domain:data
+  maturity: maturity:observed
+- id: data-science
+  name: data-science
+  source: https://github.com/google/adk-samples/tree/main/python/agents/data-science
+  summary: Multi-agent data analysis with NL2SQL and database tools.
+  tags:
+  - entity:agent
+  - pattern:multi-agent
+  - capability:data-analysis
+  - domain:data
+  maturity: maturity:observed
+- id: deep-search
+  name: deep-search
+  source: https://github.com/google/adk-samples/tree/main/python/agents/deep-search
+  summary: Fullstack deep research agent with modular workflows, web search, React, FastAPI, and HITL.
+  tags:
+  - entity:agent
+  - capability:research
+  - pattern:hitl
+  - entity:ui
+  - domain:horizontal
+  maturity: maturity:observed
+- id: earth-engine-geospatial
+  name: earth-engine-geospatial
+  source: https://github.com/google/adk-samples/tree/main/python/agents/earth-engine-geospatial
+  summary: Google Earth Engine geospatial analysis.
+  tags:
+  - entity:agent
+  - capability:geospatial
+  - domain:geospatial
+  maturity: maturity:observed
+- id: economic-research-agent
+  name: economic-research-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/economic-research-agent
+  summary: Regional economic intelligence across labor, policy, real estate, incentives, and logistics.
+  tags:
+  - entity:agent
+  - capability:research
+  - capability:data-analysis
+  - domain:data
+  maturity: maturity:observed
+- id: financial-advisor
+  name: financial-advisor
+  source: https://github.com/google/adk-samples/tree/main/python/agents/financial-advisor
+  summary: 'Multi-agent support for financial advisors: data, risk, trading, execution, and reports.'
+  tags:
+  - entity:agent
+  - pattern:multi-agent
+  - capability:finance
+  - domain:finance
+  maturity: maturity:observed
+- id: fomc-research
+  name: fomc-research
+  source: https://github.com/google/adk-samples/tree/main/python/agents/fomc-research
+  summary: FOMC market event analysis and report generation.
+  tags:
+  - entity:agent
+  - capability:research
+  - capability:data-analysis
+  - domain:finance
+  maturity: maturity:observed
+- id: fun-facts
+  name: fun-facts
+  source: https://github.com/google/adk-samples/tree/main/python/agents/fun-facts
+  summary: Minimal ADK agent and simple deployment baseline.
+  tags:
+  - entity:agent
+  - pattern:single-agent
+  - domain:horizontal
+  maturity: maturity:observed
+- id: gemini-fullstack
+  name: gemini-fullstack
+  source: https://github.com/google/adk-samples/tree/main/python/agents/gemini-fullstack
+  summary: Historical fullstack research sample; use deep-search for current pattern.
+  tags:
+  - entity:agent
+  - capability:research
+  - entity:ui
+  - domain:horizontal
+  maturity: maturity:observed
+- id: gemma-food-tour-guide
+  name: gemma-food-tour-guide
+  source: https://github.com/google/adk-samples/tree/main/python/agents/gemma-food-tour-guide
+  summary: Food tour guide using Gemma, Maps MCP, multimodal input, and route planning.
+  tags:
+  - entity:agent
+  - pattern:mcp
+  - pattern:multimodal
+  - integration:google-maps
+  - domain:travel
+  maturity: maturity:observed
+- id: genmedia-for-commerce
+  name: genmedia-for-commerce
+  source: https://github.com/google/adk-samples/tree/main/python/agents/genmedia-for-commerce
+  summary: 'Fullstack commerce media generation: VTO, video, spin, background change, catalog search, MCP, Terraform.'
+  tags:
+  - entity:agent
+  - capability:media-generation
+  - pattern:mcp
+  - entity:ui
+  - domain:retail
+  maturity: maturity:observed
+- id: global-kyc-agent
+  name: global-kyc-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/global-kyc-agent
+  summary: Multi-jurisdiction KYC compliance for UK and US.
+  tags:
+  - entity:agent
+  - capability:compliance
+  - domain:security
+  - domain:finance
+  maturity: maturity:observed
+- id: google-trends-agent
+  name: google-trends-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/google-trends-agent
+  summary: Google Trends analysis using BigQuery public datasets.
+  tags:
+  - entity:agent
+  - capability:data-analysis
+  - integration:bigquery
+  - domain:marketing
+  maturity: maturity:observed
+- id: hierarchical-workflow-automation
+  name: hierarchical-workflow-automation
+  source: https://github.com/google/adk-samples/tree/main/python/agents/hierarchical-workflow-automation
+  summary: Structured hierarchical workflow automation across systems.
+  tags:
+  - entity:agent
+  - entity:workflow
+  - pattern:workflow-sequential
+  - domain:operations
+  maturity: maturity:observed
+- id: high-volume-document-analyzer
+  name: high-volume-document-analyzer
+  source: https://github.com/google/adk-samples/tree/main/python/agents/high-volume-document-analyzer
+  summary: Large-scale document collection analysis.
+  tags:
+  - entity:agent
+  - capability:document-processing
+  - capability:rag
+  - domain:horizontal
+  maturity: maturity:observed
+- id: image-scoring
+  name: image-scoring
+  source: https://github.com/google/adk-samples/tree/main/python/agents/image-scoring
+  summary: Imagen generation and policy compliance scoring loop.
+  tags:
+  - entity:agent
+  - capability:media-generation
+  - pattern:workflow-loop
+  - domain:media
+  maturity: maturity:observed
+- id: incident-management
+  name: incident-management
+  source: https://github.com/google/adk-samples/tree/main/python/agents/incident-management
+  summary: ServiceNow incident management with Application Integration connectors.
+  tags:
+  - entity:agent
+  - capability:customer-ops
+  - integration:servicenow
+  - integration:application-integration
+  - domain:operations
+  maturity: maturity:observed
+- id: invoice-processing
+  name: invoice-processing
+  source: https://github.com/google/adk-samples/tree/main/python/agents/invoice-processing
+  summary: Invoice extraction and interactive document processing.
+  tags:
+  - entity:agent
+  - capability:document-processing
+  - domain:operations
+  maturity: maturity:observed
+- id: llm-auditor
+  name: llm-auditor
+  source: https://github.com/google/adk-samples/tree/main/python/agents/llm-auditor
+  summary: Multi-agent chatbot response verification, critique, revision, and fact-checking.
+  tags:
+  - entity:agent
+  - capability:research
+  - capability:grounding
+  - domain:horizontal
+  maturity: maturity:observed
+- id: machine-learning-engineering
+  name: machine-learning-engineering
+  source: https://github.com/google/adk-samples/tree/main/python/agents/machine-learning-engineering
+  summary: MLE-STAR style multi-agent ML engineering workflow.
+  tags:
+  - entity:agent
+  - pattern:multi-agent
+  - domain:data
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: marketing-agency
+  name: marketing-agency
+  source: https://github.com/google/adk-samples/tree/main/python/agents/marketing-agency
+  summary: Multi-agent agency for websites, domains, marketing strategy, and logo generation.
+  tags:
+  - entity:agent
+  - capability:content-generation
+  - capability:media-generation
+  - domain:marketing
+  maturity: maturity:observed
+- id: medical-pre-authorization
+  name: medical-pre-authorization
+  source: https://github.com/google/adk-samples/tree/main/python/agents/medical-pre-authorization
+  summary: Medical record and policy analysis for coverage and eligibility.
+  tags:
+  - entity:agent
+  - capability:document-processing
+  - capability:decisioning
+  - domain:healthcare
+  maturity: maturity:observed
+- id: memory-bank
+  name: memory-bank
+  source: https://github.com/google/adk-samples/tree/main/python/agents/memory-bank
+  summary: Memory Bank integration for cross-session facts and preferences.
+  tags:
+  - entity:agent
+  - capability:memory
+  - domain:horizontal
+  maturity: maturity:observed
+- id: multiformat-hybrid-rag
+  name: multiformat-hybrid-rag
+  source: https://github.com/google/adk-samples/tree/main/python/agents/multiformat-hybrid-rag
+  summary: Multi-format RAG over GCS and Vector Search 2.0.
+  tags:
+  - entity:agent
+  - capability:rag
+  - integration:vertex-ai
+  - domain:horizontal
+  maturity: maturity:observed
+- id: nexshift-agent
+  name: nexshift-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/nexshift-agent
+  summary: Nurse rostering and shift management.
+  tags:
+  - entity:agent
+  - capability:planning
+  - domain:healthcare
+  - domain:operations
+  maturity: maturity:observed
+- id: nurse-handover
+  name: nurse-handover
+  source: https://github.com/google/adk-samples/tree/main/python/agents/nurse-handover
+  summary: Clinical handover summarization.
+  tags:
+  - entity:agent
+  - capability:document-processing
+  - domain:healthcare
+  maturity: maturity:observed
+- id: on-brand-genmedia
+  name: on-brand-genmedia
+  source: https://github.com/google/adk-samples/tree/main/python/agents/on-brand-genmedia
+  summary: Brand-policy-aware image generation and scoring.
+  tags:
+  - entity:agent
+  - capability:media-generation
+  - capability:compliance
+  - domain:marketing
+  maturity: maturity:observed
+- id: order-processing
+  name: order-processing
+  source: https://github.com/google/adk-samples/tree/main/python/agents/order-processing
+  summary: Order automation with Application Integration connectors and HITL.
+  tags:
+  - entity:agent
+  - pattern:hitl
+  - integration:application-integration
+  - domain:operations
+  maturity: maturity:observed
+- id: parallel_task_decomposition_execution
+  name: parallel_task_decomposition_execution
+  source: https://github.com/google/adk-samples/tree/main/python/agents/parallel_task_decomposition_execution
+  summary: Parallel task decomposition and execution.
+  tags:
+  - entity:agent
+  - pattern:workflow-parallel
+  - capability:planning
+  - domain:horizontal
+  maturity: maturity:observed
+- id: personalized-shopping
+  name: personalized-shopping
+  source: https://github.com/google/adk-samples/tree/main/python/agents/personalized-shopping
+  summary: Personalized shopping assistant and product recommendation.
+  tags:
+  - entity:agent
+  - capability:customer-ops
+  - domain:retail
+  maturity: maturity:observed
+- id: plumber-data-engineering-assistant
+  name: plumber-data-engineering-assistant
+  source: https://github.com/google/adk-samples/tree/main/python/agents/plumber-data-engineering-assistant
+  summary: Data engineering assistant for Spark, Beam, dbt, Dataflow, and Dataproc on GCP.
+  tags:
+  - entity:agent
+  - capability:data-engineering
+  - integration:dataflow
+  - integration:dataproc
+  - integration:dbt
+  - domain:data
+  maturity: maturity:observed
+- id: podcast_transcript_agent
+  name: podcast_transcript_agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/podcast_transcript_agent
+  summary: Sequential podcast planning and transcript generation.
+  tags:
+  - entity:agent
+  - pattern:workflow-sequential
+  - capability:content-generation
+  - domain:media
+  maturity: maturity:observed
+- id: policy-as-code
+  name: policy-as-code
+  source: https://github.com/google/adk-samples/tree/main/python/agents/policy-as-code
+  summary: Natural language data governance and policy-as-code workflows.
+  tags:
+  - entity:agent
+  - capability:compliance
+  - domain:data
+  - domain:security
+  maturity: maturity:observed
+- id: product-catalog-ad-generation
+  name: product-catalog-ad-generation
+  source: https://github.com/google/adk-samples/tree/main/python/agents/product-catalog-ad-generation
+  summary: Product-catalog-grounded ad generation.
+  tags:
+  - entity:agent
+  - capability:content-generation
+  - domain:retail
+  - domain:marketing
+  maturity: maturity:observed
+- id: realtime-conversational-agent
+  name: realtime-conversational-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/realtime-conversational-agent
+  summary: Fullstack realtime multimodal conversational template.
+  tags:
+  - entity:agent
+  - pattern:streaming
+  - pattern:multimodal
+  - entity:ui
+  - domain:horizontal
+  maturity: maturity:observed
+- id: retail-ai-location-strategy
+  name: retail-ai-location-strategy
+  source: https://github.com/google/adk-samples/tree/main/python/agents/retail-ai-location-strategy
+  summary: Retail site selection and location strategy workflow.
+  tags:
+  - entity:agent
+  - capability:geospatial
+  - capability:research
+  - domain:retail
+  maturity: maturity:observed
+- id: safety-plugins
+  name: safety-plugins
+  source: https://github.com/google/adk-samples/tree/main/python/agents/safety-plugins
+  summary: 'ADK safety plugins: Gemini judge, Model Armor, jailbreak filters.'
+  tags:
+  - entity:plugin
+  - capability:security
+  - capability:compliance
+  - integration:model-armor
+  - domain:security
+  maturity: maturity:observed
+- id: sdlc-task-planner
+  name: sdlc-task-planner
+  source: https://github.com/google/adk-samples/tree/main/python/agents/sdlc-task-planner
+  summary: SDLC task breakdown and planning.
+  tags:
+  - entity:agent
+  - capability:planning
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: sdlc-technical-designer
+  name: sdlc-technical-designer
+  source: https://github.com/google/adk-samples/tree/main/python/agents/sdlc-technical-designer
+  summary: Technical design generation for SDLC workflows.
+  tags:
+  - entity:agent
+  - capability:planning
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: sdlc-user-story-refiner
+  name: sdlc-user-story-refiner
+  source: https://github.com/google/adk-samples/tree/main/python/agents/sdlc-user-story-refiner
+  summary: User story refinement and artifact handling.
+  tags:
+  - entity:agent
+  - capability:planning
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: short-movie-agents
+  name: short-movie-agents
+  source: https://github.com/google/adk-samples/tree/main/python/agents/short-movie-agents
+  summary: End-to-end short movie generation agents.
+  tags:
+  - entity:agent
+  - capability:media-generation
+  - pattern:multi-agent
+  - domain:media
+  maturity: maturity:observed
+- id: small-business-loan-agent
+  name: small-business-loan-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/small-business-loan-agent
+  summary: Small business loan document extraction, underwriting, pricing, and decisioning.
+  tags:
+  - entity:agent
+  - capability:decisioning
+  - capability:finance
+  - domain:finance
+  maturity: maturity:observed
+- id: software-bug-assistant
+  name: software-bug-assistant
+  source: https://github.com/google/adk-samples/tree/main/python/agents/software-bug-assistant
+  summary: Bug triage with internal tickets, external knowledge, RAG, MCP, and Google Search.
+  tags:
+  - entity:agent
+  - capability:rag
+  - pattern:mcp
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: story_teller
+  name: story_teller
+  source: https://github.com/google/adk-samples/tree/main/python/agents/story_teller
+  summary: Small collaborative story writing sample.
+  tags:
+  - entity:agent
+  - capability:content-generation
+  - pattern:multi-agent
+  - domain:horizontal
+  maturity: maturity:observed
+- id: supply-chain
+  name: supply-chain
+  source: https://github.com/google/adk-samples/tree/main/python/agents/supply-chain
+  summary: Market, weather, operations, and demand analysis for supply chain optimization.
+  tags:
+  - entity:agent
+  - pattern:multi-agent
+  - capability:data-analysis
+  - domain:operations
+  maturity: maturity:observed
+- id: swe-benchmark-agent
+  name: swe-benchmark-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/swe-benchmark-agent
+  summary: SWE-bench and TerminalBench-style software engineering benchmark agent.
+  tags:
+  - entity:agent
+  - entity:evaluation
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: tau2-benchmark-agent
+  name: tau2-benchmark-agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents/tau2-benchmark-agent
+  summary: Tau2-Bench benchmark integration.
+  tags:
+  - entity:agent
+  - entity:evaluation
+  - domain:horizontal
+  maturity: maturity:observed
+- id: travel-concierge
+  name: travel-concierge
+  source: https://github.com/google/adk-samples/tree/main/python/agents/travel-concierge
+  summary: Multi-agent travel assistant with dynamic instructions, schemas, context updates, and tools.
+  tags:
+  - entity:agent
+  - pattern:multi-agent
+  - capability:planning
+  - domain:travel
+  maturity: maturity:observed
+- id: workflow-concurrent_research_writer
+  name: workflow-concurrent_research_writer
+  source: https://github.com/google/adk-samples/tree/main/python/agents/workflow-concurrent_research_writer
+  summary: Concurrent research and writing workflow.
+  tags:
+  - entity:workflow
+  - pattern:workflow-parallel
+  - capability:research
+  - capability:content-generation
+  maturity: maturity:observed
+- id: workflow-morning_email_debrief
+  name: workflow-morning_email_debrief
+  source: https://github.com/google/adk-samples/tree/main/python/agents/workflow-morning_email_debrief
+  summary: Scheduled morning email debrief workflow.
+  tags:
+  - entity:workflow
+  - pattern:long-running
+  - capability:planning
+  - domain:horizontal
+  maturity: maturity:observed
+- id: workflows-HITL_concierge
+  name: workflows-HITL_concierge
+  source: https://github.com/google/adk-samples/tree/main/python/agents/workflows-HITL_concierge
+  summary: Human-in-the-loop concierge workflow.
+  tags:
+  - entity:workflow
+  - pattern:hitl
+  - domain:travel
+  maturity: maturity:observed
+- id: workflows-sequential
+  name: workflows-sequential
+  source: https://github.com/google/adk-samples/tree/main/python/agents/workflows-sequential
+  summary: Basic sequential workflow sample.
+  tags:
+  - entity:workflow
+  - pattern:workflow-sequential
+  - domain:horizontal
+  maturity: maturity:observed
+- id: youtube-analyst
+  name: youtube-analyst
+  source: https://github.com/google/adk-samples/tree/main/python/agents/youtube-analyst
+  summary: YouTube content, channel, audience, and chart analysis with ADK Skills.
+  tags:
+  - entity:agent
+  - entity:skill
+  - capability:data-analysis
+  - integration:youtube
+  - pattern:skilltoolset
+  - domain:media
+  maturity: maturity:observed

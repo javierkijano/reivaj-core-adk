@@ -1,0 +1,283 @@
+{
+  "eval_set_id": "tests_to_eval_root_adk_task_to_workflow",
+  "name": "tests_to_eval_root_adk_task_to_workflow",
+  "eval_cases": [
+    {
+      "eval_id": "hello message",
+      "conversation": [
+        {
+          "invocation_id": "e-e259e623-e8ad-4557-9f37-1a1d498f2655",
+          "user_content": {
+            "parts": [
+              {
+                "text": "hello"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "{\n  \"score\": 0.9,\n  \"weak_postconditions\": [\n    {\n      \"task_id\": \"t1_generate_greeting\",\n      \"postcondition\": \"The response asks the user how to assist them.\",\n      \"problem\": \"The current evaluator type for this specific postcondition is 'schema', which cannot verify semantic meaning such as whether the response actually asks how to assist the user. It requires an LLM to evaluate the textual content.\"\n    }\n  ],\n  \"missing_verifiers\": [],\n  \"verifier_improvements\": [\n    {\n      \"task_id\": \"t1_generate_greeting\",\n      \"verifier\": {\n        \"type\": \"llm\",\n        \"instruction\": \"Evaluate the generated text. Verify that a response was successfully generated, it acknowledges the user's greeting, explicitly asks how to assist the user, and maintains a polite and helpful tone.\",\n        \"success_threshold\": 0.9,\n        \"failure_action\": \"retry\"\n      }\n    }\n  ]\n}"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "invocation_events": [
+              {
+                "author": "goal_interpreter",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\"raw_goal\":\"hello\",\"interpreted_goal\":\"Acknowledge the user's greeting and politely prompt them for a specific task or query.\",\"success_criteria\":[\"A greeting response is generated.\",\"The response includes a prompt asking how to assist the user.\"],\"hard_constraints\":[],\"soft_constraints\":[\"Polite and helpful tone.\"],\"unknowns\":[\"The actual task or problem the user needs help with.\"]}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "state_abstractor",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\"known_facts\":[\"The user has initiated a conversation with a basic greeting.\",\"No specific task or request has been articulated.\"],\"missing_facts\":[\"The specific task, problem, or query the user needs assistance with.\"],\"available_capabilities\":[\"Text generation\",\"Conversational response\"],\"relevant_constraints\":[\"The response must maintain a polite and helpful tone.\"],\"task_family\":\"Conversational Response\",\"ambiguity_level\":\"low\",\"risk_level\":\"low\"}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "candidate_task_planner",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"graph_type\": \"runtime_task_graph\",\n  \"runtime_pipeline_ref\": \"basic_conversational_response\",\n  \"nodes\": [\n    {\n      \"id\": \"t1_generate_greeting\",\n      \"title\": \"Generate Greeting Response\",\n      \"description\": \"Generate a polite text response that acknowledges the user's greeting and prompts them to provide a specific query or task.\",\n      \"action_type\": \"generation\",\n      \"abstraction_level\": \"task\",\n      \"input_state\": [\n        \"user_greeting_input\"\n      ],\n      \"output_state\": [\n        \"polite_greeting_response\"\n      ],\n      \"preconditions\": [\n        \"User has provided a basic greeting.\"\n      ],\n      \"postconditions\": [\n        \"A response is generated.\",\n        \"The response asks the user how to assist them.\"\n      ],\n      \"executor_type\": \"agent\",\n      \"executor_id\": \"conversational_llm\",\n      \"verifier_type\": \"rule_based\",\n      \"verifier_instruction\": \"Verify the response contains both a greeting acknowledgment and a question prompting the user for a task, while maintaining a polite tone.\",\n      \"acceptance_criteria\": [\n        \"A greeting response is generated.\",\n        \"The response includes a prompt asking how to assist the user.\",\n        \"The tone of the response is polite and helpful.\"\n      ],\n      \"dependencies\": [],\n      \"execution_mode\": \"sequential\",\n      \"parallel_group\": null,\n      \"build_status\": \"built\",\n      \"runtime_status\": \"ready\",\n      \"runtime_execution_mode\": \"real\",\n      \"execution_status\": \"executable\",\n      \"missing_runtime_inputs\": [],\n      \"branch_condition\": null,\n      \"can_expand\": false,\n      \"should_expand_now\": false,\n      \"expansion_reason\": null,\n      \"risk_level\": \"low\",\n      \"risk_reasons\": [\n        \"The task is a standard conversational pattern with no complex logic, external dependencies, or security risks.\"\n      ]\n    }\n  ],\n  \"edges\": [],\n  \"assumptions\": [\n    \"The environment can directly present the generated text response back to the user.\",\n    \"The user intends to interact with an AI assistant.\"\n  ]\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "dependency_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 1.0,\n  \"missing_edges\": [],\n  \"invalid_edges\": [],\n  \"cycles\": [],\n  \"parallelization_warnings\": []\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "granularity_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 1.0,\n  \"tasks_to_keep\": [\n    \"t1_generate_greeting\"\n  ],\n  \"tasks_to_split\": [],\n  \"tasks_to_merge\": [],\n  \"tasks_to_remove\": [],\n  \"repair_suggestions\": []\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "coverage_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 1,\n  \"missing_goal_elements\": [],\n  \"redundant_tasks\": [],\n  \"hidden_assumptions\": [\n    \"The environment handles the delivery of the generated text directly to the user's interface.\"\n  ],\n  \"repair_suggestions\": []\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "verifiability_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 0.9,\n  \"weak_postconditions\": [],\n  \"missing_verifiers\": [],\n  \"verifier_improvements\": [\n    {\n      \"task_id\": \"t1_generate_greeting\",\n      \"verifier\": {\n        \"type\": \"llm\",\n        \"instruction\": \"Check if the generated response acknowledges the user's greeting, prompts them to ask a question or state a task, and maintains a polite and helpful tone.\",\n        \"success_threshold\": 0.9,\n        \"failure_action\": \"retry\"\n      }\n    }\n  ]\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "executability_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 1.0,\n  \"executable_tasks\": [\n    \"t1_generate_greeting\"\n  ],\n  \"conditionally_executable_tasks\": [],\n  \"blocked_tasks\": [],\n  \"missing_runtime_inputs\": [],\n  \"missing_capabilities\": [],\n  \"suggested_executor_bindings\": [\n    {\n      \"task_id\": \"t1_generate_greeting\",\n      \"executor\": {\n        \"type\": \"agent\",\n        \"id\": \"conversational_llm\",\n        \"required_inputs\": [\n          \"user_greeting_input\"\n        ],\n        \"expected_outputs\": [\n          \"polite_greeting_response\"\n        ],\n        \"fallback_executor\": null\n      }\n    }\n  ]\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "repair_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"repaired_task_graph\": {\n    \"graph_type\": \"runtime_task_graph\",\n    \"runtime_pipeline_ref\": \"basic_conversational_response\",\n    \"nodes\": [\n      {\n        \"id\": \"t1_generate_greeting\",\n        \"title\": \"Generate Greeting Response\",\n        \"description\": \"Generate a polite text response that acknowledges the user's greeting and prompts them to provide a specific query or task.\",\n        \"action_type\": \"generation\",\n        \"abstraction_level\": \"task\",\n        \"input_state\": [\n          \"user_greeting_input\"\n        ],\n        \"output_state\": [\n          \"polite_greeting_response\"\n        ],\n        \"preconditions\": [\n          \"User has provided a basic greeting.\"\n        ],\n        \"postconditions\": [\n          \"A response is generated.\",\n          \"The response asks the user how to assist them.\"\n        ],\n        \"executor_type\": \"agent\",\n        \"executor_id\": \"conversational_llm\",\n        \"verifier_type\": \"llm\",\n        \"verifier_instruction\": \"Check if the generated response acknowledges the user's greeting, prompts them to ask a question or state a task, and maintains a polite and helpful tone.\",\n        \"acceptance_criteria\": [\n          \"A greeting response is generated.\",\n          \"The response includes a prompt asking how to assist the user.\",\n          \"The tone of the response is polite and helpful.\"\n        ],\n        \"dependencies\": [],\n        \"execution_mode\": \"sequential\",\n        \"parallel_group\": null,\n        \"build_status\": \"built\",\n        \"runtime_status\": \"ready\",\n        \"runtime_execution_mode\": \"real\",\n        \"execution_status\": \"executable\",\n        \"missing_runtime_inputs\": [],\n        \"branch_condition\": null,\n        \"can_expand\": false,\n        \"should_expand_now\": false,\n        \"expansion_reason\": null,\n        \"risk_level\": \"low\",\n        \"risk_reasons\": [\n          \"The task is a standard conversational pattern with no complex logic, external dependencies, or security risks.\"\n        ]\n      }\n    ],\n    \"edges\": [],\n    \"assumptions\": [\n      \"The environment can directly present the generated text response back to the user.\",\n      \"The user intends to interact with an AI assistant.\",\n      \"The environment handles the delivery of the generated text directly to the user's interface.\"\n    ]\n  },\n  \"repair_operations\": [\n    {\n      \"operation\": \"add_verifier\",\n      \"target\": \"t1_generate_greeting\",\n      \"reason\": \"The rule-based verifier might not accurately evaluate the polite and helpful tone. An LLM verifier is better suited for checking these nuanced textual properties.\",\n      \"suggested_change\": \"Changed verifier_type from 'rule_based' to 'llm' and updated verifier_instruction to explicitly check the tone and prompts.\"\n    }\n  ],\n  \"unresolved_assumptions\": [\n    \"The environment handles the delivery of the generated text directly to the user's interface.\"\n  ],\n  \"requires_user_clarification\": false\n}"
+                    },
+                    {
+                      "text": "",
+                      "thought_signature": "AY89a1-PAFbQOit2Mk6Tk7PIg_Q7qCEShJRLTT3-LRL0sB5BHpOdiqXHvZR0blGV_Ua-FFUxRQvCHYfJzsgPi6fpHHctXRGHCZqamWCWHbTlOuMxBJ0mwQToZr593h_n_umEGAeded0WqResMukVSXZhQDGSEeATbQlhY9OOj7SiCI_fktFfFCGgEJIpwrPozLUfY25XeHR6mLDlumiNqXJybAerznZBp7K7-_0BMJNCV4Z8ZlyjAVxHc9c41dFhFc_cU8MkCt52nwGUOVY3T3FGXc7IRWrpRljTBTNfkav9qV8hgY1rImAsez2p2pKxeX6QvbuNONkr-zaNeaQdazOUf97nro8A64l0-uOStHL92fk08aDPWP1FMQwQjlkatHbN8pgMfgGEjFrNDrPGI-Z2FKR882oNf82PAzlFt008iyG_B09a-Vw_TJoBIym4TYvTaQiw6r-dgR7c9th0xuvBK9n5sv9CZuZwaorilzgDHhFW8Ksv_YLk68ZCUWG1FAhOSXk3-_C_ZAIzqLdA6dlqFxiv5KYYPfsy2Ta5uA1Ry8mzHnymst9UoZaJKvuygZfARgFGrHmNYDOEnUep63PSLCPioDvMTt2E8as-KXRzIX3u5-Di2JpE-IFfbM31gkeSLPXt_6m7fMsEnl47D2qrLvDizo5Ex9EuTwgh1wR8DY374qcPbk2UY0RvxPZmFlEB6bDLxp7w3Kv3eRQGK5pHg10eaLhuS1WVSXJmOIwshLNmj9AP_VbNRqFMzzHXJLer39Iu4Jl3fquM1wRfZougF3ss6sIVcDnz_PyndLqtzwRRrQ8rVEhZyY3Fny4OLJWEBsWSbOPClTGLQ8XI5Jqq-_zWF9ddFDDbvxgVKENsihgVvO4cGUJMH-MTFXJICE2NMbTNMxRXQZkheUpFtxmWhnqPIDOXotD6CBukI2EBQ-K1GsyiaPBM-b8KXwpceCSdpS7Pmfvfx76gym8ILY_pXRMOviNLE-egTJSPidzkJEOYb15Bz5FBGyRuo_0E1oAwF4xKpnJhwPfVLYlJ8L5LDVjHjA-FKWNHu3lHKizFS5k_xlz2czRXjGQGh-WJv2wNLzGOvTHMU8kQw4O_rCdWJomULv1ZwMGkN2R3wZKWeH3v8kRZDBthfAWWSjhUBNyKx3N27S3H9hXvwPvHdp-6fBNe0XvDOAr0Dr-H5Bu6SzUH0geHpZlmOMbsQdN7BESON6SzpeQh2dfpCCvONMprdNByGOsfyRUCJ5NkAzuJI8eOkmnjAI9MpanZJg6if8jqOhEA92rshhZ2XXdcwTvCrwk-KJbnsDYe7oP-Hpo53H5ad9Z-eTcu4nPPFg-cK7rWYwIIuxgegNdM88ez8q39Ydo1WtBZcuUov8oV-k9fS9MdjCtRfpDP7gLQO6l2YzvmGfNXd8wkpgnq86asqEpphHCGGBY9mo9nnSN1SXqYVaenMAKMfGjWtSGltw2lvHuwnvTXaIALPpIpGErurxPTPICcccXP1GUqze5780J1ap9czHKm6Q_QGXJDW-3wvVi32BcvFM7dw6urVIS9H_MsYJyzMYk11lYn5UvDnqVsAM-xwR9T3Gr4rs2WU-VLLb1uf9USRyZSnApd5CKo8EUeWiXN28TCRla-7O4pUzNNb7gDaKeEoGLCqbfl0w3fzI9KO2EDvgzIDPyI2c0NOjm6hw2BOvzTJwK1vpEWotjQe9Fd_5i5SBZ7Vaw8Ry1j_qazw-x6gPmrqBL4hFaN3dgmsR8AavHFGSPCQhWnixIEuuzv56fS3I2T-5mtjh6EtvFf1Ks8o3L2O0N0ld63bzcfgSDRuCu2YE0Pp_hiYQmV9rcovbpQNV8uXxIgQdwgA4FldKbCYjGcdDBoowl486L3HWnD5HzEmdfVA8Vy2_rWTuoByuXNz5WL-X6Zvp4Ivy7bgJnfglvSXCWegVPMhqBVCnvK2h7LpLHoKaGOlMftVVExYGeOUNz72WHnYWJ3q3OCyIe4nlEWV1dgoBrCgSwL5ZCk0SIgOjjQ-fyasqy6r4xjkzfyNFUld917WryT4w2kopJuPAr_-yoCcPOoacOxSfhVX-iueU8tYmN1TTmENY91Csz-3NpRKLDUvUPqNVgj-juXN-c3sH8q6ylUClu1Xe3pUSDq8esje8kakJ2A7lyED5M7EuE8GWgKpcbb-oUSJeja6h1gZVmooyTD4lnPOgzgHbGvgS4HbFe7x64SNbqiSprRVKOvsxTZY__f1bMCS8bApWnCQpCs0VzpXaIoltyBITVldnnl0UjEfH3tHV7M3jizGeDZWa5hcyNhHsaaWQMmqxrHsf0iUVH-xwm24BC7w65RzLmYdRfoXpC-Vg1mpoGylgflWMHDwV7IkS-CYnKmPF6koskPpbgiZ-OgZQA0LdAqEGKUhQmQ8TVtgVFr90JY-MNNulhkFuoqlBu2ydT4HS9PaFYr2MzLjhMdk3rCgjQeY83YDr2T8dt9igEjgLMPx7JH7QsgovO1KhS1lvRDk3rkMola5hkEmw-hzy4jHRSakYsGsktw4l7OcyQRYzLnvqy6MLbLH0RS1ZtW89mI_BwDl3KcwHgm4_Z6bH7z5BJQm4jjPF-W-loE5dEykkUcWV33A6Z8bsashwsn5PInI8u_-3ycmtRGu0yoHwlYtcTcAsMsha79T3O-jll_eopkd0o9bH70Ax6WHOanl7WzdrMJ7-LXR5uxY47uBjJThoLRI2w7BskaoyyrqznFXD95NwaIPY7viVW7AkymI-qzjv7AawKW2CNCbgI8L9EIEj3t8n6BeK8oVZOH5tydVNl4tptOfiimb_wCdu-xW_Cor--g1e0877-_-x-BFpqrR-qTj2Efve3eEmgIJaXFmaf0mponI_S2f03bcMunqAhdhXLvVHUvkKA25au3YbHdLM5xSqnwA_Hl3Cw8OGtWrT5RXkmiDVRYVE54w3_X9fC2eNwwpo1rhimQBNMossKktgXaodfkf0Dx1cKRfQCCmQZI5-r14t2Bp3JmOx7Fp8_Xehj3NhhE3nUQ7at_VkTAHQmMjKGuOK_mIo9Rcj5_Z5icK2u8-OJeAWnXZ3eGSwfYBJNsIC_jNCf-rmP4nLH8b_n5W2zj0jtCzxcp_wmCjb4h9tSrCP5sQNIrWs9HIqCvYQMSuqIr9ZYbvUHoi35dJCPMD_zPAjmHaMYSreQPvyoteiFRLLbAAVcwiBPld22SyIweBCCAES6f_WdVGiusEMbRlg95A-QTcpXyakhqncLY_jqLhRCrukYYIFanshWxIRdVrrErHmEwEu_8tgpJWu_5dFfvAbJhPr1n3JjClQlGUdkdNX7jhA8TJhokCWrfGCtEbDK6hzcu62KmbQRjOcUPOVGebjWqowef_A0b-rzJZBe1MCp5glwKjI9p0Sd5DyvSm-oKRgT2iww6X1DPFJ6YbABQJeS0S7twNetF1_XJ5XIR1SE07Wmb5z6GXbDS9Fzd26UvmkbT_GJy20HClsekPSd-Xme5sw6ANEocm40IC8bMCEOXiKF6J-_967Wsd0lbPAp0l0srAyFaq4dn_cemE347qgsyGA9gwRLDCtiqMvUQwhrJ9M4BGwo8R3o1WtS2w4fVRoCzybtCASvJ8wrh1N-4kP772ZDWDeF4mH_E4xpZCPJY0uaUVG5tlOgMjFgxZY-NY_ChPbUh318nbUcNkPZiPAk91649XRjjEk8qNX_wH-qkE8-_futtBik9KoayGVi8jA2VKBboD_efTEZZMH-6GkFzXTXe-xg8DiuNRSEXO4z-_Uc5ldg06p4F3nbJaJ_8E4FRXgVCjzmss1voFvOYDM_6Qo-1VB_zA9VXZh_mv8vXh-Nfsb9HYVwLVK4CcHW2Wazv53OZW5vfhUWYPCDNMGFEHOboZqSxiQfExkocsmtagaxzVK1mgve-djbqBmapQ4ymPPrZMiDICzIZaiC9x_zbWe36f6exnHMl2RkNOeRN4EZctsUNkWyIOqwVrTt-HYsxpfFnyTgA_hRY9U2dKGNX9eNrme8IDKQamNbskS0PxI6wDnGssqBSUU6IhtdLphyrw5HovJvFyCt7uooLbl_SQSx9qmZ4daMxGZ-rs9pDStWqIPcQ95AJQRFoT8uuYQK44b885NMdc_lHMtxKxEBLjQBjfbV1LQc7kjXX1_Os7fbqDtNeLlkcFVmreWtI67vVqEdRo4w_8OiOyyqK3vzAnXCznV0EQpvUgY6XZR7lSJVc6Bit3BX3Z2mjjHKcv-Q5Dv3HFLHlY3XFqXB7AhFrxx3Fa5tNpRcYC28IWmQ_clQPfN6HDQVKARbWntncPsea71LyQ2Qrw93AtDurqkaXKXM3VVHrxI02COR2azH0XkbYt-7Di9hrAgAn9gaQbydf43i-Sii2H89BY7oiP037rQhmUSn-mfUjWmuxC4VS1-_EpJ4nK46USxhH1lyStywWO_JGfh0kyTnkAWOnfDk4vT2w2mdhaVrokTZCPqegD_cqUvn5ptdy3s7UqIB0Ti7n-yBzZi49oic-_aBpJbvspQcHPzDLp7LyMO1InWjKSNGFez718oPMrHTtPM1wvPNsQvXibf0bKPoXMBUqaKLfPtOhl2GXmkwc7CFsrSqfLwIyBp__WoYJaKwDTuIuWTnZ9KSAJgN31wlPg_ogtLEd5fPMSmbD9IAUwGVDDxpwajgkxdas027uIDfRMszuuTczwMu6hHtAm4JOuWtt2sliXOZXLUksd3qHGt3wKebv4wP_hXfURNGuCMIuVffFb3HhjMVnrUAihRL5W6q5uELqDQiu4zRbJDkzCd18804WbAonQiiIN3-qPSXxXAdkBZFcRgf3KnvUFHFuzlOTT41r7SYq82Env18dtL6g-XqZ6TEgtVmM7XdBkMNu-8ykRkU8dHzBuRM6eKhPPjpsVtC_lGOReMD3JQbPpHQ75kadNf8F3JiHXFlrRnGZ16pOV3b9-kyJYuF0b0QOpUQBPyRkJ2tXvAWoPvrPOZl181g3lraveuulfmuiPeiY8JVcszxJT_FpX2IGuQERRU2XQC2pHZCsgEuURVqxJ27Fhdc_CE8251ntQo3wJ3LBQ1wHnqkWOLiEbVRv4hilbljQeZlk1v7iTh0QQ82WbgRyz40KgARW5LQpuCeNWUFSOzJaNiPPe-1YsAnUg97pJCDcwXDGE77GPtwtIh0_82hkyGXDuzafRybmrYkJU79QOdkK7Jv39D9sTpPpMVx8Xk99gjPP_6BtbXkrsnS27K6Ef_usXEN_YrtGuiXhGRI49cixxS5-paBgXz-sZxe4jz6znQuixzGKtgTLEse3dUce3N1Bo_-7as0AftQ76mi58PNkyg4ohVGJZE-mbhu_Tiir-Gj9AXVhggQ2_ERypzsegwCSvgH2lX5x5PAm_wu71pa0bFO7C57itS_ZyDSjLal9FKR-4UWCTsYNewyYuhbxw74mL94ekSoYvqMDU6JeMusKDCbLrVHcMD9e4eof6dR1QI3gZKguKhsioQH_AP8rfSFfFTg6g8nncNW0l8NtFW9v9O9ipIYOmhR1xk13DHS7YGiWzGj9G-AwSCLq2QM1UTktZRWQerS5U9P8JEknJBOPuRw1VmLsB4XCPHXgWVSr6uEv22oLXzXNe24IiYsXtTvdF3xxRHLtguTQkoajcC9S4vVw5TM9lGwr2eRd6pRg7OX4ryA10CM7Xg8ZYEtjaP-srsVaJ64EYD8hPVdO2cu5l_NiS6vYNaCzyy7BvGgCQP4xP2FBtrRV_xAnTeYH2K-PZqawFRXCVS5EC1HzG4mssduXZlSshW8JxDuC-D4I7Ewu3GQlIX96i8BIdFtYzXOeUwkUF889I_oX3BIy56zieSo9yZhQt03_ARF5aq6Mxs9BaSjdeqs2SIyRM0DdZUidergiGb8p9WIpoJX2WEedIucWyoD0e0fU6fNV5cEWuDLD1F6pZEhVokEPWW11wk58SxCZ1Fq090rICQ39IQy7TRR3T0YeLv1YdcSRB7bzYDkzQmwc1GyYVdyDdFMS1cLKHSFUVlMw9aQ_3XjbSIyR2UPMkeAWSuHRtDDV89MI5aprSbWyZDdqwGC4rmebpdRkjtu-19dqx8yvDBr6Xg4VfeN30Dd4P_0-yckZ6YlEk_9LhvSntYvc619HoxvEYpg5v_JBeDLvw8E1pA2-Etef0TMIZU59fQo6CcU3NTZryD4M_3204Yz6d_USVORdkrcQm1S5Aq5r9JkhOev30fqaZh5pT31ZUn0Znt-djLJsHUJl5iySlT579MZXs8GTMg1vhMAbVQj9HCbVNX0IoB8kYFZzDeb9XUw_nd3J4bVhzRDwf74bk25Hjhs_zYCwygre1BSrJILGE22rS5eQ5xZjUNmWNY4lneGVUVeJc3q4x3LGI1VMQLwjm2IfLClv_ggbqybVqaPfGquHVH7IyEBIdTXlzaeh2AxnPvC0RnyAXsFXmQkALZwXVyPTlW4JTy3SHlh_Q-y2uCu_3iL6egEa66I_M-kKiHVKrrDyk81ra_4Yjms3YzCSaMsI4g0kvknPd37Wlo6-JkHAFiQgn6fJemNRLYa3FIIoC4UZt_6HCbT6F0mx88zSmyVWoFnIAs8C5KAruxKx1xqWz6eQ97ECVhhhzDeVnmjj2lpKtKdSd8nnNWydchjeKLZ6-uo-h0-2LICqCeORiu5FrBHHmaUVqO-WjSiuimBAAXY5PMC-V-896qQwzXv7x7OGs7ry527qMEZSQpKWqc8QV5IoQeoZWVlpo5UP2BsxXmCmwcjH7E6yF2mzN_oUuwPbgnTPM4UnXQGWXckBTyDrVLDlb3QARXtwDrziFIY7WkQM9Sd7Ec5Zg6dDxGa5wBrPvh70sUHoUhGkN_RjkNFU5lJm9rFXlshg9gdDl5utlYfrQirnpqv7Hc7c8gxlYTtQsH_l9VMLtmB6Kwcp9zig6NWwbq6W7NhW7yil2Fy7So1YgUVirngaG_f9luqAatSNSoYroItCuRH_PM6kMj3oXDl5YBju8plZHUzpqJMfWQ4m9GzUf5Sq3Bu8hyLz8Yt0hXbKBi12ay54EQY93H0fgj8Np_x7-62KgHT0ZXfSEN_Jx7AF0KNfTenPChekR0xmorEI1cr6RsECrIX98sLn-8WNYE6zJY6lDZ7oqB-Hu_KE3jVwe6QX8uiWiaflJ0W672PuajUzCFT69jFYNWST-gXFyZpSbymmOO5sz-Nraa6jSEecYhEsGwZrrH5sL9rGL_6JGHm2tgwugSH_L4xBKjuCkgmdlDBfefH3Sg_tKtAZcF-KIqtsrJANvxBFYTplvvriTykXkKuaI4yol6hKweR4PvupzCjByPwouPbaHGe4Qh_6VGXk4mv661PnwqC9CG-9K3aBFegNocTcFrffPQQey9A7Hc-50bYmLM0prN-ZEZmH11_BBOOISBko1ZCVPtlR-ovKxcqvu6UDXAJWxNEtGTpVRaW72gHu5UMwqTyTSQTX"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "granularity_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 1.0,\n  \"tasks_to_keep\": [\n    \"t1_generate_greeting\"\n  ],\n  \"tasks_to_split\": [],\n  \"tasks_to_merge\": [],\n  \"tasks_to_remove\": [],\n  \"repair_suggestions\": []\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "dependency_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 1.0,\n  \"missing_edges\": [],\n  \"invalid_edges\": [],\n  \"cycles\": [],\n  \"parallelization_warnings\": []\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "executability_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 1.0,\n  \"executable_tasks\": [\n    \"t1_generate_greeting\"\n  ],\n  \"conditionally_executable_tasks\": [],\n  \"blocked_tasks\": [],\n  \"missing_runtime_inputs\": [],\n  \"missing_capabilities\": [],\n  \"suggested_executor_bindings\": [\n    {\n      \"task_id\": \"t1_generate_greeting\",\n      \"executor\": {\n        \"type\": \"agent\",\n        \"id\": \"conversational_llm\",\n        \"required_inputs\": [\n          \"user_greeting_input\"\n        ],\n        \"expected_outputs\": [\n          \"polite_greeting_response\"\n        ],\n        \"fallback_executor\": null\n      }\n    }\n  ]\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "coverage_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 1,\n  \"missing_goal_elements\": [],\n  \"redundant_tasks\": [],\n  \"hidden_assumptions\": [],\n  \"repair_suggestions\": []\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "verifiability_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 0.95,\n  \"weak_postconditions\": [],\n  \"missing_verifiers\": [],\n  \"verifier_improvements\": [\n    {\n      \"task_id\": \"t1_generate_greeting\",\n      \"verifier\": {\n        \"type\": \"llm\",\n        \"instruction\": \"Evaluate the generated text. Verify that it acknowledges the greeting, asks how to assist the user, and maintains a polite and helpful tone.\",\n        \"success_threshold\": 0.9,\n        \"failure_action\": \"retry\"\n      }\n    }\n  ]\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "repair_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"repaired_task_graph\": {\n    \"graph_type\": \"runtime_task_graph\",\n    \"runtime_pipeline_ref\": \"basic_conversational_response\",\n    \"nodes\": [\n      {\n        \"id\": \"t1_generate_greeting\",\n        \"title\": \"Generate Greeting Response\",\n        \"description\": \"Generate a polite text response that acknowledges the user's greeting and prompts them to provide a specific query or task.\",\n        \"action_type\": \"generation\",\n        \"abstraction_level\": \"task\",\n        \"input_state\": [\n          \"user_greeting_input\"\n        ],\n        \"output_state\": [\n          \"polite_greeting_response\"\n        ],\n        \"preconditions\": [\n          \"User has provided a basic greeting.\"\n        ],\n        \"postconditions\": [\n          \"A response is generated.\",\n          \"The response asks the user how to assist them.\"\n        ],\n        \"executor_type\": \"agent\",\n        \"executor_id\": \"conversational_llm\",\n        \"verifier_type\": \"llm\",\n        \"verifier_instruction\": \"Evaluate the generated text. Verify that it acknowledges the greeting, asks how to assist the user, and maintains a polite and helpful tone.\",\n        \"acceptance_criteria\": [\n          \"A greeting response is generated.\",\n          \"The response includes a prompt asking how to assist the user.\",\n          \"The tone of the response is polite and helpful.\"\n        ],\n        \"dependencies\": [],\n        \"execution_mode\": \"sequential\",\n        \"parallel_group\": null,\n        \"build_status\": \"built\",\n        \"runtime_status\": \"ready\",\n        \"runtime_execution_mode\": \"real\",\n        \"execution_status\": \"executable\",\n        \"missing_runtime_inputs\": [],\n        \"branch_condition\": null,\n        \"can_expand\": false,\n        \"should_expand_now\": false,\n        \"expansion_reason\": null,\n        \"risk_level\": \"low\",\n        \"risk_reasons\": [\n          \"The task is a standard conversational pattern with no complex logic, external dependencies, or security risks.\"\n        ]\n      }\n    ],\n    \"edges\": [],\n    \"assumptions\": [\n      \"The environment can directly present the generated text response back to the user.\",\n      \"The user intends to interact with an AI assistant.\",\n      \"The environment handles the delivery of the generated text directly to the user's interface.\"\n    ]\n  },\n  \"repair_operations\": [\n    {\n      \"operation\": \"add_verifier\",\n      \"target\": \"t1_generate_greeting\",\n      \"reason\": \"Improve the verifier by making the evaluation instructions more specific to the task goals.\",\n      \"suggested_change\": \"Updated the verifier instruction to explicitly check for greeting acknowledgment, offering assistance, and maintaining a polite tone.\"\n    }\n  ],\n  \"unresolved_assumptions\": [\n    \"The environment handles the delivery of the generated text directly to the user's interface.\"\n  ],\n  \"requires_user_clarification\": false\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "final_granularity_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 1.0,\n  \"tasks_to_keep\": [\n    \"t1_generate_greeting\"\n  ],\n  \"tasks_to_split\": [],\n  \"tasks_to_merge\": [],\n  \"tasks_to_remove\": [],\n  \"repair_suggestions\": []\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "final_coverage_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 1.0,\n  \"missing_goal_elements\": [],\n  \"redundant_tasks\": [],\n  \"hidden_assumptions\": [],\n  \"repair_suggestions\": []\n}"
+                    },
+                    {
+                      "text": "",
+                      "thought_signature": "AY89a1-1oUZMSGCM1BYLyfO3oa8IjcoFAFXB-U6HT8Crdn9HlQVlc8NQ5BoRodj5gQzkKLaZllXi3ZCoBUgSALFga8NZVRlV7D0yUUEy1kTEMwND_jfN_FPl8QobRqdTnYbMdnBzBsrGFUTwCPEAfeGOnc1z3-zaMXjJs6lfADos_51YQ_LJfg1O5lQjtYH8QyqgUmuxs0aIS7FU9Sz01d9eWBHT_zX_kaKpaRp24UhBzoTV8mui4qVQ0b0GlI0ZbP8U8be--1HLI3r1PzypmjUf2Ma6T9F1mlrKt8386cxB1MMifbpWQrGfVIObaTEQvciEJkSWb1JztrzqUYFlVAygUSzkiRGr6WusJ2xiX2-EjNn7xD_Kw5oWJgg30-C9hUmaKme6o5MolAQAqhNWuE3KP85T8Q-8lK_Vih5XktkmAaDAsiNlbfdVfA1f2uXJk2QRLeqN1FbhWmW6c_CGsAH1wRTP2Ayonh242xWJ6f4_ILjZBRaLJoR7vvcDdHl7NysZFT73RhLIyrQeAsFStpl2xNJeWqvH0BQwMdCGNf-kxyCWDoXFlE_GgfcPSvw_MT-nGFBcSGpiuwEc9pdwBtx0bgq16XoR6yh9Egwj2xGcWZ21QEwlKqRVO2dSiDc58zus89p474Zu8RLNkKLNPZs2QOfhuLjRKwPwVqshk2hjZ0oZeG6vPP7CEPjk9Wquux-9fCPxGX6FnKOCY4YFp1SrRnai1VdGM4fkru3IN5APQbMciYlr-BNAL1xiKMv_alcrOKFIJIMf9zRDygE5X68TLNHZMJj5Xzqgm7FEagHVC9Wq3I5nD5bppmZSe5P-gXwfaw0e08AimlmnjvzyF_3Dkk4L-FsmgdF118H3B0lFoTEooC_c-KfC5zqU4FOCWkPpYt5juj8JEg18lhAYaffyoc41ZnD3y050ha9wOx10dG6oLOW0coiXa0k3RRDCdwFJR-Y-gb0Ti98JBLWmzLRU0dCOOX28wBXUkyfXTDFoCkXNRJrTnZgz5GSIlliXRdZLWDESFRlUkfySZ38rLN_B4uhcVjWE5uqR5I0Qs74aPKgSUOS5ex-YqYSakSTg3JyJG4xtAgtDGTfiDsHQkm5w_b8R6DJJuSTpDEooSOVIYaOwTgr-WTt-BhOFRQOIwLj7mwssFkWfuxHRLtQwQan4tPhGmzz_YuZgI3MNAs_HzL8RECY0EcAJkD44W2n4vO7nFjpvuDbhOGsiGV8mhtuOFIorg4-wNcbHRkm0RYkUJlpuOS9XeLNoNJCfh3JVWWCuk_b8Ahwnw0NRqMnt4RfMwsLZxXq2wbJpBa39BxnOZuKVoVbIb2TSBNwRyVawLZySYDDk1b3GHy-fLF2DU5DxUeWR0scPcDEi-V9wPTKkYdrCG5yuY24PFUWRr5zsvTJCVSMwWk9-DxU_iiBy8Q7kSfkwrfDY8Z5KEqcUciSPLVDH298XIgN5t8i1XPdHbEMSxK_ZSJ_AgeZ2wetKH55AUNTcuLcO9Rw3lroToM0fNIErwN4VoP6yCqngK19mc_aYER5YOU_LgbGfiUkQY0AYSgP-fzg-6OH2yNY-EO-ulQIkDuzoTp22I8gXhF7ODrc--BZHVViDN6keHmRzMJs1ZvbCz1rw8uaZNlASqswomie4PLYNYZwaUFhRE-Psr1AtvactzEDhTdk="
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "final_dependency_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 1,\n  \"missing_edges\": [],\n  \"invalid_edges\": [],\n  \"cycles\": [],\n  \"parallelization_warnings\": []\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "final_executability_checker",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"score\": 1.0,\n  \"executable_tasks\": [\n    \"t1_generate_greeting\"\n  ],\n  \"conditionally_executable_tasks\": [],\n  \"blocked_tasks\": [],\n  \"missing_runtime_inputs\": [],\n  \"missing_capabilities\": [],\n  \"suggested_executor_bindings\": [\n    {\n      \"task_id\": \"t1_generate_greeting\",\n      \"executor\": {\n        \"type\": \"agent\",\n        \"id\": \"conversational_llm\",\n        \"required_inputs\": [\n          \"user_greeting_input\"\n        ],\n        \"expected_outputs\": [\n          \"polite_greeting_response\"\n        ],\n        \"fallback_executor\": null\n      }\n    }\n  ]\n}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ]
+          },
+          "creation_timestamp": 1778669633.423498
+        },
+        {
+          "user_content": {
+            "parts": []
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "# TaskSplitter Plan\n\n## Goal\n\nAcknowledge the user's greeting and politely prompt them for a specific task or query.\n\n## Status\n\n- Status: `needs_repair`\n- Graph validity: `partial`\n- Structural status: `needs_repair`\n- Runtime status: `ready_for_execution`\n- Graph type: `runtime_task_graph`\n- Must apply repairs before execution: `True`\n- Must provide runtime inputs before execution: `False`\n\n## Quality Score\n\n0.84\n\n## Tasks\n\n| Task ID | Title | Output State | Acceptance Criteria | Dependencies | Executor | Verifier | Build | Runtime | Phase |\n|---|---|---|---|---|---|---|---|---|---|\n| t1_generate_greeting | Generate Greeting Response | polite_greeting_response | A greeting response is generated.<br>The response includes a prompt asking how to assist the user.<br>The tone of the response is polite and helpful. | none | agent:conversational_llm | llm:replan | executable | ready | P1 |\n\n## Warnings\n- Weak postcondition on t1_generate_greeting: The current evaluator type for this specific postcondition is 'schema', which cannot verify semantic meaning such as whether the response actually asks how to assist the user. It requires an LLM to evaluate the textual content.\n\n## Pending Repair Suggestions\n- verifiability:weak_postcondition:t1_generate_greeting:The current evaluator type for this specific postcondition is 'schema', which cannot verify semantic meaning such as whether the response actually asks how to assist the user. It requires an LLM to evaluate the textual content.\n- verifiability:improve_verifier:t1_generate_greeting"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {}
+        }
+      ],
+      "session_input": {
+        "app_name": "app",
+        "user_id": "user",
+        "state": {
+          "goal_state": "",
+          "macro_state": "",
+          "candidate_task_graph": "",
+          "coverage_report": "",
+          "granularity_report": "",
+          "dependency_report": "",
+          "executability_report": "",
+          "verifiability_report": "",
+          "quality_report": ""
+        }
+      },
+      "creation_timestamp": 1778669790.5573602
+    }
+  ],
+  "creation_timestamp": 1778669616.190443
+}

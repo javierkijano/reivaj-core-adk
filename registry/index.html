@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reivaj Resource Registry</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0d1117;
+      --panel: #151b23;
+      --panel-soft: #1f2630;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --line: #30363d;
+      --accent: #7c3aed;
+      --accent-2: #22d3ee;
+      --chip: #21262d;
+      --chip-active: #312e81;
+      --ok: #2ea043;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(124, 58, 237, 0.22), transparent 32rem),
+        radial-gradient(circle at top right, rgba(34, 211, 238, 0.16), transparent 30rem),
+        var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 32px clamp(16px, 4vw, 48px) 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 52px);
+      letter-spacing: -0.05em;
+      line-height: 0.95;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 20px;
+      padding: 20px clamp(16px, 4vw, 48px) 48px;
+    }
+
+    aside, main { min-width: 0; }
+
+    .panel {
+      background: color-mix(in srgb, var(--panel) 94%, transparent);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+    }
+
+    .controls {
+      position: sticky;
+      top: 16px;
+      padding: 16px;
+    }
+
+    label {
+      display: block;
+      margin: 14px 0 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    input, select, button {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-soft);
+      color: var(--text);
+      padding: 10px 12px;
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), #4f46e5);
+      border: 0;
+      font-weight: 700;
+    }
+
+    .secondary-button {
+      margin-top: 8px;
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      padding: 14px;
+      border-radius: 16px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-height: 260px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .chip {
+      width: auto;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--chip);
+      color: var(--muted);
+      padding: 6px 9px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      border-color: color-mix(in srgb, var(--accent) 60%, white);
+      color: white;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .toolbar p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 220px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--panel) 96%, white), var(--panel));
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .summary {
+      margin: 0;
+      color: var(--text);
+    }
+
+    .path {
+      margin: 0;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .tag {
+      border-radius: 999px;
+      background: var(--chip);
+      color: var(--muted);
+      padding: 4px 7px;
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .tag.entity { color: #93c5fd; }
+    .tag.capability { color: #86efac; }
+    .tag.pattern { color: #c4b5fd; }
+    .tag.domain { color: #fcd34d; }
+    .tag.integration { color: #67e8f9; }
+    .tag.source_type { color: #f9a8d4; }
+
+    .source-badge {
+      width: fit-content;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.11);
+      color: var(--accent-2);
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .notice {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .error {
+      margin-bottom: 16px;
+      padding: 12px;
+      border: 1px solid #7f1d1d;
+      border-radius: 12px;
+      background: rgba(127, 29, 29, 0.18);
+      color: #fecaca;
+    }
+
+    .empty {
+      padding: 40px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; }
+      .controls { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Resource Registry</h1>
+    <p class="subtitle">Browse reusable agents, tools, skills, workflows, integrations, and implementation patterns. The page loads registry YAML catalogs dynamically, so new catalog files can be added without rewriting the UI.</p>
+  </header>
+
+  <div class="shell">
+    <aside>
+      <section class="panel controls">
+        <label for="search">Search</label>
+        <input id="search" type="search" placeholder="agent, tag, source, summary..." autocomplete="off">
+
+        <label for="sourceFilter">Source</label>
+        <select id="sourceFilter"></select>
+
+        <label for="categoryFilter">Tag category</label>
+        <select id="categoryFilter">
+          <option value="">All categories</option>
+          <option value="entity">entity</option>
+          <option value="capability">capability</option>
+          <option value="pattern">pattern</option>
+          <option value="integration">integration</option>
+          <option value="domain">domain</option>
+          <option value="maturity">maturity</option>
+          <option value="source_type">source_type</option>
+        </select>
+
+        <label>Tags</label>
+        <div id="tagChips" class="chips"></div>
+
+        <button id="clearFilters" class="secondary-button" type="button">Clear filters</button>
+
+        <label for="fileLoader">Load more registry YAML</label>
+        <input id="fileLoader" type="file" accept=".yaml,.yml,text/yaml,text/plain" multiple>
+        <p class="notice">For local browser security, use a small static server if automatic loading fails: run `python3 -m http.server` from the repo root and open `/registry/`.</p>
+      </section>
+    </aside>
+
+    <main>
+      <section class="stats" aria-label="Registry stats">
+        <div class="stat"><strong id="totalCount">0</strong><span>Total items</span></div>
+        <div class="stat"><strong id="visibleCount">0</strong><span>Visible items</span></div>
+        <div class="stat"><strong id="tagCount">0</strong><span>Tags</span></div>
+      </section>
+
+      <section class="toolbar">
+        <p id="status">Loading registry...</p>
+        <button id="reload" type="button" style="max-width: 140px;">Reload</button>
+      </section>
+
+      <div id="errors"></div>
+      <section id="results" class="grid" aria-live="polite"></section>
+    </main>
+  </div>
+
+  <script>
+    const REGISTRY_SOURCES = [
+      {
+        id: 'adk-sample-agents',
+        label: 'External ADK sample agents',
+        url: 'external/adk-samples/agent-catalog.yaml',
+        sourceType: 'external',
+        upstreamRoot: 'https://github.com/google/adk-samples/tree/main/python/agents',
+        type: 'agent-catalog'
+      },
+      {
+        id: 'adk-sample-skills',
+        label: 'External ADK sample skills',
+        url: 'external/adk-samples/skills.yaml',
+        sourceType: 'external',
+        upstreamRoot: 'https://github.com/google/adk-samples/tree/main/python/agents',
+        type: 'skill-catalog'
+      },
+      {
+        id: 'adk-sample-components',
+        label: 'External ADK sample components',
+        url: 'external/adk-samples/component-inventory.yaml',
+        sourceType: 'external',
+        upstreamRoot: 'https://github.com/google/adk-samples/tree/main/python/agents',
+        type: 'component-inventory'
+      },
+      {
+        id: 'adk-reusable-functionality',
+        label: 'External reusable functionality',
+        url: 'external/adk-samples/reusable-functionality.yaml',
+        sourceType: 'external',
+        upstreamRoot: 'https://github.com/google/adk-samples/tree/main/python/agents',
+        type: 'functionality-index'
+      },
+      {
+        id: 'adk-workflow-samples',
+        label: 'External ADK workflow samples',
+        url: 'external/workflow-samples/workflow-catalog.yaml',
+        sourceType: 'external',
+        upstreamRoot: 'https://github.com/google/adk-python/tree/v2/contributing/workflow_samples',
+        type: 'workflow-catalog'
+      },
+      {
+        id: 'internal-resources',
+        label: 'Internal resources',
+        url: 'internal/resources.yaml',
+        sourceType: 'internal',
+        type: 'internal-catalog'
+      }
+    ];
+
+    const state = {
+      allItems: [],
+      visibleItems: [],
+      selectedTags: new Set(),
+      errors: []
+    };
+
+    const els = {
+      search: document.querySelector('#search'),
+      sourceFilter: document.querySelector('#sourceFilter'),
+      categoryFilter: document.querySelector('#categoryFilter'),
+      tagChips: document.querySelector('#tagChips'),
+      clearFilters: document.querySelector('#clearFilters'),
+      fileLoader: document.querySelector('#fileLoader'),
+      totalCount: document.querySelector('#totalCount'),
+      visibleCount: document.querySelector('#visibleCount'),
+      tagCount: document.querySelector('#tagCount'),
+      status: document.querySelector('#status'),
+      errors: document.querySelector('#errors'),
+      results: document.querySelector('#results'),
+      reload: document.querySelector('#reload')
+    };
+
+    function cleanYamlValue(value) {
+      return value
+        .trim()
+        .replace(/^['"]|['"]$/g, '')
+        .trim();
+    }
+
+    function parseYamlKeyValue(line) {
+      const match = line.match(/^([A-Za-z0-9_-]+):(?:\s*(.*))?$/);
+      if (!match) return null;
+      return [match[1], cleanYamlValue(match[2] || '')];
+    }
+
+    function parseRegistryYaml(yaml) {
+      const document = { source: {}, items: [] };
+      let section = '';
+      let current = null;
+      let listKey = '';
+
+      yaml.split(/\r?\n/).forEach((rawLine) => {
+        const line = rawLine.replace(/\s+$/, '');
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) return;
+
+        if (trimmed === 'source:') { section = 'source'; return; }
+        if (trimmed === 'items:') { section = 'items'; return; }
+
+        if (section === 'source' && line.startsWith('  ') && !line.startsWith('    ')) {
+          const pair = parseYamlKeyValue(trimmed);
+          if (pair) document.source[pair[0]] = pair[1];
+          return;
+        }
+
+        if (section !== 'items') return;
+
+        if (line.startsWith('- ')) {
+          if (current) document.items.push(current);
+          current = {};
+          listKey = '';
+          const pair = parseYamlKeyValue(trimmed.slice(2));
+          if (pair) current[pair[0]] = pair[1];
+          return;
+        }
+
+        if (!current || !line.startsWith('  ')) return;
+
+        if (line.startsWith('  - ') && listKey) {
+          current[listKey].push(cleanYamlValue(trimmed.slice(2)));
+          return;
+        }
+
+        if (line.startsWith('    ')) return;
+
+        const pair = parseYamlKeyValue(trimmed);
+        if (!pair) return;
+        const [key, value] = pair;
+        if (value === '[]') {
+          current[key] = [];
+          listKey = key;
+        } else if (value === '') {
+          current[key] = [];
+          listKey = key;
+        } else {
+          current[key] = value;
+          listKey = '';
+        }
+      });
+
+      if (current) document.items.push(current);
+      return document;
+    }
+
+    function normalizeSourcePath(sourcePath, source) {
+      if (source.sourceType !== 'external' || /^https?:\/\//i.test(sourcePath)) return sourcePath;
+      if (!source.upstreamRoot) return sourcePath;
+
+      const ids = sourcePath
+        .split(',')
+        .map((value) => value.trim())
+        .filter((value) => value && /^[A-Za-z0-9_.-]+$/.test(value));
+
+      return ids.length ? ids.map((id) => `${source.upstreamRoot}/${id}`).join(', ') : source.upstreamRoot;
+    }
+
+    function parseItems(yaml, source) {
+      return parseYamlItems(yaml, source);
+    }
+
+    function parseYamlItems(yaml, configuredSource) {
+      const document = parseRegistryYaml(yaml);
+      const source = {
+        ...configuredSource,
+        ...document.source,
+        sourceType: document.source.source_type || configuredSource.sourceType,
+        upstreamRoot: document.source.upstream_root || configuredSource.upstreamRoot
+      };
+      const sourceType = `source_type:${source.sourceType || 'internal'}`;
+
+      return document.items
+        .map((item) => {
+          const sourcePath = normalizeSourcePath(item.source || source.url, source);
+          const tags = [...new Set([sourceType, ...(item.tags || []), item.maturity].filter(Boolean))];
+          return {
+            id: `${source.id || configuredSource.id}:${item.id}`,
+            name: item.name || item.id,
+            sourceId: source.id || configuredSource.id,
+            sourceLabel: source.label || configuredSource.label,
+            sourcePath,
+            summary: item.summary || '',
+            tags,
+            raw: item
+          };
+        })
+        .filter((item) => item.name && item.summary);
+    }
+
+    async function loadSource(source) {
+      const response = await fetch(source.url, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`${source.url}: ${response.status} ${response.statusText}`);
+      return parseItems(await response.text(), source);
+    }
+
+    async function loadAll() {
+      state.errors = [];
+      state.allItems = [];
+      els.status.textContent = 'Loading registry...';
+
+      const results = await Promise.allSettled(REGISTRY_SOURCES.map(loadSource));
+      results.forEach((result, index) => {
+        if (result.status === 'fulfilled') state.allItems.push(...result.value);
+        else state.errors.push(`${REGISTRY_SOURCES[index].label}: ${result.reason.message}`);
+      });
+
+      renderSourceFilter();
+      applyFilters();
+    }
+
+    function renderSourceFilter() {
+      const current = els.sourceFilter.value;
+      const sources = [...new Set(state.allItems.map((item) => item.sourceLabel))].sort();
+      els.sourceFilter.innerHTML = ['<option value="">All sources</option>', ...sources.map((source) => `<option>${escapeHtml(source)}</option>`)].join('');
+      els.sourceFilter.value = sources.includes(current) ? current : '';
+    }
+
+    function applyFilters() {
+      const query = els.search.value.trim().toLowerCase();
+      const source = els.sourceFilter.value;
+      const category = els.categoryFilter.value;
+      const selected = [...state.selectedTags];
+
+      state.visibleItems = state.allItems.filter((item) => {
+        const haystack = `${item.name} ${item.sourcePath} ${item.summary} ${item.tags.join(' ')}`.toLowerCase();
+        if (query && !haystack.includes(query)) return false;
+        if (source && item.sourceLabel !== source) return false;
+        if (category && !item.tags.some((tag) => tag.startsWith(`${category}:`))) return false;
+        if (selected.length && !selected.every((tag) => item.tags.includes(tag))) return false;
+        return true;
+      });
+
+      render();
+    }
+
+    function render() {
+      renderErrors();
+      renderTagChips();
+      renderCards();
+      const allTags = new Set(state.allItems.flatMap((item) => item.tags));
+      els.totalCount.textContent = state.allItems.length;
+      els.visibleCount.textContent = state.visibleItems.length;
+      els.tagCount.textContent = allTags.size;
+      els.status.textContent = state.errors.length
+        ? `Loaded ${state.allItems.length} items with ${state.errors.length} source warning(s).`
+        : `Loaded ${state.allItems.length} items.`;
+    }
+
+    function renderErrors() {
+      els.errors.innerHTML = state.errors.map((error) => `<div class="error">${escapeHtml(error)}</div>`).join('');
+    }
+
+    function renderTagChips() {
+      const category = els.categoryFilter.value;
+      const counts = new Map();
+      state.allItems.forEach((item) => {
+        item.tags.forEach((tag) => {
+          if (!category || tag.startsWith(`${category}:`)) counts.set(tag, (counts.get(tag) || 0) + 1);
+        });
+      });
+
+      const chips = [...counts.entries()]
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .slice(0, 120)
+        .map(([tag, count]) => {
+          const active = state.selectedTags.has(tag) ? ' active' : '';
+          return `<button type="button" class="chip${active}" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)} ${count}</button>`;
+        })
+        .join('');
+
+      els.tagChips.innerHTML = chips || '<span class="notice">No tags available.</span>';
+    }
+
+    function renderCards() {
+      if (!state.visibleItems.length) {
+        els.results.innerHTML = '<div class="panel empty">No registry items match the current filters.</div>';
+        return;
+      }
+
+      els.results.innerHTML = state.visibleItems.map((item) => `
+        <article class="card">
+          <span class="source-badge">${escapeHtml(item.sourceLabel)}</span>
+          <h2>${escapeHtml(item.name)}</h2>
+          <p class="summary">${escapeHtml(item.summary)}</p>
+          <p class="path">${escapeHtml(item.sourcePath)}</p>
+          <div class="tag-list">${item.tags.map((tag) => `<span class="tag ${escapeHtml(tag.split(':')[0])}">${escapeHtml(tag)}</span>`).join('')}</div>
+        </article>
+      `).join('');
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[char]));
+    }
+
+    els.search.addEventListener('input', applyFilters);
+    els.sourceFilter.addEventListener('change', applyFilters);
+    els.categoryFilter.addEventListener('change', applyFilters);
+    els.reload.addEventListener('click', loadAll);
+    els.clearFilters.addEventListener('click', () => {
+      els.search.value = '';
+      els.sourceFilter.value = '';
+      els.categoryFilter.value = '';
+      state.selectedTags.clear();
+      applyFilters();
+    });
+    els.tagChips.addEventListener('click', (event) => {
+      const tag = event.target.dataset.tag;
+      if (!tag) return;
+      if (state.selectedTags.has(tag)) state.selectedTags.delete(tag);
+      else state.selectedTags.add(tag);
+      applyFilters();
+    });
+    els.fileLoader.addEventListener('change', async (event) => {
+      const files = [...event.target.files];
+      const loaded = await Promise.all(files.map(async (file) => {
+        const source = { id: `file:${file.name}`, label: file.name, url: file.name };
+        return parseItems(await file.text(), source);
+      }));
+      state.allItems.push(...loaded.flat());
+      renderSourceFilter();
+      applyFilters();
+    });
+
+    loadAll();
+  </script>
+</body>
+</html>

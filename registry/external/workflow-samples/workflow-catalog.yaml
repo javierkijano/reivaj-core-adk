@@ -1,0 +1,159 @@
+source:
+  id: adk-workflow-samples
+  label: External ADK workflow samples
+  source_type: external
+  upstream_root: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples
+items:
+- id: dynamic_nodes
+  name: dynamic_nodes
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/dynamic_nodes
+  summary: Demonstrates dynamic node execution with ctx.run_node and Python control flow inside a workflow.
+  tags:
+  - entity:workflow
+  - pattern:workflow-loop
+  - capability:planning
+  - domain:horizontal
+  maturity: maturity:observed
+- id: fan_out_fan_in
+  name: fan_out_fan_in
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/fan_out_fan_in
+  summary: Fan-out/fan-in workflow pattern for parallel task execution and aggregation.
+  tags:
+  - entity:workflow
+  - pattern:workflow-parallel
+  - domain:horizontal
+  maturity: maturity:observed
+- id: loop
+  name: loop
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/loop
+  summary: Basic iterative workflow loop sample.
+  tags:
+  - entity:workflow
+  - pattern:workflow-loop
+  - domain:horizontal
+  maturity: maturity:observed
+- id: loop_self
+  name: loop_self
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/loop_self
+  summary: Self-referential loop routing where a node can route back to itself.
+  tags:
+  - entity:workflow
+  - pattern:workflow-loop
+  - domain:horizontal
+  maturity: maturity:observed
+- id: message
+  name: message
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/message
+  summary: Message handling sample for workflow node communication.
+  tags:
+  - entity:workflow
+  - domain:horizontal
+  maturity: maturity:observed
+- id: multi_triggers
+  name: multi_triggers
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/multi_triggers
+  summary: Workflow triggered by multiple input or event paths.
+  tags:
+  - entity:workflow
+  - pattern:long-running
+  - domain:horizontal
+  maturity: maturity:observed
+- id: nested_workflow
+  name: nested_workflow
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/nested_workflow
+  summary: Composes workflows by nesting one workflow inside another.
+  tags:
+  - entity:workflow
+  - pattern:multi-agent
+  - domain:horizontal
+  maturity: maturity:observed
+- id: node_output
+  name: node_output
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/node_output
+  summary: Demonstrates node output contracts and passing data between workflow steps.
+  tags:
+  - entity:workflow
+  - domain:horizontal
+  maturity: maturity:observed
+- id: parallel_worker
+  name: parallel_worker
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/parallel_worker
+  summary: Parallel worker execution pattern for concurrent workflow work units.
+  tags:
+  - entity:workflow
+  - pattern:workflow-parallel
+  - domain:horizontal
+  maturity: maturity:observed
+- id: request_input
+  name: request_input
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/request_input
+  summary: Human/user input request workflow pattern.
+  tags:
+  - entity:workflow
+  - pattern:hitl
+  - domain:horizontal
+  maturity: maturity:observed
+- id: request_input_advanced
+  name: request_input_advanced
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/request_input_advanced
+  summary: Advanced human/user input request workflow pattern.
+  tags:
+  - entity:workflow
+  - pattern:hitl
+  - domain:horizontal
+  maturity: maturity:observed
+- id: request_input_rerun
+  name: request_input_rerun
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/request_input_rerun
+  summary: Human/user input with rerun or resume behavior.
+  tags:
+  - entity:workflow
+  - pattern:hitl
+  - pattern:long-running
+  - domain:horizontal
+  maturity: maturity:observed
+- id: retry
+  name: retry
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/retry
+  summary: Retry behavior for workflow node failures or transient conditions.
+  tags:
+  - entity:workflow
+  - pattern:workflow-loop
+  - domain:horizontal
+  maturity: maturity:observed
+- id: route
+  name: route
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/route
+  summary: Conditional route selection between workflow nodes.
+  tags:
+  - entity:workflow
+  - capability:planning
+  - domain:horizontal
+  maturity: maturity:observed
+- id: sequence
+  name: sequence
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/sequence
+  summary: Basic sequential workflow execution.
+  tags:
+  - entity:workflow
+  - pattern:workflow-sequential
+  - domain:horizontal
+  maturity: maturity:observed
+- id: shared_sub_agent
+  name: shared_sub_agent
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/shared_sub_agent
+  summary: Workflow pattern for sharing a sub-agent across workflow nodes.
+  tags:
+  - entity:workflow
+  - entity:sub-agent
+  - pattern:sub-agent-team
+  - domain:horizontal
+  maturity: maturity:observed
+- id: state
+  name: state
+  source: https://github.com/google/adk-python/tree/v2/contributing/workflow_samples/state
+  summary: Workflow state management and state passing sample.
+  tags:
+  - entity:workflow
+  - domain:horizontal
+  maturity: maturity:observed

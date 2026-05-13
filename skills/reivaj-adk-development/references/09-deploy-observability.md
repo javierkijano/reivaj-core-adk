@@ -64,6 +64,11 @@ Areas estudiadas:
 | BigQuery Agent Analytics | Analitica de conversaciones y calidad |
 | Third-party | AgentOps, Phoenix, MLflow, etc. |
 
+El catalogo oficial de integraciones incluye observabilidad con Cloud Trace,
+BigQuery Agent Analytics, AgentOps, Arize AX, Datadog, Freeplay, Galileo,
+Grafana Cloud, LangWatch, MLflow Tracing, Monocle, Phoenix y W&B Weave. Elegir
+segun destino de despliegue, requisitos de privacidad, coste y stack existente.
+
 Cargar `google-agents-cli-observability` antes de configurar observabilidad.
 
 ## Rollback Y Operacion

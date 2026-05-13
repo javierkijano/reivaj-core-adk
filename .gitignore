@@ -1,4 +1,6 @@
 /.DS_Store
+**/.DS_Store
+**/.ruff_cache/
 /.venv/
 /.agents/
 /.commandcode/
@@ -129,6 +131,7 @@ my_env.tfvars
 .google-agents-cli/
 .adk/
 deployment_metadata.json
+skills-lock.json
 tools/a2a-inspector/
 tests/load_test/.results/*.html
 tests/load_test/.results/*.csv

@@ -1,0 +1,170 @@
+source:
+  id: internal-resources
+  label: Internal resources
+  source_type: internal
+items:
+- id: academic_research
+  name: academic_research
+  source: agents/academic_research
+  summary: Internal ADK academic research agent.
+  tags:
+  - entity:agent
+  - capability:research
+  - domain:education-research
+  maturity: maturity:observed
+- id: bidi_demo
+  name: bidi_demo
+  source: agents/bidi_demo
+  summary: Internal bidirectional realtime demo agent.
+  tags:
+  - entity:agent
+  - pattern:streaming
+  - pattern:multimodal
+  - domain:horizontal
+  maturity: maturity:observed
+- id: blog_writer
+  name: blog_writer
+  source: agents/blog_writer
+  summary: Internal blog writer agent with eval and test assets.
+  tags:
+  - entity:agent
+  - capability:content-generation
+  - domain:marketing
+  maturity: maturity:observed
+- id: data_engineering
+  name: data_engineering
+  source: agents/data_engineering
+  summary: Internal data engineering assistant resources.
+  tags:
+  - entity:agent
+  - capability:data-engineering
+  - domain:data
+  maturity: maturity:observed
+- id: data_science
+  name: data_science
+  source: agents/data_science
+  summary: Internal data science agent and analytics resources.
+  tags:
+  - entity:agent
+  - capability:data-analysis
+  - domain:data
+  maturity: maturity:observed
+- id: google_trends_agent
+  name: google_trends_agent
+  source: agents/google_trends_agent
+  summary: Internal Google Trends analysis agent.
+  tags:
+  - entity:agent
+  - capability:data-analysis
+  - integration:bigquery
+  - domain:marketing
+  maturity: maturity:observed
+- id: podcast_transcript_agent
+  name: podcast_transcript_agent
+  source: agents/podcast_transcript_agent
+  summary: Internal podcast transcript generation workflow.
+  tags:
+  - entity:agent
+  - entity:workflow
+  - capability:content-generation
+  - domain:media
+  maturity: maturity:observed
+- id: realtime_conversational_agent
+  name: realtime_conversational_agent
+  source: agents/realtime_conversational_agent
+  summary: Internal realtime multimodal conversational agent.
+  tags:
+  - entity:agent
+  - pattern:streaming
+  - pattern:multimodal
+  - entity:ui
+  - domain:horizontal
+  maturity: maturity:observed
+- id: root_adk_task_to_workflow
+  name: root_adk_task_to_workflow
+  source: agents/root_adk_task_to_workflow
+  summary: Internal root agent for converting ADK tasks to workflow implementations.
+  tags:
+  - entity:agent
+  - entity:workflow
+  - capability:planning
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: root_deep_web_research
+  name: root_deep_web_research
+  source: agents/root_deep_web_research
+  summary: Internal deep web research root agent.
+  tags:
+  - entity:agent
+  - capability:research
+  - capability:grounding
+  - domain:horizontal
+  maturity: maturity:observed
+- id: short_movie_agents
+  name: short_movie_agents
+  source: agents/short_movie_agents
+  summary: Internal short movie generation agents.
+  tags:
+  - entity:agent
+  - capability:media-generation
+  - domain:media
+  maturity: maturity:observed
+- id: story_teller
+  name: story_teller
+  source: agents/story_teller
+  summary: Internal collaborative story writing agent.
+  tags:
+  - entity:agent
+  - capability:content-generation
+  - domain:horizontal
+  maturity: maturity:observed
+- id: workflow_concurrent_research_writer
+  name: workflow_concurrent_research_writer
+  source: agents/workflow_concurrent_research_writer
+  summary: Internal concurrent research and writing workflow.
+  tags:
+  - entity:workflow
+  - pattern:workflow-parallel
+  - capability:research
+  - capability:content-generation
+  maturity: maturity:observed
+- id: youtube_analyst
+  name: youtube_analyst
+  source: agents/youtube_analyst
+  summary: Internal YouTube analyst agent and skill resources.
+  tags:
+  - entity:agent
+  - entity:skill
+  - capability:data-analysis
+  - integration:youtube
+  - domain:media
+  maturity: maturity:observed
+- id: reivaj-adk-development
+  name: reivaj-adk-development
+  source: skills/reivaj-adk-development
+  summary: Internal ADK development skill and reference pack.
+  tags:
+  - entity:skill
+  - capability:skills
+  - domain:software-engineering
+  maturity: maturity:adapted
+- id: reivaj-adk-2.0-development
+  name: reivaj-adk-2.0-development
+  source: skills/reivaj-adk-2.0-development
+  summary: Internal ADK 2.0 Workflow development skill and reference pack.
+  tags:
+  - entity:skill
+  - entity:workflow
+  - capability:skills
+  - domain:software-engineering
+  maturity: maturity:adapted
+- id: reivaj-registry-management
+  name: reivaj-registry-management
+  source: skills/reivaj-registry-management
+  summary: Internal skill for maintaining, searching, serving, and improving the Resource Registry.
+  tags:
+  - entity:skill
+  - capability:skills
+  - domain:software-engineering
+  - domain:horizontal
+  maturity: maturity:adapted

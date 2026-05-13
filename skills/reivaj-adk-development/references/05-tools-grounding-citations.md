@@ -10,11 +10,19 @@
 | OpenAPI tools | APIs externas descritas por OpenAPI |
 | MCP toolset | Herramientas y datos via MCP |
 | Google API tools | Integraciones con APIs Google |
+| API Hub / API Registry tools | Convertir APIs documentadas o servicios Google Cloud en tools/MCP |
+| Application Integration tools | Conectores enterprise para apps SaaS/procesos de negocio |
+| Data Agent toolset | Consultar Data Agents conversacionales sobre BigQuery/Looker |
+| Toolbox/database toolsets | MCP Toolbox, BigQuery, Spanner, Bigtable, MongoDB, Couchbase, etc. |
 | Retrieval tools | RAG, documentos, chunks, vector/document search |
 | `AgentTool` | Subagente como herramienta de alto nivel |
 
 Separar built-ins en agentes dedicados cuando haya limites de combinacion de
 tools. Usar `bypass_multi_tools_limit=True` solo con necesidad concreta.
+
+La fuente autoritativa para integraciones prebuilt es
+`https://adk.dev/integrations/`. Ver `15-adk-integrations-python-api.md` antes de
+implementar conectores propios.
 
 ## Grounding Metadata
 

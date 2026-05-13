@@ -1,0 +1,47 @@
+schema:
+  version: 1
+  catalog:
+    required:
+      - source
+      - items
+    source:
+      required:
+        - id
+        - label
+        - source_type
+      fields:
+        id: Stable kebab-case source identifier.
+        label: Human-readable source label.
+        source_type: One of external or internal.
+        upstream_root: Optional web root used by external catalogs.
+    item:
+      required:
+        - id
+        - name
+        - source
+        - summary
+        - tags
+        - maturity
+      fields:
+        id: Stable identifier unique within the catalog.
+        name: Human-readable resource name.
+        source: Web URL for external entries or repository-relative path for internal entries.
+        summary: Concise description of behavior or reuse value.
+        tags: Controlled tags from registry/taxonomy.yaml, excluding source_type and maturity.
+        maturity: One maturity tag from registry/taxonomy.yaml.
+        dependencies: Optional services, packages, APIs, env vars, auth, or datasets.
+        interfaces: Optional inputs, outputs, tools, or protocol surfaces.
+        review_notes: Optional risks, limitations, and adaptation notes.
+        subcomponents: Optional child agents, tools, skills, prompts, or workflows.
+        tests: Optional unit, integration, or eval paths.
+        deployment: Optional deployment assets or runtime assumptions.
+        related: Optional related registry IDs or samples.
+        promotion_plan: Optional steps to move from observed to adapted or productionized.
+        metadata: Optional catalog-specific data that does not redefine the schema.
+  rules:
+    - External catalogs must use source.source_type: external.
+    - External item.source values must be web URLs.
+    - Internal catalogs must use source.source_type: internal.
+    - Internal item.source values must be repository-relative paths.
+    - Markdown files may describe catalogs but must not duplicate item records.
+    - New structured registry records must be added to YAML catalogs.

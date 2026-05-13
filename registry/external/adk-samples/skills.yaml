@@ -1,0 +1,138 @@
+source:
+  id: adk-sample-skills
+  label: External ADK sample skills
+  source_type: external
+  upstream_root: https://github.com/google/adk-samples/tree/main/python/agents
+items:
+- id: blog-writer
+  name: blog-writer
+  source: https://github.com/google/adk-samples/blob/main/python/agents/agent-skills-tutorial/app/skills/blog-writer/SKILL.md
+  summary: Good minimal example of SKILL.md plus references/style-guide.md
+  tags:
+  - entity:skill
+  - capability:content-generation
+  - domain:marketing
+  - pattern:skilltoolset
+  maturity: maturity:observed
+- id: content-research-writer
+  name: content-research-writer
+  source: https://github.com/google/adk-samples/blob/main/python/agents/agent-skills-tutorial/app/skills/content-research-writer/SKILL.md
+  summary: Demonstrates research + SEO methodology with L3 SEO reference
+  tags:
+  - entity:skill
+  - capability:research
+  - capability:content-generation
+  - domain:marketing
+  maturity: maturity:observed
+- id: abcd-framework-audit
+  name: abcd-framework-audit
+  source: https://github.com/google/adk-samples/blob/main/python/agents/youtube-analyst/youtube_analyst/skills/abcd-framework-audit/SKILL.md
+  summary: Candidate for creative/ad quality review workflows
+  tags:
+  - entity:skill
+  - capability:data-analysis
+  - domain:media
+  - domain:marketing
+  maturity: maturity:observed
+- id: creative-insight-analyzer
+  name: creative-insight-analyzer
+  source: https://github.com/google/adk-samples/blob/main/python/agents/youtube-analyst/youtube_analyst/skills/creative-insight-analyzer/SKILL.md
+  summary: Candidate for media insight extraction
+  tags:
+  - entity:skill
+  - capability:data-analysis
+  - domain:media
+  - domain:marketing
+  maturity: maturity:observed
+- id: daily-briefing
+  name: daily-briefing
+  source: https://github.com/google/adk-samples/blob/main/python/agents/youtube-analyst/youtube_analyst/skills/daily-briefing/SKILL.md
+  summary: Candidate for scheduled briefing pattern
+  tags:
+  - entity:skill
+  - capability:research
+  - domain:media
+  maturity: maturity:observed
+- id: debate-synthesizer
+  name: debate-synthesizer
+  source: https://github.com/google/adk-samples/blob/main/python/agents/youtube-analyst/youtube_analyst/skills/debate-synthesizer/SKILL.md
+  summary: Candidate for multi-source opinion synthesis
+  tags:
+  - entity:skill
+  - capability:research
+  - domain:media
+  maturity: maturity:observed
+- id: deep-exploration
+  name: deep-exploration
+  source: https://github.com/google/adk-samples/blob/main/python/agents/youtube-analyst/youtube_analyst/skills/deep-exploration/SKILL.md
+  summary: Candidate for iterative exploration workflows
+  tags:
+  - entity:skill
+  - capability:research
+  - domain:media
+  maturity: maturity:observed
+- id: industry-landscape-briefing
+  name: industry-landscape-briefing
+  source: https://github.com/google/adk-samples/blob/main/python/agents/youtube-analyst/youtube_analyst/skills/industry-landscape-briefing/SKILL.md
+  summary: Candidate for market/industry brief generation
+  tags:
+  - entity:skill
+  - capability:research
+  - domain:marketing
+  maturity: maturity:observed
+- id: kol-discovery
+  name: kol-discovery
+  source: https://github.com/google/adk-samples/blob/main/python/agents/youtube-analyst/youtube_analyst/skills/kol-discovery/SKILL.md
+  summary: Candidate for influencer/key opinion leader discovery
+  tags:
+  - entity:skill
+  - capability:research
+  - domain:marketing
+  - domain:media
+  maturity: maturity:observed
+- id: multi-video-synthesis
+  name: multi-video-synthesis
+  source: https://github.com/google/adk-samples/blob/main/python/agents/youtube-analyst/youtube_analyst/skills/multi-video-synthesis/SKILL.md
+  summary: Candidate for comparing multiple media sources
+  tags:
+  - entity:skill
+  - capability:research
+  - domain:media
+  maturity: maturity:observed
+- id: poi-discovery-briefing
+  name: poi-discovery-briefing
+  source: https://github.com/google/adk-samples/blob/main/python/agents/youtube-analyst/youtube_analyst/skills/poi-discovery-briefing/SKILL.md
+  summary: Candidate for place/person-of-interest discovery briefs
+  tags:
+  - entity:skill
+  - capability:research
+  - capability:geospatial
+  - domain:travel
+  maturity: maturity:observed
+- id: product-launch-audit
+  name: product-launch-audit
+  source: https://github.com/google/adk-samples/blob/main/python/agents/youtube-analyst/youtube_analyst/skills/product-launch-audit/SKILL.md
+  summary: Candidate for launch readiness/audit workflows
+  tags:
+  - entity:skill
+  - capability:data-analysis
+  - domain:marketing
+  maturity: maturity:observed
+- id: sentiment-analysis
+  name: sentiment-analysis
+  source: https://github.com/google/adk-samples/blob/main/python/agents/youtube-analyst/youtube_analyst/skills/sentiment-analysis/SKILL.md
+  summary: Candidate for sentiment workflow packaging
+  tags:
+  - entity:skill
+  - capability:data-analysis
+  - domain:media
+  maturity: maturity:observed
+- id: visualization-reporting
+  name: visualization-reporting
+  source: https://github.com/google/adk-samples/blob/main/python/agents/youtube-analyst/youtube_analyst/skills/visualization-reporting/SKILL.md
+  summary: Candidate for chart/report generation instructions
+  tags:
+  - entity:skill
+  - capability:data-analysis
+  - domain:media
+  maturity: maturity:observed

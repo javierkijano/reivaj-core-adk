@@ -1,0 +1,357 @@
+source:
+  id: adk-reusable-functionality
+  label: External reusable functionality
+  source_type: external
+  upstream_root: https://github.com/google/adk-samples/tree/main/python/agents
+items:
+- id: minimal-single-adk-agent
+  name: Minimal single ADK agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Minimal Agent project skeleton and smoke test
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Agent Architecture Patterns
+    source_samples: fun-facts, currency-agent, story_teller
+- id: root-router-with-subagent-team
+  name: Root router with subagent team
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Multi-agent team template with role prompts and delegation rules
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Agent Architecture Patterns
+    source_samples: travel-concierge, financial-advisor, data-science, cyber-guardian-agent, marketing-agency
+- id: sequential-workflow
+  name: Sequential workflow
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Sequential task pipeline template
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Agent Architecture Patterns
+    source_samples: workflows-sequential, podcast_transcript_agent, google-trends-agent
+- id: parallel-fan-out-fan-in
+  name: Parallel fan-out/fan-in
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Parallel decomposition and synthesis workflow
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Agent Architecture Patterns
+    source_samples: workflow-concurrent_research_writer, parallel_task_decomposition_execution
+- id: hitl-approval
+  name: HITL approval
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Human approval checkpoint pattern
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Agent Architecture Patterns
+    source_samples: workflows-HITL_concierge, order-processing, deep-search
+- id: loop-and-scoring
+  name: Loop and scoring
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Generate-score-refine loop with policy gate
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Agent Architecture Patterns
+    source_samples: image-scoring, on-brand-genmedia
+- id: long-running-ambient
+  name: Long-running / ambient
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Scheduled/event-driven agent template
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Agent Architecture Patterns
+    source_samples: ambient-expense-agent, workflow-morning_email_debrief
+- id: fullstack-agent
+  name: Fullstack agent
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Backend/frontend boundary and streaming UI pattern
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Agent Architecture Patterns
+    source_samples: deep-search, genmedia-for-commerce, realtime-conversational-agent
+- id: bigquery-analytics
+  name: BigQuery analytics
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: BigQuery tool adapter, NL2SQL guardrails, analytics report template
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Tool And Integration Families
+    source_samples: data-science, data-engineering, google-trends-agent, brand-search-optimization, agent-observability-bq
+- id: data-engineering-operations
+  name: Data engineering operations
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Dataflow, Dataproc, dbt, Dataform toolsets
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Tool And Integration Families
+    source_samples: plumber-data-engineering-assistant, airflow_version_upgrade_agent, data-engineering
+- id: economic-data-connectors
+  name: Economic data connectors
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: FRED/BLS/BEA/Census/EIA/FEC style data-source adapters
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Tool And Integration Families
+    source_samples: economic-research-agent, fomc-research
+- id: document-extraction
+  name: Document extraction
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Document parsing, schema validation, extraction report pattern
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Tool And Integration Families
+    source_samples: invoice-processing, medical-pre-authorization, claim-adjudication-agent, high-volume-document-analyzer
+- id: search-and-grounding
+  name: Search and grounding
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Search-plan-summarize-cite workflow and citation normalizer
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Tool And Integration Families
+    source_samples: deep-search, llm-auditor, academic-research, software-bug-assistant
+- id: mcp-integrations
+  name: MCP integrations
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: MCP client/server setup templates and tool wrappers
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Tool And Integration Families
+    source_samples: currency-agent, antom-payment, gemma-food-tour-guide, genmedia-for-commerce, software-bug-assistant
+- id: application-integration-connectors
+  name: Application Integration connectors
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Connector-backed business process tool pattern
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Tool And Integration Families
+    source_samples: incident-management, order-processing
+- id: apigee-api-hub
+  name: Apigee/API Hub
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: API hub discovery and agent-tool pattern
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Tool And Integration Families
+    source_samples: auto-insurance-agent
+- id: google-maps-places
+  name: Google Maps / Places
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Location search and route-planning adapter
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Tool And Integration Families
+    source_samples: gemma-food-tour-guide, retail-ai-location-strategy
+- id: github-sdlc-artifacts
+  name: GitHub / SDLC artifacts
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Repo ops, artifact read/write, SDLC planning tools
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Tool And Integration Families
+    source_samples: plumber-data-engineering-assistant, software-bug-assistant, sdlc-*
+- id: skilltoolset-progressive-disclosure
+  name: SkillToolset progressive disclosure
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Standard ADK Skills folder layout and root instruction contract
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Skill And Prompt Reuse
+    source_samples: agent-skills-tutorial, youtube-analyst
+- id: meta-skill-skill-factory
+  name: Meta skill / skill factory
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Internal skill generator with spec references and review gate
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Skill And Prompt Reuse
+    source_samples: agent-skills-tutorial
+- id: prompt-packs-by-role
+  name: Prompt packs by role
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Role prompt templates and prompt evaluation checklist
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Skill And Prompt Reuse
+    source_samples: financial-advisor, travel-concierge, cyber-guardian-agent, data-science
+- id: content-and-seo-writing
+  name: Content and SEO writing
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Writing style guide skill and SEO review skill
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Skill And Prompt Reuse
+    source_samples: blog-writer, agent-skills-tutorial, marketing-agency
+- id: briefing-synthesis
+  name: Briefing synthesis
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Daily/industry briefing reusable workflow
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Skill And Prompt Reuse
+    source_samples: youtube-analyst, workflow-morning_email_debrief, economic-research-agent
+- id: adk-eval-cases
+  name: ADK eval cases
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Evalset templates by task type
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Evaluation And Quality Patterns
+    source_samples: academic-research, brand-search-optimization, RAG, data-science, travel-concierge
+- id: safety-guardrail-plugins
+  name: Safety/guardrail plugins
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Guardrail plugin registry and policy-test fixtures
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Evaluation And Quality Patterns
+    source_samples: safety-plugins, camel, ai-security-agent
+- id: benchmark-harnesses
+  name: Benchmark harnesses
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Benchmark runner abstraction and scoring interface
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Evaluation And Quality Patterns
+    source_samples: swe-benchmark-agent, tau2-benchmark-agent, machine-learning-engineering
+- id: tool-unit-tests
+  name: Tool unit tests
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Tool mocking and deterministic test templates
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Evaluation And Quality Patterns
+    source_samples: Samples with tests/ and custom tools
+- id: agent-runtime-deployment
+  name: Agent Runtime deployment
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Deployment checklist and service-account/IAM template
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Deployment And Runtime Patterns
+    source_samples: adk-ae-oauth, memory-bank, genmedia-for-commerce, auto-insurance-agent
+- id: oauth-delegated-auth
+  name: OAuth delegated auth
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: OAuth consent and token handling pattern
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Deployment And Runtime Patterns
+    source_samples: adk-ae-oauth
+- id: observability-to-bigquery
+  name: Observability to BigQuery
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: BigQuery analytics plugin configuration
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Deployment And Runtime Patterns
+    source_samples: agent-observability-bq
+- id: fullstack-infra
+  name: Fullstack infra
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Frontend/backend/deployment boundary template
+  tags: []
+  maturity: maturity:observed
+  metadata:
+    section: Deployment And Runtime Patterns
+    source_samples: genmedia-for-commerce, deep-search
+- id: p0-skilltoolset-layout-and-skill-factory
+  name: P0 SkillToolset layout and skill factory
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Directly supports internal reusable knowledge packs
+  tags: []
+  maturity: maturity:candidate
+  metadata:
+    section: Extraction Priorities
+    source_samples: SkillToolset layout and skill factory
+- id: p0-search-ground-cite-workflow
+  name: P0 Search-ground-cite workflow
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Common requirement across research, audit, and RAG agents
+  tags: []
+  maturity: maturity:candidate
+  metadata:
+    section: Extraction Priorities
+    source_samples: Search-ground-cite workflow
+- id: p0-multi-agent-team-template
+  name: P0 Multi-agent team template
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Reusable across most domain assistants
+  tags: []
+  maturity: maturity:candidate
+  metadata:
+    section: Extraction Priorities
+    source_samples: Multi-agent team template
+- id: p1-document-extraction-pipeline
+  name: P1 Document extraction pipeline
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: High reuse in healthcare, finance, invoices, policies
+  tags: []
+  maturity: maturity:candidate
+  metadata:
+    section: Extraction Priorities
+    source_samples: Document extraction pipeline
+- id: p1-bigquery-nl2sql-adapter-patterns
+  name: P1 BigQuery/NL2SQL adapter patterns
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: High reuse for analytics agents
+  tags: []
+  maturity: maturity:candidate
+  metadata:
+    section: Extraction Priorities
+    source_samples: BigQuery/NL2SQL adapter patterns
+- id: p1-hitl-checkpoint-pattern
+  name: P1 HITL checkpoint pattern
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Needed for risky business workflows
+  tags: []
+  maturity: maturity:candidate
+  metadata:
+    section: Extraction Priorities
+    source_samples: HITL checkpoint pattern
+- id: p2-media-generation-scoring-loop
+  name: P2 Media generation scoring loop
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Useful but domain-specific
+  tags: []
+  maturity: maturity:candidate
+  metadata:
+    section: Extraction Priorities
+    source_samples: Media generation scoring loop
+- id: p2-deployment-runtime-templates
+  name: P2 Deployment/runtime templates
+  source: https://github.com/google/adk-samples/tree/main/python/agents
+  summary: Reuse after auth and project conventions are standardized
+  tags: []
+  maturity: maturity:candidate
+  metadata:
+    section: Extraction Priorities
+    source_samples: Deployment/runtime templates

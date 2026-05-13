@@ -70,7 +70,7 @@ interno suele usar guiones bajos.
 | Application Integration connectors | `incident-management`, `order-processing` |
 | Apigee / API hub | `auto-insurance-agent` |
 | Memory Bank | `memory-bank` |
-| ADK Skills / SkillToolset | `agent-skills-tutorial` |
+| ADK Skills / SkillToolset | `agent-skills-tutorial`; ver `14-agent-skills-tutorial-analysis.md` |
 | Safety plugins / guardrails | `safety-plugins`, `camel`, `ai-security-agent`, `cyber-guardian-agent` |
 | Realtime / streaming / multimodal | `bidi-demo`, `realtime-conversational-agent`, `customer-service` |
 | Genmedia / Imagen / video | `genmedia-for-commerce`, `on-brand-genmedia`, `image-scoring`, `short-movie-agents` |
@@ -95,7 +95,7 @@ interno suele usar guiones bajos.
 
 | Sample | Patron principal | Cuando leerlo |
 |---|---|---|
-| [`agent-skills-tutorial`](https://github.com/google/adk-samples/tree/main/python/agents/agent-skills-tutorial) | Inline, file-based, external y meta skills | ADK SkillToolset y progressive disclosure de skills |
+| [`agent-skills-tutorial`](https://github.com/google/adk-samples/tree/main/python/agents/agent-skills-tutorial) | Inline, file-based, external y meta skills | ADK SkillToolset, L1/L2/L3 progressive disclosure y skill factory |
 | [`memory-bank`](https://github.com/google/adk-samples/tree/main/python/agents/memory-bank) | Memory Bank integration | Preferencias/hechos cross-session y variantes de deployment |
 
 ### Workflow Y Orquestacion
