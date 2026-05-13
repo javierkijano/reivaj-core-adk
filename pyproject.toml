@@ -9,4 +9,4 @@ dependencies = []
 package = false
 
 [tool.uv.workspace]
-members = ["root_web_search", "root-adk-task-to-workflow"]
+members = ["root_web_search", "root_adk_task_to_workflow", "root_deep_web_research"]

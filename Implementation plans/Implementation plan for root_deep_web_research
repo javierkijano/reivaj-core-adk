@@ -1,0 +1,1205 @@
+# ADK 2.0 Workflow Implementation Plan
+
+## Goal
+
+Diseñar una arquitectura de flujo de trabajo basada en grafos (ADK 2.0) para un sistema de investigación web automatizado. El grafo debe orquestar un PlanningNode inicial, un ApprovalNode (human-in-the-loop), un enrutamiento estático paralelo hacia proveedores abstractos de búsqueda (agnósticos), y un SynthesisNode final que consolide un reporte trazable.
+
+## Planning Philosophy
+
+- Default implementation target: ADK 2.0 graph-based `Workflow`.
+- Primary orchestration pattern: explicit graph edges, route dictionaries, route loops and `JoinNode` for fan-out/fan-in convergence.
+- Internal data passing: `Event(output=...)` or `Event(state=...)`; reserve `Event(message=...)` for user-facing messages.
+- Secondary patterns avoided by default: collaborative agents and dynamic workflows with `Context.run_node`.
+- If a secondary pattern becomes necessary, record opt-in and compare against graph routes, static fan-out and `JoinNode` alternatives first.
+- ADK 2.0 is beta; confirm `google-adk>=2.0.0b1` opt-in and do not rely on Live Streaming for graph-based workflows.
+
+## Initial Problem Definition
+
+- Input classification: `broad_goal`
+- Requires decomposition: `True`
+- Should invoke TaskSplitter: `True`
+- Approval state: `approved`
+- Confidence: `1.00`
+
+### Process
+
+Analizaré tu solicitud para diseñar un sistema de investigación web automatizado y agnóstico. Reformularé el problema central, identificaré las herramientas y enfoques necesarios bajo la filosofía de grafos, y plantearé decisiones clave de arquitectura. Una vez que apruebes el enfoque, se generará el plan de implementación detallado.
+
+### Reformulated Problem
+
+Diseñar un flujo de trabajo basado en grafos (ADK 2.0) para investigación web automatizada, que sea agnóstico respecto a los proveedores de búsqueda (Google, Exa, GitHub, etc.). El sistema debe recibir un tema, generar un plan, solicitar aprobación humana (único punto de intervención), orquestar la extracción de datos mediante rutas estáticas o interfaces comunes, y sintetizar un reporte final estructurado y trazable.
+
+### Light Exploration
+
+- Evaluación de requisitos de orquestación de múltiples herramientas de búsqueda y análisis.
+- Revisión de patrones de diseño agnósticos (interfaces de proveedor abstracto).
+- Análisis de la ubicación óptima del 'human-in-the-loop' para aprobación de planes.
+- Consideración de ramas de ejecución en paralelo seguidas de un nodo de sincronización (JoinNode) para la síntesis final.
+
+### Subtopics And Approaches
+
+Subtopics:
+
+- Arquitectura de nodos y aristas (ADK 2.0)
+- Abstracción de proveedores de búsqueda
+- Generación de planes de investigación algorítmicos
+- Gestión de estado y contratos de eventos (Event contracts)
+- Síntesis de información y trazabilidad de fuentes
+
+Approaches:
+
+- Flujo de trabajo basado en grafos con rutas estáticas explícitas
+- Patrón de inyección de dependencias para proveedores de búsqueda
+- Ejecución de ramas paralelas (Scatter-Gather) para múltiples fuentes
+- Intervención humana asíncrona (Human-in-the-loop) post-planificación
+
+### Sources And Tools
+
+Sources:
+
+- Patrones de arquitectura ADK 2.0
+- Documentación de APIs de búsqueda (Tavily, Exa, Brave, Google)
+- Modelos de síntesis RAG (Retrieval-Augmented Generation)
+
+Available tools:
+
+- Nodos de abstracción LLM
+- Nodos de enrutamiento y bifurcación (RouterNode, SplitNode, JoinNode)
+- Integraciones hipotéticas/mockeadas con APIs de búsqueda
+
+Missing tools:
+
+- Credenciales y SDKs específicos para cada proveedor en el entorno de ejecución
+- Conectores oficiales preconstruidos (se deberán diseñar interfaces abstractas)
+
+### Ambiguities
+
+- Equilibrio entre selección dinámica de herramientas por un LLM (menos predecible) frente a enrutamiento estático basado en categorías de investigación (estilo ADK 2.0).
+
+### Decision Steps
+
+| ID | Decision | Reason | Impact | Options | Default | Resolver | Blocking | Auto-resolution Criterion | Selected |
+|---|---|---|---|---|---|---|---|---|---|
+| workflow_routing | Para alinearnos con ADK 2.0, ¿preferimos utilizar enrutamiento estático explícito (ej. Ramas predefinidas para 'Técnico', 'Noticias', 'Mercado' que se activan según la clasificación inicial) en lugar de agentes dinámicos impredecibles? | ADK 2.0 favorece grafos con aristas estáticas para garantizar trazabilidad y control. Un nodo inicial de planificación puede decidir qué ramas estáticas activar. | El sistema será muy predecible, determinista y fácil de depurar, aunque requiere definir las topologías de investigación de antemano. | Si, No, Respuesta personalizada, Elaborar plan | Si | human | True |  | Si |
+| human_checkpoint | ¿El punto de intervención humana debe situarse estrictamente después de que el sistema proponga el plan y herramientas, pero antes de ejecutar ninguna búsqueda externa? | Garantiza el principio de intervención corta y de alto valor sugerido en los requisitos, evitando costos de API si el plan inicial está desenfocado. | El flujo se pausará esperando validación. Una vez aprobado, el resto del proceso (extracción, análisis, síntesis) será totalmente autónomo. | Si, No, Respuesta personalizada, Elaborar plan | Si | human | True |  | Si |
+| provider_agnostic_interface | ¿Debe el sistema implementar una interfaz de contrato abstracto (ej. SearchEvent) para aislar la lógica del flujo de la implementación específica de cada API (Google, Exa, Tavily)? | Es fundamental para cumplir con el requisito de ser un sistema completamente agnóstico y extensible en el futuro. | Permite intercambiar proveedores sin modificar los nodos centrales de planificación y síntesis. | Si, No, Respuesta personalizada, Elaborar plan | Si | auto | False | El usuario solicitó explícitamente un sistema agnóstico. | Si |
+
+### Auto-resolved Decisions
+
+- provider_agnostic_interface
+
+### Important Escalations
+
+- None
+
+### Brief Plan Before Splitting
+
+1. Definir los contratos de eventos (Event Contracts) unificados para solicitudes y resultados de investigación.
+2. Diseñar un Nodo Planificador (PlanningNode) que reciba el tema, clasifique las necesidades y proponga una estrategia.
+3. Implementar un Nodo de Aprobación Humana (ApprovalNode) que pausa el flujo.
+4. Construir un Router que dirija a ramas explícitas (Búsqueda General, Análisis GitHub, Tendencias, etc.) a través de interfaces de proveedor abstractas.
+5. Crear un JoinNode y un Nodo Sintetizador (SynthesisNode) que consolide los hallazgos, cite fuentes y detalle limitaciones.
+
+### TaskSplitter Goal
+
+Diseñar un flujo de trabajo ADK 2.0 basado en grafos para un sistema inteligente de investigación web. El grafo debe comenzar con un PlanningNode, seguido de una pausa para validación humana. Una vez aprobado, usar un Router para activar ramas de ejecución estáticas paralelas (utilizando interfaces abstractas para conectar proveedores como Google, Exa, Tavily, etc.). Finalmente, agrupar las respuestas en un JoinNode que alimente un SynthesisNode encargado de emitir el reporte final trazable. No utilizar agentes dinámicos; basarse en enrutamiento estructurado explícito.
+
+## Status
+
+- Status: `needs_repair`
+- Graph validity: `partial`
+- Structural status: `needs_repair`
+- Runtime status: `blocked_by_runtime_inputs`
+- Graph type: `implementation_task_graph`
+- Must apply repairs before execution: `True`
+- Must provide runtime inputs before execution: `True`
+
+## Quality Score
+
+0.84
+
+## Implementation Architecture
+
+- Export a `root_agent` that is an ADK 2.0 `Workflow` from the expected module.
+- Keep each node single-purpose and task-oriented; do not model open-ended chat subagents inside the graph.
+- Declare graph edges from `START`, then route through explicit node objects or route dictionaries.
+- Use Pydantic `input_schema` and `output_schema` at fragile boundaries and preserve stable state keys.
+- Model branch convergence as `JoinNode`, integration tasks or explicit route contracts, not implicit shared state.
+- Add deterministic tests before live evals or deployment: import/export, route keys, schema validation, joins and HITL resume/auth if applicable.
+
+## Workflow Graph Contract
+
+| Task ID | Title | Output State | Acceptance Criteria | Dependencies | Executor | Verifier | Build | Runtime | Phase |
+|---|---|---|---|---|---|---|---|---|---|
+| t0_configure_runtime_environment | Configure runtime environment and secrets | runtime_configuration | .env.example exists<br>Secrets are not committed<br>Provider keys are validated at startup<br>System can run in mock mode without external keys | none | agent:runtime_configuration_engineer | test:replan | executable | not_applicable | P1 |
+| T1_schema_design | Design Event Contracts and Pydantic Schemas | event_contracts.py | All events inherit from ADK base classes if applicable.<br>SearchRequest and SearchResult schemas are generic enough to support Google, Exa, Tavily, and GitHub.<br>ResearchPlan schema includes a list of static routes to be executed.<br>The ResearchPlan schema includes a structured field for decision_questions (options: Yes/No/Custom) to be presented during the Approval phase. | none | agent:schema_generator | schema_validation:replan | executable | not_applicable | P1 |
+| T2_provider_config | Setup Provider Configuration and Secrets Management | provider_config.py | Configuration schema defined for at least 4 providers.<br>Missing keys raise explicit configuration errors, allowing partial degradation if some providers are missing. | t0_configure_runtime_environment | agent:config_generator | schema_validation:replan | executable | blocked_by_runtime_inputs | P2 |
+| T3_planning_node | Implement PlanningNode | planning_node.py | Uses an LLM abstraction to populate the ResearchPlan schema.<br>Plan output clearly lists selected provider branches (e.g., ['tech', 'news']).<br>The node evaluates available providers from config and formulates specific Yes/No/Custom decision questions for the user inside the ResearchPlan. | T1_schema_design, T2_provider_config | agent:node_developer | test:replan | executable | not_applicable | P3 |
+| T4_approval_node | Implement ApprovalNode (Human-in-the-loop) | approval_node.py | Node yields a suspension state requiring user input.<br>Upon resumption, if user provides 'Custom Feedback', node can either adapt the plan or signal a loop back to PlanningNode. | T1_schema_design | agent:node_developer | test:replan | executable | not_applicable | P2 |
+| T5A_provider_interface | Design Provider Interface and Mock Adapters | provider_interface.py | Abstract Base Class defined for SearchProvider.<br>Mock adapters implemented to prove abstraction. | T1_schema_design | agent:integration_developer | schema_validation:replan | executable | not_applicable | P2 |
+| T5B_google_adapter | Implement Google Search Adapter | google_adapter.py | Rate limiting decorators or retry logic included.<br>Normalizes output to SearchResult schema. | t0_configure_runtime_environment, T5A_provider_interface, T2_provider_config | agent:integration_developer | test:replan | executable | blocked_by_runtime_inputs | P3 |
+| T5B_exa_adapter | Implement Exa Search Adapter | exa_adapter.py | Rate limiting decorators or retry logic included.<br>Normalizes output to SearchResult schema. | t0_configure_runtime_environment, T5A_provider_interface, T2_provider_config | agent:integration_developer | test:replan | executable | blocked_by_runtime_inputs | P3 |
+| T5B_tavily_adapter | Implement Tavily Search Adapter | tavily_adapter.py | Rate limiting decorators or retry logic included.<br>Normalizes output to SearchResult schema. | t0_configure_runtime_environment, T5A_provider_interface, T2_provider_config | agent:integration_developer | test:replan | executable | blocked_by_runtime_inputs | P3 |
+| T5B_github_adapter | Implement GitHub Search Adapter | github_adapter.py | Rate limiting decorators or retry logic included.<br>Normalizes output to SearchResult schema. | t0_configure_runtime_environment, T5A_provider_interface, T2_provider_config | agent:integration_developer | test:replan | executable | blocked_by_runtime_inputs | P3 |
+| T6_router_and_branches | Implement RouterNode and Static Branch Nodes | router_and_branches.py | RouterNode explicitly yields target routes based on the ResearchPlan.<br>Branch nodes (e.g., GeneralSearchNode, CodeSearchNode) simply invoke the appropriate provider adapters and emit SearchResult events. | T1_schema_design, T5B_google_adapter, T5B_exa_adapter, T5B_tavily_adapter, T5B_github_adapter | agent:workflow_developer | test:replan | executable | not_applicable | P4 |
+| T7_synthesis_and_join | Implement JoinNode and SynthesisNode | synthesis_and_join.py | JoinNode waits for all spawned branches to complete or timeout.<br>SynthesisNode processes evidence, explicitly linking claims to sources in the output schema.<br>Synthesis output identifies uncertainties and limitations as requested. | T1_schema_design | agent:node_developer | test:replan | executable | not_applicable | P2 |
+| T8_graph_wiring | Wire ADK 2.0 Workflow Graph | research_workflow.py | Graph compiles without cyclic errors (unless explicit retry loops are designed).<br>Approval checkpoint effectively breaks execution and can be explicitly resumed.<br>Graph uses explicit Edge declarations. | T3_planning_node, T4_approval_node, T6_router_and_branches, T7_synthesis_and_join | agent:workflow_developer | test:replan | executable | not_applicable | P5 |
+| T9_e2e_tests | Write Deterministic E2E Tests | test_research_workflow.py | Mock implementations of provider adapters are injected.<br>Test simulates human approving the plan.<br>Test simulates human modifying the plan.<br>Test asserts final SynthesisReport structure. | T8_graph_wiring | agent:test_developer | test:replan | executable | ready | P6 |
+| T10_documentation | Create Final Markdown Implementation Document | ADK_2.0_Research_System_Design.md | Document covers Architecture, Provider Abstraction, Setup, and Execution. | T9_e2e_tests | agent:doc_generator | human:replan | executable | not_applicable | P7 |
+
+## Detailed Task Specifications
+
+### t0_configure_runtime_environment: Configure runtime environment and secrets
+
+Define runtime configuration, secret handling and mock-mode behavior for external providers before live execution.
+
+- Action type: `configure`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `not_applicable`
+- Runtime execution mode: `either`
+- Execution status: `executable`
+- Branch condition: `none`
+- Risk: `high`
+
+Inputs:
+
+- goal_state_available
+
+Outputs:
+
+- runtime_configuration
+
+Preconditions:
+
+- Required provider and deployment choices are known or documented as assumptions.
+
+Postconditions:
+
+- Runtime configuration exists without committed secrets.
+
+Acceptance criteria:
+
+- .env.example exists
+- Secrets are not committed
+- Provider keys are validated at startup
+- System can run in mock mode without external keys
+
+Executor contract:
+
+- Type/id: `agent:runtime_configuration_engineer`
+- Required inputs: goal_state_available
+- Expected outputs: runtime_configuration
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `test`
+- Instruction: Verify .env.example, secret validation, startup checks and mock mode behavior without exposing secret values.
+- Success threshold: `0.90`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `True`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- Secret handling and runtime config affect live safety.
+
+### T1_schema_design: Design Event Contracts and Pydantic Schemas
+
+Define the unified Pydantic schemas for Event Contracts (ResearchQuery, ResearchPlan, SearchRequest, SearchResult, SynthesisReport) to ensure provider-agnostic data flow across the ADK 2.0 graph.
+
+- Action type: `design`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `not_applicable`
+- Runtime execution mode: `either`
+- Execution status: `executable`
+- Branch condition: `none`
+- Risk: `low`
+
+Inputs:
+
+- goal_state_available
+
+Outputs:
+
+- event_contracts.py
+
+Preconditions:
+
+- Target use cases and high-level node topology are known.
+
+Postconditions:
+
+- Pydantic schemas are defined for all fragile node boundaries.
+
+Acceptance criteria:
+
+- All events inherit from ADK base classes if applicable.
+- SearchRequest and SearchResult schemas are generic enough to support Google, Exa, Tavily, and GitHub.
+- ResearchPlan schema includes a list of static routes to be executed.
+- The ResearchPlan schema includes a structured field for decision_questions (options: Yes/No/Custom) to be presented during the Approval phase.
+
+Executor contract:
+
+- Type/id: `agent:schema_generator`
+- Required inputs: goal_state_available
+- Expected outputs: event_contracts.py
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `schema_validation`
+- Instruction: Verify that schemas strictly isolate orchestration logic from provider-specific data and use ADK Event(output=...) patterns.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- None
+
+### T2_provider_config: Setup Provider Configuration and Secrets Management
+
+Establish the configuration mechanism (e.g., environment variables, secret managers) and rate-limit guardrails for the multiple external search providers.
+
+- Action type: `setup`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `blocked_by_runtime_inputs`
+- Runtime execution mode: `either`
+- Execution status: `blocked_by_runtime_inputs`
+- Branch condition: `none`
+- Risk: `medium`
+
+Inputs:
+
+- goal_state_available
+
+Outputs:
+
+- provider_config.py
+
+Preconditions:
+
+- Target providers (Google, Exa, Tavily, GitHub) are identified.
+
+Postconditions:
+
+- A unified configuration loader handles all provider secrets and quotas safely. Missing keys raise deterministic configuration errors without leaking values to logs.
+
+Acceptance criteria:
+
+- Configuration schema defined for at least 4 providers.
+- Missing keys raise explicit configuration errors, allowing partial degradation if some providers are missing.
+
+Executor contract:
+
+- Type/id: `agent:config_generator`
+- Required inputs: goal_state_available
+- Expected outputs: provider_config.py
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `schema_validation`
+- Instruction: Ensure no hardcoded credentials exist and that budget/rate limits are configurable.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- Varying rate limits and authentication models across providers.
+
+Missing runtime inputs:
+
+- Actual API keys for Google, Exa, Tavily, GitHub
+
+### T3_planning_node: Implement PlanningNode
+
+Build the initial LLM abstraction node that takes a raw query, explores the topic briefly, reformulates it, and outputs a structured ResearchPlan with suggested routes.
+
+- Action type: `implementation`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `not_applicable`
+- Runtime execution mode: `either`
+- Execution status: `executable`
+- Branch condition: `none`
+- Risk: `low`
+
+Inputs:
+
+- event_contracts.py
+
+Outputs:
+
+- planning_node.py
+
+Preconditions:
+
+- Event schemas are strictly defined.
+
+Postconditions:
+
+- PlanningNode class exists, conforming to ADK 2.0 node interfaces, returning a PlanEvent.
+
+Acceptance criteria:
+
+- Uses an LLM abstraction to populate the ResearchPlan schema.
+- Plan output clearly lists selected provider branches (e.g., ['tech', 'news']).
+- The node evaluates available providers from config and formulates specific Yes/No/Custom decision questions for the user inside the ResearchPlan.
+
+Executor contract:
+
+- Type/id: `agent:node_developer`
+- Required inputs: event_contracts.py
+- Expected outputs: planning_node.py
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `test`
+- Instruction: Run a suite of unit tests with mocked LLM outputs to verify that the PlanningNode deterministically outputs a strictly typed ResearchPlan event, adhering to ADK 2.0 interfaces.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- None
+
+### T4_approval_node: Implement ApprovalNode (Human-in-the-loop)
+
+Implement the workflow pause mechanism that surfaces the ResearchPlan to a human user, allowing Yes/No/Custom feedback before resuming the execution.
+
+- Action type: `implementation`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `not_applicable`
+- Runtime execution mode: `either`
+- Execution status: `executable`
+- Branch condition: `none`
+- Risk: `medium`
+
+Inputs:
+
+- event_contracts.py
+
+Outputs:
+
+- approval_node.py
+
+Preconditions:
+
+- ResearchPlan schema is defined.
+
+Postconditions:
+
+- ApprovalNode correctly pauses and resumes state via ADK 2.0 mechanisms.
+
+Acceptance criteria:
+
+- Node yields a suspension state requiring user input.
+- Upon resumption, if user provides 'Custom Feedback', node can either adapt the plan or signal a loop back to PlanningNode.
+
+Executor contract:
+
+- Type/id: `agent:node_developer`
+- Required inputs: event_contracts.py
+- Expected outputs: approval_node.py
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `test`
+- Instruction: Execute unit tests that assert the ApprovalNode triggers a workflow suspension (pause) and gracefully handles state resumption with simulated Yes/No/Custom user inputs.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- Human-in-the-loop state management can be tricky to test without an actual UI.
+
+### T5A_provider_interface: Design Provider Interface and Mock Adapters
+
+Create the SearchProvider Abstract Base Class and basic MockAdapters to isolate architecture from external vendors.
+
+- Action type: `implementation`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `not_applicable`
+- Runtime execution mode: `either`
+- Execution status: `executable`
+- Branch condition: `none`
+- Risk: `low`
+
+Inputs:
+
+- event_contracts.py
+
+Outputs:
+
+- provider_interface.py
+
+Preconditions:
+
+- Schemas are defined.
+
+Postconditions:
+
+- Abstract Base Class defined for SearchProvider. Mock adapters available for testing.
+
+Acceptance criteria:
+
+- Abstract Base Class defined for SearchProvider.
+- Mock adapters implemented to prove abstraction.
+
+Executor contract:
+
+- Type/id: `agent:integration_developer`
+- Required inputs: event_contracts.py
+- Expected outputs: provider_interface.py
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `schema_validation`
+- Instruction: Ensure the interface strictly uses the unified SearchResult schema.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- None
+
+### T5B_google_adapter: Implement Google Search Adapter
+
+Implement the specific SDK/API calls for Google Search with its rate-limiting and normalization to the SearchResult schema.
+
+- Action type: `implementation`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `blocked_by_runtime_inputs`
+- Runtime execution mode: `either`
+- Execution status: `blocked_by_runtime_inputs`
+- Branch condition: `none`
+- Risk: `medium`
+
+Inputs:
+
+- provider_interface.py
+- provider_config.py
+
+Outputs:
+
+- google_adapter.py
+
+Preconditions:
+
+- Provider interface and configs are defined.
+
+Postconditions:
+
+- Concrete adapter for Google Search is available and adheres to the provider interface.
+
+Acceptance criteria:
+
+- Rate limiting decorators or retry logic included.
+- Normalizes output to SearchResult schema.
+
+Executor contract:
+
+- Type/id: `agent:integration_developer`
+- Required inputs: provider_interface.py, provider_config.py
+- Expected outputs: google_adapter.py
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `test`
+- Instruction: Run unit tests with mocked API endpoints to ensure the Google adapter handles rate limits, implements retry logic correctly, and normalizes JSON into the unified SearchResult schema.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- Normalization of disparate JSON structures into a single schema.
+
+Missing runtime inputs:
+
+- Google API Key
+
+### T5B_exa_adapter: Implement Exa Search Adapter
+
+Implement the specific SDK/API calls for Exa Search with its rate-limiting and normalization to the SearchResult schema.
+
+- Action type: `implementation`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `blocked_by_runtime_inputs`
+- Runtime execution mode: `either`
+- Execution status: `blocked_by_runtime_inputs`
+- Branch condition: `none`
+- Risk: `medium`
+
+Inputs:
+
+- provider_interface.py
+- provider_config.py
+
+Outputs:
+
+- exa_adapter.py
+
+Preconditions:
+
+- Provider interface and configs are defined.
+
+Postconditions:
+
+- Concrete adapter for Exa Search is available and adheres to the provider interface.
+
+Acceptance criteria:
+
+- Rate limiting decorators or retry logic included.
+- Normalizes output to SearchResult schema.
+
+Executor contract:
+
+- Type/id: `agent:integration_developer`
+- Required inputs: provider_interface.py, provider_config.py
+- Expected outputs: exa_adapter.py
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `test`
+- Instruction: Run unit tests with mocked API endpoints to ensure the Exa adapter handles rate limits, implements retry logic correctly, and normalizes JSON into the unified SearchResult schema.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- Normalization of disparate JSON structures into a single schema.
+
+Missing runtime inputs:
+
+- Exa API Key
+
+### T5B_tavily_adapter: Implement Tavily Search Adapter
+
+Implement the specific SDK/API calls for Tavily Search with its rate-limiting and normalization to the SearchResult schema.
+
+- Action type: `implementation`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `blocked_by_runtime_inputs`
+- Runtime execution mode: `either`
+- Execution status: `blocked_by_runtime_inputs`
+- Branch condition: `none`
+- Risk: `medium`
+
+Inputs:
+
+- provider_interface.py
+- provider_config.py
+
+Outputs:
+
+- tavily_adapter.py
+
+Preconditions:
+
+- Provider interface and configs are defined.
+
+Postconditions:
+
+- Concrete adapter for Tavily Search is available and adheres to the provider interface.
+
+Acceptance criteria:
+
+- Rate limiting decorators or retry logic included.
+- Normalizes output to SearchResult schema.
+
+Executor contract:
+
+- Type/id: `agent:integration_developer`
+- Required inputs: provider_interface.py, provider_config.py
+- Expected outputs: tavily_adapter.py
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `test`
+- Instruction: Run unit tests with mocked API endpoints to ensure the Tavily adapter handles rate limits, implements retry logic correctly, and normalizes JSON into the unified SearchResult schema.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- Normalization of disparate JSON structures into a single schema.
+
+Missing runtime inputs:
+
+- Tavily API Key
+
+### T5B_github_adapter: Implement GitHub Search Adapter
+
+Implement the specific SDK/API calls for GitHub Search with its rate-limiting and normalization to the SearchResult schema.
+
+- Action type: `implementation`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `blocked_by_runtime_inputs`
+- Runtime execution mode: `either`
+- Execution status: `blocked_by_runtime_inputs`
+- Branch condition: `none`
+- Risk: `medium`
+
+Inputs:
+
+- provider_interface.py
+- provider_config.py
+
+Outputs:
+
+- github_adapter.py
+
+Preconditions:
+
+- Provider interface and configs are defined.
+
+Postconditions:
+
+- Concrete adapter for GitHub Search is available and adheres to the provider interface.
+
+Acceptance criteria:
+
+- Rate limiting decorators or retry logic included.
+- Normalizes output to SearchResult schema.
+
+Executor contract:
+
+- Type/id: `agent:integration_developer`
+- Required inputs: provider_interface.py, provider_config.py
+- Expected outputs: github_adapter.py
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `test`
+- Instruction: Run unit tests with mocked API endpoints to ensure the GitHub adapter handles rate limits, implements retry logic correctly, and normalizes JSON into the unified SearchResult schema.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- Normalization of disparate JSON structures into a single schema.
+
+Missing runtime inputs:
+
+- GitHub API Key
+
+### T6_router_and_branches: Implement RouterNode and Static Branch Nodes
+
+Build the static RouterNode that reads the approved ResearchPlan and dispatches parallel execution via explicit static edges to branch nodes (e.g., TechNode, MarketNode).
+
+- Action type: `implementation`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `not_applicable`
+- Runtime execution mode: `either`
+- Execution status: `executable`
+- Branch condition: `none`
+- Risk: `low`
+
+Inputs:
+
+- event_contracts.py
+- google_adapter.py
+- exa_adapter.py
+- tavily_adapter.py
+- github_adapter.py
+
+Outputs:
+
+- router_and_branches.py
+
+Preconditions:
+
+- Provider adapters are ready to be called by branch nodes.
+
+Postconditions:
+
+- RouterNode and respective statically defined execution branches exist.
+
+Acceptance criteria:
+
+- RouterNode explicitly yields target routes based on the ResearchPlan.
+- Branch nodes (e.g., GeneralSearchNode, CodeSearchNode) simply invoke the appropriate provider adapters and emit SearchResult events.
+
+Executor contract:
+
+- Type/id: `agent:workflow_developer`
+- Required inputs: event_contracts.py, google_adapter.py, exa_adapter.py, tavily_adapter.py, github_adapter.py
+- Expected outputs: router_and_branches.py
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `test`
+- Instruction: Assert via tests that the RouterNode's output maps to statically defined branch nodes and does not rely on dynamic pathing or autonomous tool-calling loops.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- None
+
+### T7_synthesis_and_join: Implement JoinNode and SynthesisNode
+
+Build the JoinNode for fan-in convergence of parallel search results, and the SynthesisNode to analyze gathered evidence, validate citations, and generate the final report.
+
+- Action type: `implementation`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `not_applicable`
+- Runtime execution mode: `either`
+- Execution status: `executable`
+- Branch condition: `none`
+- Risk: `medium`
+
+Inputs:
+
+- event_contracts.py
+
+Outputs:
+
+- synthesis_and_join.py
+
+Preconditions:
+
+- Output schemas are defined.
+
+Postconditions:
+
+- Join logic correctly aggregates events. Synthesis logic produces a properly formatted SynthesisReport.
+
+Acceptance criteria:
+
+- JoinNode waits for all spawned branches to complete or timeout.
+- SynthesisNode processes evidence, explicitly linking claims to sources in the output schema.
+- Synthesis output identifies uncertainties and limitations as requested.
+
+Executor contract:
+
+- Type/id: `agent:node_developer`
+- Required inputs: event_contracts.py
+- Expected outputs: synthesis_and_join.py
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `test`
+- Instruction: Execute tests that simulate parallel branch completions and timeouts to verify JoinNode convergence, and assert that the SynthesisNode attributes citations properly in the SynthesisReport.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- Fan-out/fan-in synchronization in workflow graphs can introduce race conditions if not correctly modeled.
+
+### T8_graph_wiring: Wire ADK 2.0 Workflow Graph
+
+Assemble the completed nodes into a single static ADK 2.0 Graph Workflow. Define all edges from Planning -> Approval -> Router -> Branches -> Join -> Synthesis.
+
+- Action type: `implementation`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `not_applicable`
+- Runtime execution mode: `either`
+- Execution status: `executable`
+- Branch condition: `none`
+- Risk: `low`
+
+Inputs:
+
+- planning_node.py
+- approval_node.py
+- router_and_branches.py
+- synthesis_and_join.py
+
+Outputs:
+
+- research_workflow.py
+
+Preconditions:
+
+- All individual nodes are implemented and unit-tested.
+
+Postconditions:
+
+- A compiled/runnable ADK 2.0 workflow object is available.
+
+Acceptance criteria:
+
+- Graph compiles without cyclic errors (unless explicit retry loops are designed).
+- Approval checkpoint effectively breaks execution and can be explicitly resumed.
+- Graph uses explicit Edge declarations.
+
+Executor contract:
+
+- Type/id: `agent:workflow_developer`
+- Required inputs: planning_node.py, approval_node.py, router_and_branches.py, synthesis_and_join.py
+- Expected outputs: research_workflow.py
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `test`
+- Instruction: Run a script to verify that the ADK 2.0 workflow object compiles, successfully handles module imports, explicitly exports the 'root_agent', defines static route keys matching the branch nodes, and has no cyclic errors.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- None
+
+### T9_e2e_tests: Write Deterministic E2E Tests
+
+Create a suite of deterministic tests that mock the search providers and the human input, verifying the complete path from a raw topic to the final synthesis.
+
+- Action type: `testing`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `ready`
+- Runtime execution mode: `either`
+- Execution status: `executable`
+- Branch condition: `none`
+- Risk: `low`
+
+Inputs:
+
+- research_workflow.py
+
+Outputs:
+
+- test_research_workflow.py
+
+Preconditions:
+
+- Workflow graph is fully wired.
+
+Postconditions:
+
+- High test coverage achieved (>85% statement coverage) for the happy path and partial failure paths.
+
+Acceptance criteria:
+
+- Mock implementations of provider adapters are injected.
+- Test simulates human approving the plan.
+- Test simulates human modifying the plan.
+- Test asserts final SynthesisReport structure.
+
+Executor contract:
+
+- Type/id: `agent:test_developer`
+- Required inputs: research_workflow.py
+- Expected outputs: test_research_workflow.py
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `test`
+- Instruction: Execute pytest with coverage analysis to ensure the E2E test suite executes the full wired graph mock and achieves at least 85% coverage.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- None
+
+### T10_documentation: Create Final Markdown Implementation Document
+
+Document the ADK 2.0 architecture, how to extend the provider interfaces, and how the human-in-the-loop checkpoint is integrated.
+
+- Action type: `documentation`
+- Abstraction level: `meso`
+- Execution mode: `sequential`
+- Parallel group: `none`
+- Build status: `executable`
+- Runtime status: `not_applicable`
+- Runtime execution mode: `either`
+- Execution status: `executable`
+- Branch condition: `none`
+- Risk: `low`
+
+Inputs:
+
+- research_workflow.py
+- test_research_workflow.py
+
+Outputs:
+
+- ADK_2.0_Research_System_Design.md
+
+Preconditions:
+
+- System is built and tested.
+
+Postconditions:
+
+- A comprehensive implementation guide is produced, explicitly containing specific sections: Architecture, Provider Setup, and Extension Guide.
+
+Acceptance criteria:
+
+- Document covers Architecture, Provider Abstraction, Setup, and Execution.
+
+Executor contract:
+
+- Type/id: `agent:doc_generator`
+- Required inputs: research_workflow.py, test_research_workflow.py
+- Expected outputs: ADK_2.0_Research_System_Design.md
+- Fallback executor: `none`
+
+Verifier contract:
+
+- Type: `human`
+- Instruction: Review the final Markdown document to ensure it accurately explains how to configure the ADK 2.0 system and how to extend the base classes for new search providers.
+- Success threshold: `0.85`
+- Failure action: `replan`
+
+Decomposition guidance:
+
+- Can expand: `False`
+- Should expand now: `False`
+- Expansion reason: none
+- Compressed subgraph ref: `none`
+
+Risk reasons:
+
+- None
+
+## Edges And Data Flow
+
+| From | To | Type | Reason |
+|---|---|---|---|
+| T1_schema_design | T3_planning_node | enables | PlanningNode needs Event Contracts to define inputs and outputs. |
+| T2_provider_config | T3_planning_node | enables | The PlanningNode must detect available or missing providers during its exploration phase; therefore, it requires access to the configuration loader. |
+| T1_schema_design | T4_approval_node | enables | ApprovalNode needs the ResearchPlan schema. |
+| T1_schema_design | T5A_provider_interface | enables | Provider interface requires event contract schemas. |
+| T5A_provider_interface | T5B_google_adapter | enables | Concrete integrations depend on the abstract provider interface. |
+| T5A_provider_interface | T5B_exa_adapter | enables | Concrete integrations depend on the abstract provider interface. |
+| T5A_provider_interface | T5B_tavily_adapter | enables | Concrete integrations depend on the abstract provider interface. |
+| T5A_provider_interface | T5B_github_adapter | enables | Concrete integrations depend on the abstract provider interface. |
+| T2_provider_config | T5B_google_adapter | enables | Integrations require configuration and secrets handling logic. |
+| T2_provider_config | T5B_exa_adapter | enables | Integrations require configuration and secrets handling logic. |
+| T2_provider_config | T5B_tavily_adapter | enables | Integrations require configuration and secrets handling logic. |
+| T2_provider_config | T5B_github_adapter | enables | Integrations require configuration and secrets handling logic. |
+| T1_schema_design | T6_router_and_branches | enables | Branch nodes need schemas to construct search inputs. |
+| T5B_google_adapter | T6_router_and_branches | enables | Static branch nodes orchestrate the specific provider adapters. |
+| T5B_exa_adapter | T6_router_and_branches | enables | Static branch nodes orchestrate the specific provider adapters. |
+| T5B_tavily_adapter | T6_router_and_branches | enables | Static branch nodes orchestrate the specific provider adapters. |
+| T5B_github_adapter | T6_router_and_branches | enables | Static branch nodes orchestrate the specific provider adapters. |
+| T1_schema_design | T7_synthesis_and_join | enables | SynthesisNode needs the SynthesisReport schema. |
+| T3_planning_node | T8_graph_wiring | enables | Workflow wiring requires all nodes to be implemented. |
+| T4_approval_node | T8_graph_wiring | enables | Workflow wiring requires all nodes to be implemented. |
+| T6_router_and_branches | T8_graph_wiring | enables | Workflow wiring requires all nodes to be implemented. |
+| T7_synthesis_and_join | T8_graph_wiring | enables | Workflow wiring requires all nodes to be implemented. |
+| T8_graph_wiring | T9_e2e_tests | enables | Tests can only run on the fully wired graph. |
+| T9_e2e_tests | T10_documentation | enables | Final documentation should reflect the fully tested graph and include testing instructions. |
+| t0_configure_runtime_environment | T2_provider_config | requires_output | Runtime configuration is required before live provider execution. |
+| t0_configure_runtime_environment | T5B_google_adapter | requires_output | Runtime configuration is required before live provider execution. |
+| t0_configure_runtime_environment | T5B_exa_adapter | requires_output | Runtime configuration is required before live provider execution. |
+| t0_configure_runtime_environment | T5B_tavily_adapter | requires_output | Runtime configuration is required before live provider execution. |
+| t0_configure_runtime_environment | T5B_github_adapter | requires_output | Runtime configuration is required before live provider execution. |
+
+## Execution Schedule
+
+| Phase | Mode | Tasks | Convergence Task |
+|---|---|---|---|
+| P1 | parallel | T1_schema_design, t0_configure_runtime_environment | none |
+| P2 | parallel | T2_provider_config, T4_approval_node, T5A_provider_interface, T7_synthesis_and_join | T5B_exa_adapter |
+| P3 | parallel | T3_planning_node, T5B_exa_adapter, T5B_github_adapter, T5B_google_adapter, T5B_tavily_adapter | T6_router_and_branches |
+| P4 | sequential | T6_router_and_branches | none |
+| P5 | sequential | T8_graph_wiring | none |
+| P6 | sequential | T9_e2e_tests | none |
+| P7 | sequential | T10_documentation | none |
+
+## ADK 2.0 Implementation Checklist
+
+- Confirm project opt-in to ADK 2.0 beta and dependency `google-adk>=2.0.0b1`.
+- Define `Workflow(name=..., edges=[...])` with at least one edge from `START`.
+- Encode routing nodes so emitted `Event(route=...)` values exactly match route dictionary keys.
+- Ensure every node emits at most one `Event.output` per run.
+- Use `Event(output=...)` for handoff data and `Event(state=...)` for durable workflow state.
+- Use `Event(message=...)` only for user-visible responses.
+- Guarantee every branch that reaches a `JoinNode` emits output, including failure outputs.
+- Keep loops bounded with an explicit exit route or deterministic stop condition.
+- Add HITL `RequestInput`, stable `interrupt_id` and `rerun_on_resume=True` tests when human input is part of the graph.
+- Add auth tests that verify credentials are requested and consumed without printing secrets.
+- Avoid collaborative agents and dynamic workflows unless an explicit opt-in decision is recorded.
+
+## Verification Strategy
+
+- Unit-test deterministic graph helpers, route functions and schema transformations.
+- Test module import and `root_agent` export without live model calls.
+- Test every route key and every fallback route with representative inputs.
+- Test fan-out/fan-in convergence and failure-path convergence.
+- Use evals for LLM behavior only after explicit approval to run eval commands.
+- Do not run deploy, infra, playground or publish commands without explicit approval.
+
+## Warnings
+
+- Hidden assumption: Assumes the existence of an external UI or frontend application to present the ResearchPlan decision questions and successfully capture the Yes/No/Custom responses to resume the ADK 2.0 graph execution.
+- Conditionally executable task: T2_provider_config
+- Conditionally executable task: T5B_google_adapter
+- Conditionally executable task: T5B_exa_adapter
+- Conditionally executable task: T5B_tavily_adapter
+- Conditionally executable task: T5B_github_adapter
+- Missing runtime input: Actual API keys for Google, Exa, Tavily, GitHub
+- Missing runtime input: Google API Key
+- Missing runtime input: Exa API Key
+- Missing runtime input: Tavily API Key
+- Missing runtime input: GitHub API Key
+
+## Pending Repair Suggestions
+
+- verifiability:improve_verifier:T2_provider_config
+
+## Runtime Blockers
+
+- T2_provider_config: Actual API keys for Google, Exa, Tavily, GitHub
+- T5B_google_adapter: Google API Key
+- T5B_exa_adapter: Exa API Key
+- T5B_tavily_adapter: Tavily API Key
+- T5B_github_adapter: GitHub API Key
+- Actual API keys for Google, Exa, Tavily, GitHub
+- Google API Key
+- Exa API Key
+- Tavily API Key
+- GitHub API Key

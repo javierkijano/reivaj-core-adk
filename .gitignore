@@ -132,6 +132,9 @@ my_env.tfvars
 .adk/
 deployment_metadata.json
 skills-lock.json
+*uv.lock
+third-party/
+**/third-party/
 tools/a2a-inspector/
 tests/load_test/.results/*.html
 tests/load_test/.results/*.csv
