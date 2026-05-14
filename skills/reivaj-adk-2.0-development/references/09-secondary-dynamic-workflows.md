@@ -31,8 +31,9 @@ vive dentro de un nodo orquestador.
 
 ```python
 @node(rerun_on_resume=True)
-async def my_workflow(ctx: Context, node_input: str) -> str:
-    result = await ctx.run_node(my_node, node_input="hello")
+async def my_workflow(ctx: Context, node_input: Any) -> str:
+    text = content_to_text(node_input)
+    result = await ctx.run_node(my_node, node_input=text)
     return result
 
 root_agent = Workflow(
@@ -40,6 +41,10 @@ root_agent = Workflow(
     edges=[("START", my_workflow)],
 )
 ```
+
+Si `my_workflow` es root expuesto a chat general, no debe ser el primer nodo
+especializado. Agregar antes `intent_gate` y rutear a `my_workflow` solo en
+`workflow_request`.
 
 ## Building Blocks
 
@@ -74,8 +79,9 @@ Usar cuando el loop no es una simple route:
 
 ```python
 @node
-async def code_workflow(ctx: Context, user_request: str):
-    code = await ctx.run_node(coder_agent, user_request)
+async def code_workflow(ctx: Context, user_request: Any):
+    request_text = content_to_text(user_request)
+    code = await ctx.run_node(coder_agent, request_text)
     check = await ctx.run_node(compile_lint_check, code)
     while check.findings:
         yield Event(state={"code": code, "findings": check.findings})
@@ -132,6 +138,7 @@ Si se usa custom `run_id`:
 
 - Usuario lo pidio o el grafo estatico seria claramente peor.
 - Se explicaron alternativas primarias.
+- Si el orquestador esta expuesto a chat, hay `intent_gate` previo.
 - El orquestador tiene `rerun_on_resume=True` si llama nodos que pueden pausar.
 - Loops tienen limite o criterio de salida verificable.
 - Paralelismo usa `asyncio.gather` con manejo de errores cuando importa.

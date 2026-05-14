@@ -1,0 +1,752 @@
+source:
+  id: adk-integrations
+  label: External ADK integrations
+  source_type: external
+  upstream_root: https://adk.dev/integrations/
+items:
+- id: a2ui
+  name: A2UI
+  source: https://adk.dev/integrations/#a2ui
+  summary: Generate rich structured UIs from agents using the Agent-to-UI protocol.
+  tags:
+  - entity:ui
+  - domain:horizontal
+  maturity: maturity:observed
+- id: adspirer
+  name: Adspirer
+  source: https://adk.dev/integrations/#adspirer
+  summary: Create, manage, and optimize ad campaigns across Google, Meta, LinkedIn, and TikTok Ads.
+  tags:
+  - entity:tool
+  - domain:marketing
+  maturity: maturity:observed
+- id: ag-ui
+  name: AG-UI
+  source: https://adk.dev/integrations/#ag-ui
+  summary: Build interactive chat UIs with streaming, state sync, and agentic actions.
+  tags:
+  - entity:ui
+  - pattern:streaming
+  - domain:horizontal
+  maturity: maturity:observed
+- id: google-cloud-agent-registry
+  name: Google Cloud Agent Registry
+  source: https://adk.dev/integrations/#google-cloud-agent-registry
+  summary: Discover and connect to AI agents and MCP servers.
+  tags:
+  - entity:tool
+  - pattern:mcp
+  - integration:vertex-ai
+  - domain:horizontal
+  maturity: maturity:observed
+- id: agent-search
+  name: Agent Search
+  source: https://adk.dev/integrations/#agent-search
+  summary: Search across private configured data stores in Agent Search.
+  tags:
+  - entity:tool
+  - capability:research
+  - capability:rag
+  - domain:horizontal
+  maturity: maturity:observed
+- id: agentmail
+  name: AgentMail
+  source: https://adk.dev/integrations/#agentmail
+  summary: Create email inboxes for AI agents to send, receive, and manage messages.
+  tags:
+  - entity:tool
+  - capability:customer-ops
+  - domain:operations
+  maturity: maturity:observed
+- id: agentops
+  name: AgentOps
+  source: https://adk.dev/integrations/#agentops
+  summary: Session replays, metrics, and monitoring for ADK agents.
+  tags:
+  - entity:plugin
+  - capability:observability
+  - domain:horizontal
+  maturity: maturity:observed
+- id: agentphone
+  name: AgentPhone
+  source: https://adk.dev/integrations/#agentphone
+  summary: Make phone calls, send SMS, manage numbers, and build AI voice agents.
+  tags:
+  - entity:tool
+  - capability:customer-ops
+  - pattern:multimodal
+  - domain:operations
+  maturity: maturity:observed
+- id: google-cloud-api-registry
+  name: Google Cloud API Registry
+  source: https://adk.dev/integrations/#google-cloud-api-registry
+  summary: Connect with Google Cloud services as MCP tools.
+  tags:
+  - entity:tool
+  - pattern:mcp
+  - integration:vertex-ai
+  - domain:horizontal
+  maturity: maturity:observed
+- id: apigee-api-hub
+  name: Apigee API Hub
+  source: https://adk.dev/integrations/#apigee-api-hub
+  summary: Turn documented APIs from Apigee API Hub into tools.
+  tags:
+  - entity:tool
+  - integration:apigee
+  - domain:horizontal
+  maturity: maturity:observed
+- id: application-integration
+  name: Application Integration
+  source: https://adk.dev/integrations/#application-integration
+  summary: Link agents to enterprise apps using Integration Connectors.
+  tags:
+  - entity:tool
+  - integration:application-integration
+  - domain:operations
+  maturity: maturity:observed
+- id: arize-ax
+  name: Arize AX
+  source: https://adk.dev/integrations/#arize-ax
+  summary: Production-grade observability, debugging, and improvement of LLM applications.
+  tags:
+  - entity:plugin
+  - capability:observability
+  - domain:horizontal
+  maturity: maturity:observed
+- id: asana
+  name: Asana
+  source: https://adk.dev/integrations/#asana
+  summary: Manage projects, tasks, and goals for team collaboration.
+  tags:
+  - entity:tool
+  - capability:planning
+  - domain:operations
+  maturity: maturity:observed
+- id: atlan
+  name: Atlan
+  source: https://adk.dev/integrations/#atlan
+  summary: Search, explore, and govern metadata, lineage, and business knowledge.
+  tags:
+  - entity:tool
+  - capability:research
+  - capability:data-analysis
+  - domain:data
+  maturity: maturity:observed
+- id: atlassian
+  name: Atlassian
+  source: https://adk.dev/integrations/#atlassian
+  summary: Manage issues, search pages, and update team content.
+  tags:
+  - entity:tool
+  - capability:planning
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: bigquery-agent-analytics-plugin
+  name: BigQuery Agent Analytics Plugin
+  source: https://adk.dev/integrations/#bigquery-agent-analytics-plugin
+  summary: In-depth agent analytics for behavior analysis and logging.
+  tags:
+  - entity:plugin
+  - capability:observability
+  - integration:bigquery
+  - domain:data
+  maturity: maturity:observed
+- id: bigquery-tools
+  name: BigQuery Tools
+  source: https://adk.dev/integrations/#bigquery-tools
+  summary: Connect with BigQuery to retrieve data and perform analysis.
+  tags:
+  - entity:tool
+  - capability:data-analysis
+  - integration:bigquery
+  - domain:data
+  maturity: maturity:observed
+- id: bigtable-tools
+  name: Bigtable Tools
+  source: https://adk.dev/integrations/#bigtable-tools
+  summary: Interact with Bigtable to retrieve data and execute SQL.
+  tags:
+  - entity:tool
+  - capability:data-analysis
+  - domain:data
+  maturity: maturity:observed
+- id: cartesia
+  name: Cartesia
+  source: https://adk.dev/integrations/#cartesia
+  summary: Generate speech, localize voices, and create audio content.
+  tags:
+  - entity:tool
+  - capability:media-generation
+  - pattern:multimodal
+  - domain:media
+  maturity: maturity:observed
+- id: chroma
+  name: Chroma
+  source: https://adk.dev/integrations/#chroma
+  summary: Store and retrieve information using semantic vector search.
+  tags:
+  - entity:tool
+  - capability:rag
+  - capability:research
+  - domain:data
+  maturity: maturity:observed
+- id: cisco-ai-defense
+  name: Cisco AI Defense
+  source: https://adk.dev/integrations/#cisco-ai-defense
+  summary: Security guardrails to monitor or block agent prompts and tool calls.
+  tags:
+  - entity:plugin
+  - capability:security
+  - capability:compliance
+  - domain:security
+  maturity: maturity:observed
+- id: google-cloud-trace
+  name: Google Cloud Trace
+  source: https://adk.dev/integrations/#google-cloud-trace
+  summary: Monitor, debug, and trace ADK agent interactions.
+  tags:
+  - entity:plugin
+  - capability:observability
+  - domain:horizontal
+  maturity: maturity:observed
+- id: code-execution-tool-with-agent-runtime
+  name: Code Execution Tool with Agent Runtime
+  source: https://adk.dev/integrations/#code-execution-tool-with-agent-runtime
+  summary: Run AI-generated code in a secure and scalable GKE environment.
+  tags:
+  - entity:tool
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: code-execution
+  name: Code Execution
+  source: https://adk.dev/integrations/#code-execution
+  summary: Execute code and debug using Gemini models.
+  tags:
+  - entity:tool
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: computer-use
+  name: Computer Use
+  source: https://adk.dev/integrations/#computer-use
+  summary: Operate computer user interfaces using Gemini models.
+  tags:
+  - entity:tool
+  - entity:ui
+  - domain:horizontal
+  maturity: maturity:observed
+- id: couchbase
+  name: Couchbase
+  source: https://adk.dev/integrations/#couchbase
+  summary: Query collections, explore schemas, and run SQL++ queries.
+  tags:
+  - entity:tool
+  - capability:data-analysis
+  - domain:data
+  maturity: maturity:observed
+- id: dapr
+  name: Dapr
+  source: https://adk.dev/integrations/#dapr
+  summary: Durable, long-running and self-recovering agents with human approvals and safe versioning.
+  tags:
+  - entity:tool
+  - pattern:long-running
+  - pattern:hitl
+  - domain:operations
+  maturity: maturity:observed
+- id: data-agents
+  name: Data Agents
+  source: https://adk.dev/integrations/#data-agents
+  summary: Analyze data with AI-powered agents.
+  tags:
+  - entity:agent
+  - capability:data-analysis
+  - domain:data
+  maturity: maturity:observed
+- id: database-memory-service
+  name: Database Memory Service
+  source: https://adk.dev/integrations/#database-memory-service
+  summary: SQL-backed persistent memory for agents.
+  tags:
+  - entity:tool
+  - capability:memory
+  - domain:data
+  maturity: maturity:observed
+- id: datadog
+  name: Datadog
+  source: https://adk.dev/integrations/#datadog
+  summary: Develop, evaluate, and monitor LLM applications.
+  tags:
+  - entity:plugin
+  - capability:observability
+  - domain:horizontal
+  maturity: maturity:observed
+- id: daytona
+  name: Daytona
+  source: https://adk.dev/integrations/#daytona
+  summary: Execute code, run shell commands, and manage files in secure sandboxes.
+  tags:
+  - entity:tool
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: dbos
+  name: DBOS
+  source: https://adk.dev/integrations/#dbos
+  summary: Resilient, scalable, long-running agents with human approvals and safe versioning.
+  tags:
+  - entity:tool
+  - pattern:long-running
+  - pattern:hitl
+  - domain:operations
+  maturity: maturity:observed
+- id: elevenlabs
+  name: ElevenLabs
+  source: https://adk.dev/integrations/#elevenlabs
+  summary: Generate speech, clone voices, transcribe audio, and create sound effects.
+  tags:
+  - entity:tool
+  - capability:media-generation
+  - pattern:multimodal
+  - domain:media
+  maturity: maturity:observed
+- id: environment-toolset
+  name: Environment Toolset
+  source: https://adk.dev/integrations/#environment-toolset
+  summary: Create local and custom compute environments for files, scripts, and code execution.
+  tags:
+  - entity:tool
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: agent-platform-express-mode
+  name: Agent Platform Express Mode
+  source: https://adk.dev/integrations/#agent-platform-express-mode
+  summary: Try development with Agent Platform services at no cost.
+  tags:
+  - entity:deployment
+  - integration:vertex-ai
+  - domain:horizontal
+  maturity: maturity:observed
+- id: firestore-session-service
+  name: Firestore Session Service
+  source: https://adk.dev/integrations/#firestore-session-service
+  summary: Session state management for ADK agents using Firestore.
+  tags:
+  - entity:tool
+  - capability:memory
+  - domain:horizontal
+  maturity: maturity:observed
+- id: freeplay
+  name: Freeplay
+  source: https://adk.dev/integrations/#freeplay
+  summary: Build, optimize, and evaluate AI agents with end-to-end observability.
+  tags:
+  - entity:plugin
+  - entity:evaluation
+  - capability:observability
+  - domain:horizontal
+  maturity: maturity:observed
+- id: galileo
+  name: Galileo
+  source: https://adk.dev/integrations/#galileo
+  summary: End-to-end tracing, evaluation, and monitoring for ADK agents.
+  tags:
+  - entity:plugin
+  - entity:evaluation
+  - capability:observability
+  - domain:horizontal
+  maturity: maturity:observed
+- id: github
+  name: GitHub
+  source: https://adk.dev/integrations/#github
+  summary: Analyze code, manage issues and PRs, and automate workflows.
+  tags:
+  - entity:tool
+  - integration:github
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: gitlab
+  name: GitLab
+  source: https://adk.dev/integrations/#gitlab
+  summary: Perform semantic code search, inspect pipelines, and manage merge requests.
+  tags:
+  - entity:tool
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: gke-code-executor
+  name: GKE Code Executor
+  source: https://adk.dev/integrations/#gke-code-executor
+  summary: Run AI-generated code in a secure and scalable GKE environment.
+  tags:
+  - entity:tool
+  - entity:deployment
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: goodmem
+  name: GoodMem
+  source: https://adk.dev/integrations/#goodmem
+  summary: Add persistent semantic memory to agents across conversations.
+  tags:
+  - entity:tool
+  - capability:memory
+  - domain:horizontal
+  maturity: maturity:observed
+- id: google-developer-knowledge
+  name: Google Developer Knowledge
+  source: https://adk.dev/integrations/#google-developer-knowledge
+  summary: Search Google's official developer documentation for code and guidance.
+  tags:
+  - entity:tool
+  - capability:research
+  - capability:grounding
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: google-search
+  name: Google Search
+  source: https://adk.dev/integrations/#google-search
+  summary: Perform web searches using Google Search with Gemini.
+  tags:
+  - entity:tool
+  - capability:research
+  - capability:grounding
+  - integration:google-search
+  - domain:horizontal
+  maturity: maturity:observed
+- id: exa-search-api
+  name: Exa Search API
+  source: https://exa.ai/docs/reference/search-api-guide-for-coding-agents
+  summary: Search the web with semantically rich queries and grounding-friendly highlights for coding agents.
+  tags:
+  - entity:tool
+  - capability:research
+  - capability:grounding
+  - integration:exa-search
+  - domain:horizontal
+  maturity: maturity:observed
+- id: exa-py
+  name: exa-py
+  source: https://github.com/exa-labs/exa-py
+  summary: Official Python SDK for Exa web search and answer APIs.
+  tags:
+  - entity:tool
+  - capability:research
+  - capability:grounding
+  - integration:exa-search
+  - domain:horizontal
+  maturity: maturity:observed
+- id: tavily-api-reference
+  name: Tavily API Reference
+  source: https://docs.tavily.com/documentation/api-reference/
+  summary: Web search, extract, crawl, map, and research APIs for agent workflows.
+  tags:
+  - entity:tool
+  - capability:research
+  - capability:grounding
+  - integration:tavily-search
+  - domain:horizontal
+  maturity: maturity:observed
+- id: tavily-skills
+  name: Tavily Skills
+  source: https://github.com/tavily-ai/skills
+  summary: Skill pack for web search, extraction, crawling, mapping, and research powered by the Tavily CLI.
+  tags:
+  - entity:skill
+  - capability:research
+  - capability:grounding
+  - integration:tavily-search
+  - domain:horizontal
+  maturity: maturity:observed
+- id: brave-web-search-api
+  name: Brave Web Search API
+  source: https://api-dashboard.search.brave.com/documentation/services/web-search
+  summary: Web search API with freshness filtering, local enrichments, and rich data results.
+  tags:
+  - entity:tool
+  - capability:research
+  - capability:grounding
+  - integration:brave-search
+  - domain:horizontal
+  maturity: maturity:observed
+- id: brave-search-skills
+  name: Brave Search Skills
+  source: https://github.com/brave/brave-search-skills
+  summary: Official skill pack for Brave Search API use with AI coding agents.
+  tags:
+  - entity:skill
+  - capability:research
+  - capability:grounding
+  - integration:brave-search
+  - domain:horizontal
+  maturity: maturity:observed
+- id: grafana-cloud
+  name: Grafana Cloud
+  source: https://adk.dev/integrations/#grafana-cloud
+  summary: Query metrics, logs, traces, dashboards, alerts, and incidents from Grafana Cloud.
+  tags:
+  - entity:tool
+  - capability:observability
+  - domain:operations
+  maturity: maturity:observed
+- id: hugging-face
+  name: Hugging Face
+  source: https://adk.dev/integrations/#hugging-face
+  summary: Access models, datasets, research papers, and AI tools.
+  tags:
+  - entity:tool
+  - capability:research
+  - domain:data
+  maturity: maturity:observed
+- id: knowledge-engine
+  name: Knowledge Engine
+  source: https://adk.dev/integrations/#knowledge-engine
+  summary: Perform private data retrieval using Knowledge Engine.
+  tags:
+  - entity:tool
+  - capability:rag
+  - capability:research
+  - domain:data
+  maturity: maturity:observed
+- id: langwatch
+  name: LangWatch
+  source: https://adk.dev/integrations/#langwatch
+  summary: Observability, tracing, evaluation, and prompt optimization for ADK agents.
+  tags:
+  - entity:plugin
+  - entity:evaluation
+  - capability:observability
+  - domain:horizontal
+  maturity: maturity:observed
+- id: linear
+  name: Linear
+  source: https://adk.dev/integrations/#linear
+  summary: Manage issues, track projects, and streamline development.
+  tags:
+  - entity:tool
+  - capability:planning
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: mailgun
+  name: Mailgun
+  source: https://adk.dev/integrations/#mailgun
+  summary: Send emails, track delivery metrics, and manage mailing lists.
+  tags:
+  - entity:tool
+  - capability:customer-ops
+  - domain:operations
+  maturity: maturity:observed
+- id: markifact
+  name: Markifact
+  source: https://adk.dev/integrations/#markifact
+  summary: Manage marketing operations across Google Ads, Meta, GA4, TikTok, and other platforms.
+  tags:
+  - entity:tool
+  - domain:marketing
+  maturity: maturity:observed
+- id: mcp-toolbox-for-databases
+  name: MCP Toolbox for Databases
+  source: https://adk.dev/integrations/#mcp-toolbox-for-databases
+  summary: Connect over 30 different data sources to agents.
+  tags:
+  - entity:tool
+  - pattern:mcp
+  - capability:data-analysis
+  - domain:data
+  maturity: maturity:observed
+- id: mlflow-ai-gateway
+  name: MLflow AI Gateway
+  source: https://adk.dev/integrations/#mlflow-ai-gateway
+  summary: Route LLM requests for multi-provider access with built-in governance.
+  tags:
+  - entity:tool
+  - capability:compliance
+  - domain:horizontal
+  maturity: maturity:observed
+- id: mlflow-tracing
+  name: MLflow Tracing
+  source: https://adk.dev/integrations/#mlflow-tracing
+  summary: Ingest OpenTelemetry traces for agent runs, tool calls, and model requests.
+  tags:
+  - entity:plugin
+  - capability:observability
+  - domain:horizontal
+  maturity: maturity:observed
+- id: mongodb
+  name: MongoDB
+  source: https://adk.dev/integrations/#mongodb
+  summary: Query collections, manage databases, and analyze schemas.
+  tags:
+  - entity:tool
+  - capability:data-analysis
+  - domain:data
+  maturity: maturity:observed
+- id: monocle
+  name: Monocle
+  source: https://adk.dev/integrations/#monocle
+  summary: Open-source observability, tracing, and debugging of LLM applications.
+  tags:
+  - entity:plugin
+  - capability:observability
+  - domain:horizontal
+  maturity: maturity:observed
+- id: n8n
+  name: n8n
+  source: https://adk.dev/integrations/#n8n
+  summary: Trigger automated workflows, connect apps, and process data.
+  tags:
+  - entity:tool
+  - domain:operations
+  maturity: maturity:observed
+- id: notion
+  name: Notion
+  source: https://adk.dev/integrations/#notion
+  summary: Search workspaces, create pages, and manage tasks and databases.
+  tags:
+  - entity:tool
+  - capability:planning
+  - domain:operations
+  maturity: maturity:observed
+- id: paypal
+  name: Paypal
+  source: https://adk.dev/integrations/#paypal
+  summary: Manage payments, send invoices, and handle subscriptions.
+  tags:
+  - entity:tool
+  - integration:payment-api
+  - domain:finance
+  maturity: maturity:observed
+- id: phoenix
+  name: Phoenix
+  source: https://adk.dev/integrations/#phoenix
+  summary: Open-source self-hosted observability, tracing, and evaluation of LLM applications.
+  tags:
+  - entity:plugin
+  - entity:evaluation
+  - capability:observability
+  - domain:horizontal
+  maturity: maturity:observed
+- id: pinecone
+  name: Pinecone
+  source: https://adk.dev/integrations/#pinecone
+  summary: Store data, perform semantic search, and rerank results.
+  tags:
+  - entity:tool
+  - capability:rag
+  - capability:research
+  - domain:data
+  maturity: maturity:observed
+- id: postman
+  name: Postman
+  source: https://adk.dev/integrations/#postman
+  summary: Manage API collections, workspaces, and generate client code.
+  tags:
+  - entity:tool
+  - domain:software-engineering
+  maturity: maturity:observed
+- id: pubsub-tools
+  name: Pub/Sub Tools
+  source: https://adk.dev/integrations/#pubsub-tools
+  summary: Publish, pull, and acknowledge messages from Google Cloud Pub/Sub.
+  tags:
+  - entity:tool
+  - domain:operations
+  maturity: maturity:observed
+- id: qdrant
+  name: Qdrant
+  source: https://adk.dev/integrations/#qdrant
+  summary: Store and retrieve information using semantic vector search.
+  tags:
+  - entity:tool
+  - capability:rag
+  - capability:research
+  - domain:data
+  maturity: maturity:observed
+- id: reflect-and-retry-plugin
+  name: Reflect and Retry Plugin
+  source: https://adk.dev/integrations/#reflect-and-retry-plugin
+  summary: Automatically retry tool calls that fail.
+  tags:
+  - entity:plugin
+  - pattern:plugin
+  - domain:horizontal
+  maturity: maturity:observed
+- id: restate
+  name: Restate
+  source: https://adk.dev/integrations/#restate
+  summary: Resilient agent execution and orchestration with durable sessions and human approvals.
+  tags:
+  - entity:tool
+  - pattern:long-running
+  - pattern:hitl
+  - domain:operations
+  maturity: maturity:observed
+- id: spanner-tools
+  name: Spanner Tools
+  source: https://adk.dev/integrations/#spanner-tools
+  summary: Interact with Spanner to retrieve data, search, and execute SQL.
+  tags:
+  - entity:tool
+  - capability:data-analysis
+  - domain:data
+  maturity: maturity:observed
+- id: stackone
+  name: StackOne
+  source: https://adk.dev/integrations/#stackone
+  summary: Connect agents to 200+ SaaS providers.
+  tags:
+  - entity:tool
+  - domain:operations
+  maturity: maturity:observed
+- id: stripe
+  name: Stripe
+  source: https://adk.dev/integrations/#stripe
+  summary: Manage payments, customers, subscriptions, and invoices.
+  tags:
+  - entity:tool
+  - integration:payment-api
+  - domain:finance
+  maturity: maturity:observed
+- id: supermetrics
+  name: Supermetrics
+  source: https://adk.dev/integrations/#supermetrics
+  summary: Consume and analyze real-time marketing, advertising, and CRM data.
+  tags:
+  - entity:tool
+  - capability:data-analysis
+  - domain:marketing
+  maturity: maturity:observed
+- id: temporal
+  name: Temporal
+  source: https://adk.dev/integrations/#temporal
+  summary: Resilient, scalable agents, long-running agents and tools, human approvals, and safe versioning.
+  tags:
+  - entity:tool
+  - pattern:long-running
+  - pattern:hitl
+  - domain:operations
+  maturity: maturity:observed
+- id: wb-weave
+  name: W&B Weave
+  source: https://adk.dev/integrations/#wb-weave
+  summary: Log, visualize, and analyze model calls and agent performance.
+  tags:
+  - entity:plugin
+  - capability:observability
+  - domain:horizontal
+  maturity: maturity:observed
+- id: windsor-ai
+  name: Windsor.ai
+  source: https://adk.dev/integrations/#windsor-ai
+  summary: Query and analyze marketing, sales, and customer data from many platforms.
+  tags:
+  - entity:tool
+  - capability:data-analysis
+  - domain:marketing
+  maturity: maturity:observed
+- id: zoominfo
+  name: ZoomInfo
+  source: https://adk.dev/integrations/#zoominfo
+  summary: Find companies, enrich contacts, and surface go-to-market intelligence.
+  tags:
+  - entity:tool
+  - capability:research
+  - domain:marketing
+  maturity: maturity:observed

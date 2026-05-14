@@ -22,6 +22,8 @@ interesting implementation patterns decomposable into reusable components.
 | `external/adk-samples/reusable-functionality.yaml` | Cross-sample reusable patterns and implementation ideas |
 | `external/workflow-samples/README.md` | External source index for ADK 2.0 Workflow samples |
 | `external/workflow-samples/workflow-catalog.yaml` | Catalog of upstream `google/adk-python` workflow samples |
+| `external/adk-integrations/README.md` | External source index for ADK public tools and integrations |
+| `external/adk-integrations/integrations-catalog.yaml` | Catalog of public `adk.dev/integrations` resources |
 | `internal/README.md` | Internal source index for repository-owned resources |
 | `internal/resources.yaml` | Catalog of internal agents and skills |
 

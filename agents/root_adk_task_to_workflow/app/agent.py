@@ -1,5 +1,6 @@
 import logging
 import os
+from pathlib import Path
 
 import google.auth
 from dotenv import load_dotenv
@@ -50,7 +51,7 @@ from app.task_splitter.workflow_agents import (
 )
 
 logger = logging.getLogger(__name__)
-APP_NAME = "root_adk_task_to_workflow"
+APP_NAME = Path(__file__).resolve().parent.name
 MODEL_NAME = "gemini-3.1-pro-preview"
 
 

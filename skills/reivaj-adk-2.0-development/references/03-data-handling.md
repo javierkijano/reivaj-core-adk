@@ -18,9 +18,30 @@ Parametros clave:
 Usar para pasar datos internos:
 
 ```python
-def parse(node_input: str):
-    return Event(output={"text": node_input.strip()})
+from typing import Any
+
+from google.genai.types import Content
+
+
+def parse(node_input: Any):
+    return Event(output={"text": content_to_text(node_input)})
+
+
+def content_to_text(node_input: Any) -> str:
+    if isinstance(node_input, Content):
+        parts = node_input.parts or []
+        return " ".join(part.text for part in parts if getattr(part, "text", None)).strip()
+    return str(node_input).strip()
 ```
+
+Si `parse` esta conectado directamente a `START`, su firma debe aceptar `Any` o
+`Content`. El schema Pydantic propio se aplica despues de normalizar, no en la
+annotation del primer nodo.
+
+`Any` es una decision de compatibilidad runtime, no una politica de producto. En
+un root conversacional, despues de `content_to_text(...)` debe existir
+validacion semantica o `intent_gate`; no interpretar `str(node_input)`
+directamente como tarea valida.
 
 Si una funcion devuelve un valor simple, el framework puede envolverlo como
 output:
@@ -57,8 +78,8 @@ El sample `message/agent.py` muestra:
 Usar para datos pequenos de sesion:
 
 ```python
-def process_input(node_input: str):
-    return Event(state={"original_text": node_input})
+def process_input(node_input: Any):
+    return Event(state={"original_text": content_to_text(node_input)})
 
 def read_state(ctx: Context):
     return ctx.state["original_text"].upper()
@@ -102,6 +123,9 @@ Tambien se puede tipar una FunctionNode:
 def consume(node_input: FlightSearchOutput):
     return len(node_input.flights)
 ```
+
+Esta firma tipada requiere que el upstream ya haya emitido `FlightSearchOutput`.
+No conectar `consume` directamente a `START` si el runtime entregara `Content`.
 
 El sample `node_output/agent.py` muestra retorno string, `Event(output=...)`,
 `Agent(output_schema=...)` y consumo tipado. Esta muestra esta marcada `NOT
@@ -151,7 +175,7 @@ normal con `Workflow(edges=[...])` expresa el flujo con claridad.
 
 ```python
 @node(rerun_on_resume=True)
-async def orchestrate(ctx: Context, node_input: str) -> str:
+async def orchestrate(ctx: Context, node_input: Any) -> str:
     return await ctx.run_node(summarizer, node_input=node_input, use_as_output=True)
 ```
 
@@ -161,6 +185,9 @@ orquestador.
 ## Checklist De Datos
 
 - Cada nodo tiene input y output esperados documentados.
+- Cada frontera documenta semantic input y ADK runtime input por separado.
+- Primer nodo desde `START` acepta `Any` o `Content` y normaliza `Content.parts`.
+- Root conversacional no activa tareas desde texto normalizado sin `intent_gate`.
 - Cada frontera LLM/funcion critica tiene schema.
 - `message` solo se usa para usuario.
 - `state` solo guarda datos pequenos.

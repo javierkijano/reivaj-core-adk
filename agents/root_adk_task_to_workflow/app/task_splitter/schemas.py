@@ -62,6 +62,12 @@ TaskRuntimeStatus = Literal[
     "ready", "blocked_by_runtime_inputs", "mock_only", "not_applicable"
 ]
 RuntimeExecutionMode = Literal["mock", "real", "either"]
+RuntimeBoundaryType = Literal[
+    "start", "normal", "router", "join", "hitl", "auth", "final"
+]
+EntrypointContext = Literal[
+    "general_chat", "dedicated_workflow", "tool_invoked", "subworkflow"
+]
 PhaseMode = Literal["sequential", "parallel"]
 EdgeType = Literal[
     "requires_output",
@@ -170,6 +176,33 @@ class TaskEdge(BaseModel):
     to: str
     type: EdgeType
     reason: str
+
+
+class RuntimeNodeContract(BaseModel):
+    node_id: str
+    runtime_boundary_type: RuntimeBoundaryType
+    semantic_input: str
+    adk_runtime_input: str
+    recommended_function_signature: str
+    normalization_required: list[str] = Field(default_factory=list)
+    output_event_contract: str
+    state_keys_written: list[str] = Field(default_factory=list)
+    route_values_emitted: list[str] = Field(default_factory=list)
+    required_tests: list[str] = Field(default_factory=list)
+
+
+class InteractionActivationContract(BaseModel):
+    entrypoint_context: EntrypointContext
+    activation_triggers: list[str] = Field(default_factory=list)
+    non_activation_inputs: list[str] = Field(default_factory=list)
+    deterministic_prechecks: list[str] = Field(default_factory=list)
+    llm_intent_check: str
+    minimum_required_slots: list[str] = Field(default_factory=list)
+    clarification_policy: list[str] = Field(default_factory=list)
+    direct_response_policy: list[str] = Field(default_factory=list)
+    hitl_policy: list[str] = Field(default_factory=list)
+    expensive_action_policy: list[str] = Field(default_factory=list)
+    required_interaction_tests: list[str] = Field(default_factory=list)
 
 
 class GoalState(BaseModel):
@@ -287,9 +320,42 @@ class CapabilitySpec(BaseModel):
 class CandidateTaskGraph(BaseModel):
     graph_type: GraphType = "implementation_task_graph"
     runtime_pipeline_ref: str | None = None
+    interaction_activation_contract: InteractionActivationContract | None = None
     nodes: list[TaskNode] = Field(default_factory=list)
     edges: list[TaskEdge] = Field(default_factory=list)
+    runtime_node_contracts: list[RuntimeNodeContract] = Field(default_factory=list)
     assumptions: list[str] = Field(default_factory=list)
+
+
+class LLMRuntimeNodeContract(BaseModel):
+    """Live-safe runtime contract schema used as Gemini response_schema."""
+
+    node_id: str
+    runtime_boundary_type: str
+    semantic_input: str
+    adk_runtime_input: str
+    recommended_function_signature: str
+    normalization_required: list[str] = Field(default_factory=list)
+    output_event_contract: str
+    state_keys_written: list[str] = Field(default_factory=list)
+    route_values_emitted: list[str] = Field(default_factory=list)
+    required_tests: list[str] = Field(default_factory=list)
+
+
+class LLMInteractionActivationContract(BaseModel):
+    """Live-safe activation policy schema used as Gemini response_schema."""
+
+    entrypoint_context: str
+    activation_triggers: list[str] = Field(default_factory=list)
+    non_activation_inputs: list[str] = Field(default_factory=list)
+    deterministic_prechecks: list[str] = Field(default_factory=list)
+    llm_intent_check: str
+    minimum_required_slots: list[str] = Field(default_factory=list)
+    clarification_policy: list[str] = Field(default_factory=list)
+    direct_response_policy: list[str] = Field(default_factory=list)
+    hitl_policy: list[str] = Field(default_factory=list)
+    expensive_action_policy: list[str] = Field(default_factory=list)
+    required_interaction_tests: list[str] = Field(default_factory=list)
 
 
 class LLMTaskNode(BaseModel):
@@ -337,8 +403,10 @@ class LLMCandidateTaskGraph(BaseModel):
 
     graph_type: str = "implementation_task_graph"
     runtime_pipeline_ref: str | None = None
+    interaction_activation_contract: LLMInteractionActivationContract | None = None
     nodes: list[LLMTaskNode] = Field(default_factory=list)
     edges: list[LLMTaskEdge] = Field(default_factory=list)
+    runtime_node_contracts: list[LLMRuntimeNodeContract] = Field(default_factory=list)
     assumptions: list[str] = Field(default_factory=list)
 
 
@@ -500,10 +568,12 @@ class ValidatedTaskGraph(BaseModel):
     status: QualityStatus = "valid"
     graph_type: GraphType = "implementation_task_graph"
     runtime_pipeline_ref: str | None = None
+    interaction_activation_contract: InteractionActivationContract | None = None
     goal_state: GoalState
     initial_macrostate: MacroState
     nodes: list[TaskNode]
     edges: list[TaskEdge]
+    runtime_node_contracts: list[RuntimeNodeContract] = Field(default_factory=list)
     quality_report: QualityReport
     execution_schedule: ExecutionSchedule
 

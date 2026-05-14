@@ -11,6 +11,10 @@ root_agent = Workflow(
 )
 ```
 
+`parse_input` esta en frontera `START`: si es FunctionNode, su firma debe ser
+`Any` o `Content` y debe normalizar `Content.parts` antes de validar schemas
+propios.
+
 Muestra oficial: `sequence/agent.py`.
 
 ## Routing Condicional
@@ -39,9 +43,44 @@ Muestra oficial: `route/agent.py`.
 
 Buenas practicas:
 
+- Si `process_input` esta conectado a `START`, usar firma `Any`/`Content` y
+  normalizacion interna antes del clasificador.
 - Ruta con `Literal[...]` o enum Pydantic.
 - Handler por defecto para `other` o errores.
 - Tests por cada route key.
+
+## Activation Gate Para Root Conversacional
+
+Si el `Workflow` es el `root_agent` expuesto a chat/playground, el primer routing
+no debe ser planner, tool ni HITL. Debe ser una compuerta de intencion:
+
+```text
+START
+  -> normalize_input
+  -> intent_gate
+  -> {
+       greeting: greeting_response,
+       thanks: thanks_response,
+       small_talk: smalltalk_response,
+       simple_question: simple_answer,
+       ambiguous: clarification,
+       workflow_request: planner
+     }
+```
+
+Reglas:
+
+- `greeting`, `thanks`, `small_talk`, `simple_question` y `ambiguous` terminan
+  con `Event(message=...)`.
+- `workflow_request` es la unica ruta que puede activar planner, tools,
+  proveedores, HITL o acciones costosas.
+- Inputs como `Hola`, `Gracias`, `ADK` o string vacio no deben llegar al planner
+  salvo que la politica de dominio los clasifique explicitamente como request.
+- Confirmaciones sueltas como `si`, `ok` o `dale` no activan el workflow sin
+  contexto previo verificable.
+
+`Any` en la firma solo resuelve el contrato runtime con ADK; no sustituye la
+politica de activacion.
 
 ## Fan-Out / Fan-In Estatico
 
@@ -56,11 +95,22 @@ root_agent = Workflow(
 )
 ```
 
-El `JoinNode` entrega un dict con outputs por nombre de nodo. Muestra oficial:
-`fan_out_fan_in/agent.py`.
+En samples, `JoinNode` puede entregar un dict con outputs por nombre de nodo.
+Muestra oficial: `fan_out_fan_in/agent.py`.
 
 Regla critica: cada upstream debe emitir salida. Si uno falla sin fallback output,
 el join se atasca.
+
+El nodo posterior a `JoinNode` es otra frontera runtime: debe aceptar `Any` y
+normalizar internamente. No asumir una unica forma. Segun upstream/runtime puede
+llegar `dict`, `list`, `tuple`, un `Event.output` ya desempaquetado o modelos ya
+validados.
+
+```python
+def aggregate(node_input: Any) -> Event:
+    joined = normalize_join_input(node_input)
+    return Event(output=AggregateResult(results=joined))
+```
 
 ## Multiples Triggers Iniciales
 
@@ -78,6 +128,9 @@ Tambien aparece el patron `("START", (a, b, c), next_node)` donde varios nodos s
 disparan sobre el mismo input y el siguiente nodo recibe disparos multiples.
 Muestra oficial: `multi_triggers/agent.py`.
 
+Cada nodo disparado directamente desde `START` sigue la regla `Any`/`Content` +
+normalizacion. No tipar esos nodos como `str` o modelos Pydantic propios.
+
 ## Dynamic Fan-Out / Fan-In
 
 Patron secundario. No recomendar ni implementar directamente salvo peticion
@@ -92,8 +145,9 @@ solo entonces usar un orquestador:
 
 ```python
 @node(rerun_on_resume=True)
-async def orchestrator(ctx: Context, node_input: str):
-    items = [item.strip() for item in node_input.split(",")]
+async def orchestrator(ctx: Context, node_input: Any):
+    text = content_to_text(node_input)
+    items = [item.strip() for item in text.split(",")]
     tasks = [ctx.run_node(worker, node_input=item, use_sub_branch=True) for item in items]
     results = await asyncio.gather(*tasks)
     yield Event(message=format_results(results))
@@ -114,8 +168,9 @@ Un orquestador puede llamar agentes en un `while`:
 
 ```python
 @node(rerun_on_resume=True)
-async def orchestrate(ctx: Context, node_input: str):
-    yield Event(state={"topic": node_input})
+async def orchestrate(ctx: Context, node_input: Any):
+    topic = content_to_text(node_input)
+    yield Event(state={"topic": topic})
     while True:
         candidate = await ctx.run_node(generate)
         feedback = Feedback.model_validate(await ctx.run_node(evaluate, node_input=candidate))

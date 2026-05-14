@@ -18,8 +18,8 @@ Fuente: `google/adk-python` rama `v2`, `contributing/workflow_samples`.
 | `node_output` | Outputs y Pydantic | Strings, Events y schemas; sample marcado `NOT WORKING YET`. |
 | `use_as_output` | Output de nodo dinamico | `ctx.run_node(..., use_as_output=True)`. |
 | `message` | Mensajes usuario | Strings, multimodal, multiples mensajes, partial chunks. |
-| `request_input` | HITL simple | Revision humana + route approve/reject/revise. |
-| `request_input_advanced` | HITL schema/payload | `RequestInput(payload=..., response_schema=...)`. |
+| `request_input` | HITL simple | Revision humana dedicada; no usar como front-door conversacional. |
+| `request_input_advanced` | HITL schema/payload | Decision determinista decide si pedir humano; mejor patron que pedir HITL sin gate. |
 | `request_input_rerun` | Resume robusto | `@node(rerun_on_resume=True)` + `ctx.resume_inputs`. |
 | `multi_triggers` | Multiples disparos | Fan-out hacia un nodo siguiente sin join explicito. |
 | `retry` | Retry determinista | `RetryConfig`, `ctx.attempt_count`, errores transitorios. |
@@ -37,6 +37,20 @@ Los siguientes tienen comentario `NOT WORKING YET`:
 - `request_input/agent.py`
 
 No copiarlos literalmente sin validarlos contra la version instalada.
+Aunque un sample muestre firmas estrechas, en codigo de proyecto todo
+FunctionNode conectado directamente a `START` debe aceptar `Any` o `Content` y
+normalizar `Content.parts` antes de schemas propios.
+
+Lecciones HITL de samples:
+
+- `request_input` es un workflow dedicado de revision, no un patron para root
+  agents conversacionales.
+- `request_input` esta marcado como `NOT WORKING YET`; no copiar literalmente.
+- `request_input_advanced` muestra mejor separacion: una decision determinista
+  decide si pedir humano o continuar.
+- La doc indica que `RequestInput` puede pedir datos sin IA, pero
+  `response_schema` no transforma respuestas libres; para UX normal, usar
+  prompts simples o UI especifica.
 
 ## Patrones Reutilizables
 
@@ -49,13 +63,19 @@ class InputCategory(BaseModel):
     category: Literal["question", "statement", "other"]
 ```
 
+Si el workflow es `root_agent` conversacional, esta clasificacion debe ser una
+politica de activacion antes de planners/tools/HITL, con rutas como `greeting`,
+`thanks`, `small_talk`, `simple_question`, `ambiguous` y `workflow_request`.
+
 ### Join agregado
 
-El agregador recibe dict por nombre de nodo:
+El agregador puede recibir dict por nombre de nodo, pero no debe asumirlo como
+unica forma runtime:
 
 ```python
-async def aggregate(node_input: dict[str, Any]):
-    yield Event(message=node_input["make_uppercase"])
+async def aggregate(node_input: Any):
+    joined = normalize_join_input(node_input)
+    yield Event(message=joined["make_uppercase"])
 ```
 
 ### Loop generate/evaluate
@@ -100,6 +120,11 @@ yield Event(message=f"Getting weather... attempt {ctx.attempt_count}")
 
 - Copiar samples con `NOT WORKING YET` sin probar.
 - Usar loops sin limite maximo en sistemas reales.
+- Exponer un workflow especializado como root conversacional sin `intent_gate`.
+- Usar `RequestInput` como compuerta generica para saludos o inputs ambiguos.
+- Tipar el primer FunctionNode desde `START` como `str`, union estrecha o modelo
+  Pydantic propio.
+- Tipar el agregador post-`JoinNode` como una unica forma sin normalizador.
 - Imprimir credenciales aunque sea enmascaradas sin necesidad.
 - Depender de nombres de nodos implicitos sin documentar output contract.
 - Mezclar mensaje de usuario y datos internos.

@@ -5,10 +5,13 @@
 Patrones vistos en docs y samples:
 
 ```python
+from typing import Any
+
 from google.adk import Agent, Context, Event, Workflow
 from google.adk.workflow import JoinNode, RetryConfig, node
 from google.adk.workflow._base_node import START  # opcional; "START" tambien aparece en samples
 from google.adk.events import RequestInput
+from google.genai.types import Content
 ```
 
 Para auth:
@@ -62,6 +65,53 @@ def uppercase_event(node_input: str):
 
 Si el retorno no es `Event`, el framework lo envuelve como output para el nodo
 siguiente.
+
+Estas firmas estrechas son validas solo cuando un upstream ya normalizo el dato.
+No usarlas como primer nodo conectado directamente a `START`.
+
+## Binder Y Runtime Boundaries
+
+ADK convierte funciones en `FunctionNode` y valida sus parametros con las type
+annotations antes de ejecutar el cuerpo. En `START`, el input runtime real puede
+ser `google.genai.types.Content`, por ejemplo
+`Content(role="user", parts=[Part(text="...")])`. Si la firma dice `str`,
+`ResearchQuery`, `str | ResearchQuery` o un modelo Pydantic propio, el binder
+puede fallar antes de que la funcion pueda normalizar.
+
+Reglas de frontera:
+
+- Nodos conectados directamente a `START`: firma `Any` o `Content`.
+- Si `START` viene de chat/playground general: `Any`/`Content` debe ir seguido
+  de normalizacion e `intent_gate` antes de planner/tools/HITL.
+- HITL resume: tratar `ctx.resume_inputs[interrupt_id]` como payload externo.
+- Post-`JoinNode`: firma `Any` y normalizacion interna.
+- Validar con Pydantic despues de convertir el objeto runtime a la forma
+  semantica esperada.
+
+`Any` evita fallos del binder, pero no decide si el workflow debe activarse.
+Prohibido tratar `str(node_input)` como tarea valida en un root conversacional
+sin politica de intencion.
+
+Plantilla segura para primer nodo:
+
+```python
+from typing import Any
+
+from google.adk import Event
+from google.genai.types import Content
+
+
+def parse_request(node_input: Any) -> Event:
+    text = content_to_text(node_input)
+    return Event(output=ParsedRequest(topic=text))
+
+
+def content_to_text(node_input: Any) -> str:
+    if isinstance(node_input, Content):
+        parts = node_input.parts or []
+        return " ".join(part.text for part in parts if getattr(part, "text", None)).strip()
+    return str(node_input).strip()
+```
 
 ## `@node`
 

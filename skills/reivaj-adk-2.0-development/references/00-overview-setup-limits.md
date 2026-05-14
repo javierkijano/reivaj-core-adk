@@ -57,6 +57,8 @@ Usar Workflow 2.0 cuando:
 - Hay que mezclar codigo determinista y razonamiento LLM.
 - El flujo necesita trazabilidad por nodos.
 - La fragilidad principal esta en control-flow, no en calidad de lenguaje.
+- El flujo expuesto a chat necesita una politica explicita de activacion antes de
+  planners, tools, proveedores, HITL o acciones costosas.
 
 No usar Workflow 2.0 cuando:
 
@@ -73,6 +75,10 @@ No usar Workflow 2.0 cuando:
 - Multiples sesiones interactivas de chat en paralelo dentro de la misma session
   no son una forma valida de paralelismo.
 - `JoinNode` se queda atascado si algun upstream no emite salida.
+- El primer FunctionNode desde `START` falla antes de ejecutar si su annotation
+  no acepta el objeto runtime real, normalmente `Content`.
+- Un workflow tecnicamente valido puede comportarse mal si se expone a chat
+  general sin `intent_gate`; saludos o small talk pueden activar planners/HITL.
 - `Event.output` solo puede emitirse una vez por ejecucion de nodo.
 
 ## Migracion Desde ADK 1.x
@@ -89,3 +95,8 @@ Regla practica:
 
 Migrar solo si aporta control o simplifica. No migrar YAML/ADK 1.x estable solo
 por novedad.
+
+En edges desde `START`, aceptar `Any` o `Content` y normalizar `Content.parts`
+antes de validar schemas propios.
+Si ese `START` viene de chat/playground general, agregar `intent_gate` antes de
+planners, tools, proveedores o HITL.

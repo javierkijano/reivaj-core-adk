@@ -22,6 +22,11 @@ Limitacion: `response_schema` no transforma automaticamente respuestas humanas
 no estructuradas. Para UX robusta, usar UI estructurada o un Agent que convierta
 texto libre al schema requerido.
 
+`RequestInput` no es una compuerta conversacional generica. En un root expuesto a
+chat, debe aparecer despues de `intent_gate` y solo si ya existe una decision
+real que requiere humano. No usarlo para preguntar si un saludo o small talk debe
+activar el workflow.
+
 ## HITL Simple
 
 Sample `request_input/agent.py`:
@@ -32,18 +37,29 @@ Sample `request_input/agent.py`:
 - Router que emite `approved`, `rejected` o `revise`.
 - Edge que vuelve a draft si hay revision.
 
+Lecciones:
+
+- Es un workflow dedicado de revision, no un patron para root agents
+  conversacionales.
+- Esta marcado como `NOT WORKING YET`; no copiar literalmente sin validar.
+- No usarlo como excusa para disparar HITL ante `Hola` o inputs ambiguos.
+
 Patron:
 
 ```python
 def request_human_review(draft: str):
     yield RequestInput(message=f"Review this draft:\n{draft}")
 
-def handle_review(node_input: str):
-    if node_input == "approve":
+def handle_review(node_input: Any):
+    review = normalize_human_response(node_input)
+    if review == "approve":
         yield Event(route="approved")
     else:
-        yield Event(state={"feedback": node_input}, route="revise")
+        yield Event(state={"feedback": review}, route="revise")
 ```
+
+La respuesta humana es frontera externa: puede llegar como string, dict o payload
+estructurado segun UI/runtime. Normalizar antes de emitir rutas criticas.
 
 ## HITL Con Resume Robusto
 
@@ -52,15 +68,20 @@ Sample `request_input_rerun/agent.py`:
 ```python
 @node(rerun_on_resume=True)
 def human_review(draft: str, ctx: Context):
-    resume_input = ctx.resume_inputs.get("human_review")
-    if not resume_input:
+    raw_resume = ctx.resume_inputs.get("human_review")
+    if raw_resume is None:
         yield RequestInput(interrupt_id="human_review", message="Review...")
         return
+    resume_input = normalize_human_response(raw_resume)
     ...
 ```
 
 Usar este patron cuando el nodo debe ejecutarse de nuevo tras recibir respuesta.
 El `interrupt_id` debe ser estable y unico por interrupcion logica.
+
+No asumir que `ctx.resume_inputs[interrupt_id]` coincide exactamente con
+`response_schema`. Puede ser texto libre, dict serializado, instancia Pydantic o
+payload de UI. Convertir a la forma esperada y luego validar.
 
 ## HITL Con Payload Y Schema
 
@@ -70,6 +91,14 @@ Sample `request_input_advanced/agent.py`:
 class TimeOffDecision(BaseModel):
     approved: bool
     approved_days: int | None = None
+
+
+def normalize_decision(raw: Any) -> TimeOffDecision:
+    if isinstance(raw, TimeOffDecision):
+        return raw
+    if isinstance(raw, dict):
+        return TimeOffDecision.model_validate(raw)
+    return TimeOffDecision(approved=str(raw).strip().lower() == "approve")
 
 def evaluate_request(request: TimeOffRequest):
     if request.days <= 1:
@@ -83,6 +112,20 @@ def evaluate_request(request: TimeOffRequest):
 ```
 
 Usar `payload` para contexto y `response_schema` para decisiones auditables.
+Este sample muestra el patron mas seguro: una decision determinista decide si
+pedir humano o continuar. Primero validar intencion y estado; despues pedir
+input humano si hace falta.
+
+## Politica HITL User-Friendly
+
+- Mensajes breves y naturales.
+- Payload minimo y orientado a la decision.
+- Schema pequeno.
+- No exponer modelos internos completos al usuario final salvo modo reviewer/admin.
+- Para aprobacion simple, preferir approve/reject/feedback o respuesta textual
+  normalizada.
+- No pedir `approved_plan` completo a un usuario normal.
+- No disparar HITL para saludos, thanks, small talk o inputs ambiguos.
 
 ## Auth API Key
 
@@ -130,8 +173,10 @@ Reglas:
 ## Checklist HITL/Auth
 
 - Cada interrupcion tiene `interrupt_id` estable si se reanuda.
+- `RequestInput` aparece despues de `intent_gate`, no como front-door de chat.
 - El nodo HITL no avanza despues de emitir `RequestInput` hasta recibir input.
-- La respuesta humana se valida o normaliza antes de rutas criticas.
+- La respuesta humana se normaliza desde `str`/`dict`/payload estructurado y se
+  valida antes de rutas criticas.
 - Los branches de approve/reject/revise tienen handlers.
 - Auth no expone secretos en `message`, logs ni tests.
-- Los tests cubren approve, reject, revise/error y resume.
+- Los tests cubren primera interrupcion, approve, reject, revise/error y resume.

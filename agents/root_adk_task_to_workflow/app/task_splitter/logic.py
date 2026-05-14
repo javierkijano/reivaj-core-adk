@@ -18,6 +18,7 @@ from app.task_splitter.schemas import (
     ExecutorSpec,
     GoalState,
     GranularityReport,
+    InteractionActivationContract,
     LLMCandidateTaskGraph,
     LLMProblemDefinition,
     LLMRepairResult,
@@ -28,6 +29,7 @@ from app.task_splitter.schemas import (
     RepairOperationType,
     RepairResult,
     RepairSuggestion,
+    RuntimeNodeContract,
     TaskDecomposition,
     TaskDependencies,
     TaskEdge,
@@ -105,6 +107,15 @@ def _graph_snapshot(graph: CandidateTaskGraph) -> dict[str, Any]:
         "edges": sorted(
             f"{edge.from_task}->{edge.to}:{edge.type}" for edge in graph.edges
         ),
+        "interaction_activation_contract": model_dump(
+            graph.interaction_activation_contract
+        )
+        if graph.interaction_activation_contract
+        else None,
+        "runtime_node_contracts": sorted(
+            f"{contract.node_id}:{contract.runtime_boundary_type}"
+            for contract in graph.runtime_node_contracts
+        ),
     }
 
 
@@ -142,6 +153,8 @@ def _modified_fields(
     modified_nodes: list[TaskNode],
     added_edges: list[TaskEdge],
     removed_edges: list[TaskEdge],
+    runtime_contracts_changed: bool = False,
+    interaction_contract_changed: bool = False,
 ) -> list[str]:
     fields: list[str] = []
     if added_nodes:
@@ -154,6 +167,10 @@ def _modified_fields(
         fields.append("edges.added")
     if removed_edges:
         fields.append("edges.removed")
+    if runtime_contracts_changed:
+        fields.append("runtime_node_contracts.modified")
+    if interaction_contract_changed:
+        fields.append("interaction_activation_contract.modified")
     return fields
 
 
@@ -311,6 +328,53 @@ def normalize_llm_problem_definition(
         task_splitter_goal=draft.task_splitter_goal or draft.reformulated_problem,
         direct_response=draft.direct_response or None,
         approval_request=draft.approval_request or None,
+    )
+
+
+def normalize_runtime_node_contract(contract: Any) -> RuntimeNodeContract:
+    value = contract if isinstance(contract, dict) else model_dump(contract)
+    return RuntimeNodeContract(
+        node_id=value.get("node_id") or "unknown_node",
+        runtime_boundary_type=_safe_choice(
+            value.get("runtime_boundary_type", "normal"),
+            {"start", "normal", "router", "join", "hitl", "auth", "final"},
+            "normal",
+        ),
+        semantic_input=value.get("semantic_input") or "Semantic input not specified.",
+        adk_runtime_input=value.get("adk_runtime_input")
+        or "ADK runtime input not specified.",
+        recommended_function_signature=value.get("recommended_function_signature")
+        or "node_input: Any",
+        normalization_required=list(value.get("normalization_required") or []),
+        output_event_contract=value.get("output_event_contract")
+        or "Event(output=...) contract not specified.",
+        state_keys_written=list(value.get("state_keys_written") or []),
+        route_values_emitted=list(value.get("route_values_emitted") or []),
+        required_tests=list(value.get("required_tests") or []),
+    )
+
+
+def normalize_interaction_activation_contract(
+    contract: Any,
+) -> InteractionActivationContract:
+    value = contract if isinstance(contract, dict) else model_dump(contract)
+    return InteractionActivationContract(
+        entrypoint_context=_safe_choice(
+            value.get("entrypoint_context", "general_chat"),
+            {"general_chat", "dedicated_workflow", "tool_invoked", "subworkflow"},
+            "general_chat",
+        ),
+        activation_triggers=list(value.get("activation_triggers") or []),
+        non_activation_inputs=list(value.get("non_activation_inputs") or []),
+        deterministic_prechecks=list(value.get("deterministic_prechecks") or []),
+        llm_intent_check=value.get("llm_intent_check")
+        or "Use an LLM intent classifier only when deterministic prechecks cannot classify the input.",
+        minimum_required_slots=list(value.get("minimum_required_slots") or []),
+        clarification_policy=list(value.get("clarification_policy") or []),
+        direct_response_policy=list(value.get("direct_response_policy") or []),
+        hitl_policy=list(value.get("hitl_policy") or []),
+        expensive_action_policy=list(value.get("expensive_action_policy") or []),
+        required_interaction_tests=list(value.get("required_interaction_tests") or []),
     )
 
 
@@ -477,8 +541,17 @@ def normalize_llm_task_graph(draft: LLMCandidateTaskGraph) -> CandidateTaskGraph
             "implementation_task_graph",
         ),
         runtime_pipeline_ref=draft.runtime_pipeline_ref,
+        interaction_activation_contract=normalize_interaction_activation_contract(
+            draft.interaction_activation_contract
+        )
+        if draft.interaction_activation_contract
+        else None,
         nodes=nodes,
         edges=edges,
+        runtime_node_contracts=[
+            normalize_runtime_node_contract(contract)
+            for contract in draft.runtime_node_contracts
+        ],
         assumptions=draft.assumptions,
     )
 
@@ -545,13 +618,39 @@ def attach_repair_mutations(
         previous_edges[key]
         for key in sorted(previous_edges.keys() - repaired_edges.keys())
     ]
+    runtime_contracts_changed = json.dumps(
+        [model_dump(contract) for contract in previous_graph.runtime_node_contracts],
+        sort_keys=True,
+    ) != json.dumps(
+        [model_dump(contract) for contract in repaired_graph.runtime_node_contracts],
+        sort_keys=True,
+    )
+    interaction_contract_changed = json.dumps(
+        model_dump(previous_graph.interaction_activation_contract)
+        if previous_graph.interaction_activation_contract
+        else None,
+        sort_keys=True,
+    ) != json.dumps(
+        model_dump(repaired_graph.interaction_activation_contract)
+        if repaired_graph.interaction_activation_contract
+        else None,
+        sort_keys=True,
+    )
     before_snapshot = _graph_snapshot(previous_graph)
     after_snapshot = _graph_snapshot(repaired_graph)
     graph_integrity_warnings = _graph_integrity_warnings(repaired_graph)
     graph_valid_after_repair = not graph_integrity_warnings
 
     if not any(
-        [added_nodes, removed_nodes, modified_nodes, added_edges, removed_edges]
+        [
+            added_nodes,
+            removed_nodes,
+            modified_nodes,
+            added_edges,
+            removed_edges,
+            runtime_contracts_changed,
+            interaction_contract_changed,
+        ]
     ):
         return [
             operation.model_copy(
@@ -576,7 +675,15 @@ def attach_repair_mutations(
         ]
 
     if not operations:
-        target = removed_nodes[0].id if removed_nodes else "task_graph"
+        target = (
+            removed_nodes[0].id
+            if removed_nodes
+            else "runtime_node_contracts"
+            if runtime_contracts_changed
+            else "interaction_activation_contract"
+            if interaction_contract_changed
+            else "task_graph"
+        )
         operations = [
             RepairOperation(
                 operation=_choose_synthetic_operation(
@@ -630,6 +737,8 @@ def attach_repair_mutations(
             operation_modified_nodes,
             added_edges,
             removed_edges,
+            runtime_contracts_changed,
+            interaction_contract_changed,
         )
 
         enriched.append(
@@ -1035,6 +1144,365 @@ def _detect_mixed_implementation_runtime_graph(graph: CandidateTaskGraph) -> boo
     return False
 
 
+def _graph_search_text(graph: CandidateTaskGraph, goal_state: GoalState | None) -> str:
+    values: list[str] = []
+    if goal_state:
+        values.extend(
+            [
+                goal_state.raw_goal,
+                goal_state.interpreted_goal,
+                *goal_state.success_criteria,
+                *goal_state.hard_constraints,
+                *goal_state.soft_constraints,
+                *goal_state.unknowns,
+            ]
+        )
+    values.extend(graph.assumptions)
+    if graph.interaction_activation_contract:
+        contract = graph.interaction_activation_contract
+        values.extend(
+            [
+                contract.entrypoint_context,
+                *contract.activation_triggers,
+                *contract.non_activation_inputs,
+                *contract.deterministic_prechecks,
+                contract.llm_intent_check,
+                *contract.minimum_required_slots,
+                *contract.clarification_policy,
+                *contract.direct_response_policy,
+                *contract.hitl_policy,
+                *contract.expensive_action_policy,
+                *contract.required_interaction_tests,
+            ]
+        )
+    for task in graph.nodes:
+        values.extend(
+            [
+                task.id,
+                task.title,
+                task.description,
+                task.action_type,
+                *task.input_state,
+                *task.output_state,
+                *task.acceptance_criteria,
+                task.verifier.instruction,
+            ]
+        )
+    for edge in graph.edges:
+        values.extend([edge.from_task, edge.to, edge.type, edge.reason])
+    for contract in graph.runtime_node_contracts:
+        values.extend(
+            [
+                contract.node_id,
+                contract.runtime_boundary_type,
+                contract.semantic_input,
+                contract.adk_runtime_input,
+                contract.recommended_function_signature,
+                *contract.normalization_required,
+                contract.output_event_contract,
+                *contract.state_keys_written,
+                *contract.route_values_emitted,
+                *contract.required_tests,
+            ]
+        )
+    return " ".join(values).lower()
+
+
+def _is_adk2_workflow_plan(
+    graph: CandidateTaskGraph, goal_state: GoalState | None
+) -> bool:
+    text = _graph_search_text(graph, goal_state)
+    return "adk 2" in text or "adk2" in text or "workflow" in text
+
+
+def _mentions_start_edge(
+    graph: CandidateTaskGraph, goal_state: GoalState | None
+) -> bool:
+    if any(edge.from_task.upper() == "START" for edge in graph.edges):
+        return True
+    text = _graph_search_text(graph, goal_state)
+    return "start" in text and "workflow" in text
+
+
+def _contract_text(contract: RuntimeNodeContract) -> str:
+    return " ".join(
+        [
+            contract.node_id,
+            contract.runtime_boundary_type,
+            contract.semantic_input,
+            contract.adk_runtime_input,
+            contract.recommended_function_signature,
+            *contract.normalization_required,
+            contract.output_event_contract,
+            *contract.state_keys_written,
+            *contract.route_values_emitted,
+            *contract.required_tests,
+        ]
+    ).lower()
+
+
+def _valid_start_runtime_contract(contract: RuntimeNodeContract) -> bool:
+    runtime_input = contract.adk_runtime_input.lower()
+    signature = contract.recommended_function_signature.lower()
+    normalizers = " ".join(contract.normalization_required).lower()
+    mentions_runtime_input = any(
+        value in runtime_input
+        for value in ["google.genai.types.content", "content", "any"]
+    )
+    signature_ok = "node_input: any" in signature or "node_input: content" in signature
+    normalizes_content = "content.parts" in normalizers
+    return mentions_runtime_input and signature_ok and normalizes_content
+
+
+def _semantic_input_without_adk_runtime_contract(
+    graph: CandidateTaskGraph, goal_state: GoalState | None
+) -> bool:
+    text = _graph_search_text(graph, goal_state)
+    mentions_semantic_input = any(
+        value in text for value in ["raw query", "raw_query", "researchquery"]
+    )
+    mentions_content_normalization = "content.parts" in text
+    return mentions_semantic_input and not mentions_content_normalization
+
+
+_GENERAL_CHAT_GATE_TERMS = {
+    "intent_gate",
+    "intent gate",
+    "conversation_router",
+    "conversation router",
+    "activation_policy",
+    "activation policy",
+    "normalize_user_input",
+    "normalize user input",
+}
+_COSTLY_FIRST_NODE_TERMS = {
+    "planning",
+    "planner",
+    "provider",
+    "tool",
+    "executor",
+    "hitl",
+    "requestinput",
+    "approval",
+}
+_REQUIRED_ROUTE_TERMS = {"greeting", "small_talk", "ambiguous"}
+_REQUIRED_ACCEPTANCE_TEST_TERMS = {
+    "hola": {"hola"},
+    "gracias": {"gracias", "thanks"},
+    "empty_or_whitespace": {'""', "empty", "whitespace"},
+    "adk_clarification": {"adk"},
+    "explicit_research_activation": {"investiga", "research", "busca fuentes"},
+    "first_node_accepts_content": {"content"},
+    "no_requestinput_before_intent_gate": {"requestinput", "intent_gate"},
+    "no_tools_for_non_activation": {"tool", "provider", "smalltalk", "small_talk"},
+}
+_RESEARCH_ACTIVATION_TRIGGER_TERMS = {
+    "investiga",
+    "busca fuentes",
+    "haz research",
+    "research",
+    "compara",
+    "analiza en profundidad",
+    "consulta la web",
+    "prepara un informe",
+}
+_NON_ACTIVATION_TERMS = {
+    "hola",
+    "greeting",
+    "gracias",
+    "thanks",
+    "small talk",
+    "small_talk",
+    "empty",
+    "whitespace",
+    "ambiguous",
+    "si",
+    "sí",
+}
+
+
+def _text_has_any(text: str, terms: set[str]) -> bool:
+    return any(term in text for term in terms)
+
+
+def _text_has_all_categories(text: str, categories: dict[str, set[str]]) -> list[str]:
+    return [
+        label for label, terms in categories.items() if not _text_has_any(text, terms)
+    ]
+
+
+def _first_logical_runtime_text(graph: CandidateTaskGraph) -> str:
+    start_contracts = [
+        contract
+        for contract in graph.runtime_node_contracts
+        if contract.runtime_boundary_type == "start"
+    ]
+    if start_contracts:
+        return " ".join(_contract_text(contract) for contract in start_contracts)
+
+    incoming = {edge.to for edge in graph.edges if edge.from_task.upper() != "START"}
+    start_targets = [
+        edge.to for edge in graph.edges if edge.from_task.upper() == "START"
+    ]
+    first_task_ids = start_targets or [
+        task.id
+        for task in graph.nodes
+        if task.id not in incoming and not task.dependencies.requires
+    ]
+    first_tasks = [task for task in graph.nodes if task.id in set(first_task_ids)]
+    return " ".join(
+        f"{task.id} {task.title} {task.description} {task.action_type} {task.executor.type} {task.executor.id}"
+        for task in first_tasks
+    ).lower()
+
+
+def _interaction_activation_diagnostics(
+    graph: CandidateTaskGraph, goal_state: GoalState | None
+) -> tuple[list[str], list[str], list[str]]:
+    critical_failures: list[str] = []
+    warnings: list[str] = []
+    pending_repair_suggestions: list[str] = []
+    contract = graph.interaction_activation_contract
+    if contract is None:
+        return (
+            ["missing_interaction_activation_contract"],
+            [],
+            ["coverage:add_interaction_activation_contract"],
+        )
+
+    contract_text = " ".join(
+        [
+            contract.entrypoint_context,
+            *contract.activation_triggers,
+            *contract.non_activation_inputs,
+            *contract.deterministic_prechecks,
+            contract.llm_intent_check,
+            *contract.minimum_required_slots,
+            *contract.clarification_policy,
+            *contract.direct_response_policy,
+            *contract.hitl_policy,
+            *contract.expensive_action_policy,
+            *contract.required_interaction_tests,
+        ]
+    ).lower()
+    graph_text = _graph_search_text(graph, goal_state)
+    route_text = " ".join(
+        route
+        for runtime_contract in graph.runtime_node_contracts
+        for route in runtime_contract.route_values_emitted
+    ).lower()
+    first_runtime_text = _first_logical_runtime_text(graph)
+
+    missing_tests = _text_has_all_categories(
+        " ".join(contract.required_interaction_tests).lower(),
+        _REQUIRED_ACCEPTANCE_TEST_TERMS,
+    )
+    if missing_tests:
+        critical_failures.append(
+            "missing_required_interaction_tests:" + ",".join(missing_tests)
+        )
+        pending_repair_suggestions.append("coverage:add_required_interaction_tests")
+
+    if contract.entrypoint_context == "general_chat":
+        if _text_has_any(
+            first_runtime_text, _COSTLY_FIRST_NODE_TERMS
+        ) and not _text_has_any(first_runtime_text, _GENERAL_CHAT_GATE_TERMS):
+            critical_failures.append("general_chat_start_node_bypasses_intent_gate")
+            pending_repair_suggestions.append("coverage:add_conversation_intent_gate")
+
+        missing_routes = sorted(
+            term
+            for term in _REQUIRED_ROUTE_TERMS
+            if term not in route_text + contract_text
+        )
+        if missing_routes:
+            critical_failures.append(
+                "missing_conversation_routes:" + ",".join(missing_routes)
+            )
+            pending_repair_suggestions.append("coverage:add_conversation_routes")
+
+        has_non_activation_policy = _text_has_any(
+            " ".join(contract.non_activation_inputs).lower(), _NON_ACTIVATION_TERMS
+        )
+        has_direct_response_policy = _text_has_any(
+            " ".join(contract.direct_response_policy).lower(),
+            {"greeting", "hola", "thanks", "gracias", "small_talk", "small talk"},
+        )
+        if not has_non_activation_policy or not has_direct_response_policy:
+            critical_failures.append(
+                "greeting_can_reach_planner_without_non_activation_policy"
+            )
+            pending_repair_suggestions.append("coverage:add_non_activation_policy")
+
+        if "requestinput" in first_runtime_text or (
+            "hitl" in first_runtime_text
+            and not _text_has_any(first_runtime_text, _GENERAL_CHAT_GATE_TERMS)
+        ):
+            critical_failures.append("requestinput_before_intent_gate")
+            pending_repair_suggestions.append("coverage:move_hitl_after_intent_gate")
+
+    has_costly_work = _text_has_any(
+        graph_text,
+        {
+            "research",
+            "search",
+            "provider",
+            "external",
+            "tool executor",
+            "consulta la web",
+        },
+    )
+    if has_costly_work:
+        trigger_text = " ".join(contract.activation_triggers).lower()
+        expensive_policy_text = " ".join(contract.expensive_action_policy).lower()
+        if not _text_has_any(trigger_text, _RESEARCH_ACTIVATION_TRIGGER_TERMS):
+            critical_failures.append("missing_explicit_costly_workflow_triggers")
+            pending_repair_suggestions.append(
+                "coverage:add_explicit_activation_triggers"
+            )
+        if not _text_has_any(
+            expensive_policy_text,
+            {"intent_gate", "explicit", "slots", "minimum", "workflow_request"},
+        ):
+            critical_failures.append("expensive_actions_not_gated_by_intent_policy")
+            pending_repair_suggestions.append("coverage:gate_expensive_actions")
+
+    for runtime_contract in graph.runtime_node_contracts:
+        if runtime_contract.runtime_boundary_type != "hitl":
+            continue
+        hitl_text = _contract_text(runtime_contract)
+        exposes_internal_payload = _text_has_any(
+            hitl_text,
+            {"approved_plan", "pydantic", "internal schema", "json schema"},
+        )
+        justified_advanced_mode = _text_has_any(
+            " ".join(contract.hitl_policy).lower() + " " + hitl_text,
+            {"advanced", "reviewer", "justification", "explicitly requested"},
+        )
+        if exposes_internal_payload and not justified_advanced_mode:
+            critical_failures.append("hitl_exposes_internal_payload_to_end_user")
+            pending_repair_suggestions.append("coverage:simplify_user_hitl_message")
+        if not _text_has_any(
+            " ".join(contract.hitl_policy).lower(),
+            {
+                "sensitive",
+                "cost",
+                "risk",
+                "side effect",
+                "low confidence",
+                "ambiguous",
+                "asked",
+            },
+        ):
+            warnings.append("hitl_policy_does_not_limit_when_requestinput_is_allowed")
+
+    return (
+        list(dict.fromkeys(critical_failures)),
+        list(dict.fromkeys(warnings)),
+        list(dict.fromkeys(pending_repair_suggestions)),
+    )
+
+
 def aggregate_quality_report(
     graph: CandidateTaskGraph,
     coverage: CoverageReport | None,
@@ -1092,6 +1560,35 @@ def aggregate_quality_report(
                 critical_failures.append(
                     f"Task {task.id} depends on unknown task {dependency_id}."
                 )
+
+    is_adk2_workflow_plan = _is_adk2_workflow_plan(graph, goal_state)
+    start_contracts = [
+        contract
+        for contract in graph.runtime_node_contracts
+        if contract.runtime_boundary_type == "start"
+    ]
+    if is_adk2_workflow_plan and not graph.runtime_node_contracts:
+        critical_failures.append("missing_runtime_node_contracts")
+        pending_repair_suggestions.append("coverage:add_runtime_node_contracts")
+    if is_adk2_workflow_plan:
+        (
+            interaction_failures,
+            interaction_warnings,
+            interaction_repairs,
+        ) = _interaction_activation_diagnostics(graph, goal_state)
+        critical_failures.extend(interaction_failures)
+        warnings.extend(interaction_warnings)
+        pending_repair_suggestions.extend(interaction_repairs)
+    if is_adk2_workflow_plan and _mentions_start_edge(graph, goal_state):
+        if not start_contracts or not all(
+            _valid_start_runtime_contract(contract) for contract in start_contracts
+        ):
+            critical_failures.append("missing_start_runtime_input_contract")
+            pending_repair_suggestions.append(
+                "coverage:add_start_runtime_input_contract"
+            )
+    if _semantic_input_without_adk_runtime_contract(graph, goal_state):
+        warnings.append("semantic_input_without_adk_runtime_contract")
 
     if coverage:
         warnings.extend(
@@ -1521,6 +2018,57 @@ def _inline_list(items: list[str], empty: str = "none") -> str:
     return ", ".join(items) if items else empty
 
 
+def render_interaction_activation_contract_markdown(
+    contract: InteractionActivationContract | None,
+) -> list[str]:
+    lines = [
+        "## Interaction Activation Contract",
+        "",
+        "This contract decides whether a chat/playground input should converse, clarify, stop, or activate an expensive workflow.",
+        "",
+    ]
+    if contract is None:
+        lines.extend(["- No Interaction Activation Contract was produced."])
+        return lines
+
+    lines.extend(
+        [
+            f"- Entrypoint context: `{contract.entrypoint_context}`",
+            "",
+            "Activation triggers:",
+            *_markdown_list(contract.activation_triggers),
+            "",
+            "Non-activation inputs:",
+            *_markdown_list(contract.non_activation_inputs),
+            "",
+            "Deterministic prechecks:",
+            *_markdown_list(contract.deterministic_prechecks),
+            "",
+            "LLM intent check:",
+            f"- {contract.llm_intent_check}",
+            "",
+            "Minimum required slots:",
+            *_markdown_list(contract.minimum_required_slots),
+            "",
+            "Clarification policy:",
+            *_markdown_list(contract.clarification_policy),
+            "",
+            "Direct response policy:",
+            *_markdown_list(contract.direct_response_policy),
+            "",
+            "HITL policy:",
+            *_markdown_list(contract.hitl_policy),
+            "",
+            "Expensive action policy:",
+            *_markdown_list(contract.expensive_action_policy),
+            "",
+            "Required interaction tests:",
+            *_markdown_list(contract.required_interaction_tests),
+        ]
+    )
+    return lines
+
+
 def render_problem_definition_markdown(problem_definition: ProblemDefinition) -> str:
     lines = [
         "## Initial Problem Definition",
@@ -1685,10 +2233,66 @@ def render_human_readable_plan(output: TaskSplitterOutput) -> str:
             "",
             "- Export a `root_agent` that is an ADK 2.0 `Workflow` from the expected module.",
             "- Keep each node single-purpose and task-oriented; do not model open-ended chat subagents inside the graph.",
+            "- For chat/playground entrypoints, route through `normalize_user_input` and `intent_gate` before planner, provider, HITL or tool nodes.",
             "- Declare graph edges from `START`, then route through explicit node objects or route dictionaries.",
             "- Use Pydantic `input_schema` and `output_schema` at fragile boundaries and preserve stable state keys.",
             "- Model branch convergence as `JoinNode`, integration tasks or explicit route contracts, not implicit shared state.",
             "- Add deterministic tests before live evals or deployment: import/export, route keys, schema validation, joins and HITL resume/auth if applicable.",
+            "",
+        ]
+    )
+
+    lines.extend(
+        render_interaction_activation_contract_markdown(
+            output.task_graph.interaction_activation_contract
+        )
+    )
+    lines.append("")
+
+    lines.extend(
+        [
+            "## Runtime Node Contracts",
+            "",
+            "These contracts describe real ADK 2.0 runner boundaries, separate from semantic and Pydantic schema contracts.",
+            "",
+            "- `START` boundary nodes receive `google.genai.types.Content` or `Any`, then normalize `Content.parts -> str -> semantic schema`.",
+            "- Post-`JoinNode` nodes receive `Any` and normalize `dict | list | tuple | Event.output | model` shapes.",
+            "- HITL nodes use stable `interrupt_id`, `rerun_on_resume=True`, `ctx.resume_inputs[interrupt_id]` normalization and emit only explicit routes such as `approved`, `rejected`, `revise`.",
+            "- Keep ADK 2.0 Workflow, explicit edges, static routing, `JoinNode`, provider abstraction and no dynamic/collaborative agents unless there is explicit opt-in.",
+            "",
+        ]
+    )
+    if output.task_graph.runtime_node_contracts:
+        lines.extend(
+            [
+                "| Node ID | Boundary | Semantic Input | ADK Runtime Input | Function Signature | Normalization | Output Event | State Keys | Routes | Required Tests |",
+                "|---|---|---|---|---|---|---|---|---|---|",
+            ]
+        )
+        for contract in output.task_graph.runtime_node_contracts:
+            lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        _table_cell(contract.node_id),
+                        contract.runtime_boundary_type,
+                        _table_cell(contract.semantic_input),
+                        _table_cell(contract.adk_runtime_input),
+                        _table_cell(contract.recommended_function_signature),
+                        _table_cell("<br>".join(contract.normalization_required)),
+                        _table_cell(contract.output_event_contract),
+                        _table_cell(_inline_list(contract.state_keys_written)),
+                        _table_cell(_inline_list(contract.route_values_emitted)),
+                        _table_cell("<br>".join(contract.required_tests)),
+                    ]
+                )
+                + " |"
+            )
+    else:
+        lines.append("- No runtime node contracts were produced.")
+
+    lines.extend(
+        [
             "",
             "## Workflow Graph Contract",
             "",
@@ -1828,14 +2432,23 @@ def render_human_readable_plan(output: TaskSplitterOutput) -> str:
             "## ADK 2.0 Implementation Checklist",
             "",
             "- Confirm project opt-in to ADK 2.0 beta and dependency `google-adk>=2.0.0b1`.",
+            "- Include an `Interaction Activation Contract` before any planner/provider/tool/HITL behavior.",
+            "- For `entrypoint_context=general_chat`, start `START -> normalize_user_input -> intent_gate` and route greetings, thanks, small talk, ambiguous inputs and simple questions away from expensive workflows.",
+            "- Activate research/search/provider work only for explicit triggers such as `investiga`, `busca fuentes`, `haz research`, `compara`, `analiza en profundidad`, `consulta la web` or `prepara un informe`.",
+            "- Answer greetings/thanks/small talk with `Event(message=...)` and do not create plans, HITL forms, tools or provider calls for those inputs.",
             "- Define `Workflow(name=..., edges=[...])` with at least one edge from `START`.",
+            '- Test `planning_node(Content(role="user", parts=[Part(text="topic")]))` returns `Event(output=ResearchPlan)` for START-connected planning nodes.',
             "- Encode routing nodes so emitted `Event(route=...)` values exactly match route dictionary keys.",
             "- Ensure every node emits at most one `Event.output` per run.",
             "- Use `Event(output=...)` for handoff data and `Event(state=...)` for durable workflow state.",
             "- Use `Event(message=...)` only for user-visible responses.",
             "- Guarantee every branch that reaches a `JoinNode` emits output, including failure outputs.",
+            "- Require each JoinNode-bound branch to emit a `BranchResult`, including skipped or failed branches.",
+            "- Normalize post-join inputs from `dict`, `list`, `tuple`, `Event.output` and Pydantic model instances.",
             "- Keep loops bounded with an explicit exit route or deterministic stop condition.",
-            "- Add HITL `RequestInput`, stable `interrupt_id` and `rerun_on_resume=True` tests when human input is part of the graph.",
+            "- Add HITL `RequestInput`, stable `interrupt_id` and `rerun_on_resume=True` tests only after intent and minimum slots are validated and policy requires human input.",
+            "- Keep end-user HITL messages natural and brief; do not expose internal schemas such as `approved_plan` unless advanced reviewer mode is explicitly justified.",
+            "- Test HITL first pause and resume via `ctx.resume_inputs[interrupt_id]` for string, dict and schema-shaped inputs.",
             "- Add auth tests that verify credentials are requested and consumed without printing secrets.",
             "- Avoid collaborative agents and dynamic workflows unless an explicit opt-in decision is recorded.",
             "",
@@ -1889,10 +2502,12 @@ def build_task_splitter_output(
         status=quality_report.status,
         graph_type=final_graph.graph_type,
         runtime_pipeline_ref=final_graph.runtime_pipeline_ref,
+        interaction_activation_contract=final_graph.interaction_activation_contract,
         goal_state=goal_state,
         initial_macrostate=macro_state,
         nodes=final_graph.nodes,
         edges=final_graph.edges,
+        runtime_node_contracts=final_graph.runtime_node_contracts,
         quality_report=quality_report,
         execution_schedule=execution_schedule,
     )

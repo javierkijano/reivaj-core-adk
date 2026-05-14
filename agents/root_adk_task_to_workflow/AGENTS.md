@@ -46,6 +46,7 @@ Ask the user: Option A (simple single-project) or Option B (full CI/CD pipeline 
 
 ## Operational Guidelines for Coding Agents
 
+- **ADK app/session name contract**: `pyproject.toml [tool.agents-cli].agent_directory` is `app`, so `app/agent.py` must export `App(name="app")` for `agents-cli run`. The root-level `agent.py` exists only for `adk web` from the parent `agents/` directory and must export `root_agent` only, never `app`; exporting `app` there makes ADK return `App(name="app")` for `/apps/root_adk_task_to_workflow` and causes `Session not found` app-name mismatches.
 - **Code preservation**: Only modify code directly targeted by the user's request. Preserve all surrounding code, config values (e.g., `model`), comments, and formatting.
 - **NEVER change the model** unless explicitly asked.
 - **Model 404 errors**: Fix `GOOGLE_CLOUD_LOCATION` (e.g., `global` instead of `europe-southwest1`), not the model name.

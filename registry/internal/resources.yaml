@@ -83,13 +83,86 @@ items:
 - id: root_adk_task_to_workflow
   name: root_adk_task_to_workflow
   source: agents/root_adk_task_to_workflow
-  summary: Internal root agent for converting ADK tasks to workflow implementations.
+  summary: Internal ADK planning agent targeted to become the reference implementation for ADK 2.0 graph-based Workflow generation.
   tags:
   - entity:agent
   - entity:workflow
   - capability:planning
+  - pattern:workflow-sequential
+  - pattern:workflow-loop
+  - pattern:sub-agent-team
   - domain:software-engineering
   maturity: maturity:observed
+  interfaces:
+  - App exports root_agent from agents/root_adk_task_to_workflow/app/agent.py.
+  - Produces ADK 2.0 Workflow implementation plans with graph, activation, runtime node, repair and verification contracts.
+  - Uses structured LLM outputs, normalizers, quality checkers, repair loop and final markdown emitter.
+  tests:
+  - agents/root_adk_task_to_workflow/tests/unit/test_agent_graph.py
+  - agents/root_adk_task_to_workflow/tests/unit/test_task_splitter_logic.py
+  - agents/root_adk_task_to_workflow/tests/integration/test_agent.py
+  related:
+  - internal-resources:reivaj-adk-2.0-development
+  - adk-workflow-samples:route
+  - adk-workflow-samples:fan_out_fan_in
+  - adk-workflow-samples:node_output
+  - adk-workflow-samples:state
+  - adk-workflow-samples:loop
+  - adk-workflow-samples:request_input_rerun
+  review_notes:
+  - Current runtime orchestration uses BaseAgent, SequentialAgent and LoopAgent rather than ADK 2.0 Workflow edges.
+  - Target architecture is a real ADK 2.0 Workflow reference with explicit START edges, route dictionaries, Event output/state/message contracts, bounded repair loops and JoinNode fan-out/fan-in.
+  - Natural entry should use a structured LLM intent classifier plus deterministic router; a purely deterministic gate is not sufficient for typo-rich inputs such as "bono dias".
+  - RequestInput should be reserved for exceptional blocking approvals, credentials, irreversible actions or explicit reviewer mode; normal clarification should use Event(message=...).
+  promotion_plan:
+  - Replace TaskSplitterWorkflowAgent orchestration with Workflow(name=..., edges=[...]) while preserving prompts, schemas and deterministic logic.
+  - Add START -> normalize_user_input -> structured_intent_classifier -> intent_router before planner, tool, provider or HITL nodes.
+  - Migrate internal handoff data to Event(output=...) and durable small state to Event(state=...), keeping Event(message=...) for user-visible responses only.
+  - Replace sequential quality checker orchestration with ADK 2.0 fan-out/fan-in and JoinNode convergence.
+  - Replace LoopAgent repair control with explicit route loop and deterministic iteration cap.
+  - Keep RequestInput as an optional late-stage node only for blocking approvals, credentials, irreversible actions or explicit reviewer mode.
+  - Promote maturity after deterministic tests cover import/export, route keys, natural-entry cases, loop exit, join convergence and any resume/auth path.
+- id: root_adk2_task_to_workflow
+  name: root_adk2_task_to_workflow
+  source: agents/root_adk2_task_to_workflow
+  summary: Reference ADK 2.0 graph Workflow planner that emits deep implementation reports with LLM intent classification, registry review, JoinNode quality checks and bounded route repair.
+  tags:
+  - entity:agent
+  - entity:workflow
+  - capability:planning
+  - pattern:workflow-sequential
+  - pattern:workflow-parallel
+  - pattern:workflow-loop
+  - domain:software-engineering
+  maturity: maturity:candidate
+  interfaces:
+  - Exports root_agent as google.adk.Workflow from agents/root_adk2_task_to_workflow/app/agent.py.
+  - Starts with START -> normalize_user_input -> structured_intent_classifier -> intent_router.
+  - Reviews registry YAML before workflow planning via registry_review_node.
+  - Uses static quality fan-out/fan-in through JoinNode and route-driven bounded repair.
+  - Emits a deep implementation report with activation, runtime boundary, graph, data, quality, registry, HITL, debugging and Definition of Done sections.
+  tests:
+  - agents/root_adk2_task_to_workflow/tests/unit/test_agent_graph.py
+  - agents/root_adk2_task_to_workflow/tests/unit/test_workflow_nodes.py
+  related:
+  - internal-resources:root_adk_task_to_workflow
+  - internal-resources:reivaj-adk-2.0-development
+  - adk-workflow-samples:route
+  - adk-workflow-samples:fan_out_fan_in
+  - adk-workflow-samples:node_output
+  - adk-workflow-samples:state
+  - adk-workflow-samples:loop
+  review_notes:
+  - Created as the ADK 2.0 reference successor to root_adk_task_to_workflow without modifying the original agent.
+  - Intent classification is intentionally LLM-based with a closed IntentDecision schema, so typo-rich greetings such as "bono dias" do not rely on brittle deterministic matching.
+  - HITL is excluded from the front door; normal clarifications use Event(message=...) and RequestInput remains optional for exceptional blocking approval/auth/reviewer flows.
+  - Quality branches are deterministic and always emit QualityFindingReport branch outputs before JoinNode convergence.
+  - Final output is rendered deterministically from structured WorkflowPlan and QualityReport data so report depth does not depend only on free-form LLM prose.
+  promotion_plan:
+  - Add eval cases for LLM intent classification after approval to run agents-cli eval.
+  - Exercise agents-cli run/playground manually after credentials are available.
+  - Add optional RequestInput resume node only if a real blocking approval/auth use case appears.
+  - Promote to maturity:adapted after import, route, registry, join, loop and eval smoke checks are documented.
 - id: root_deep_web_research
   name: root_deep_web_research
   source: agents/root_deep_web_research

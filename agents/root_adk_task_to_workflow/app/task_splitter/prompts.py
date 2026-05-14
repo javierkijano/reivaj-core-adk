@@ -170,6 +170,64 @@ Rules:
 - Every ADK 2.0 workflow plan should include a graph contract task, node/schema
   implementation tasks, explicit edge/route wiring, deterministic tests and a
   final markdown implementation document.
+- Every ADK 2.0 workflow plan must include an Interaction Activation Contract.
+  This is mandatory for agents exposed to chat/playground and still useful for
+  dedicated workflows, tool-invoked flows and subworkflows.
+- Interaction Activation Contract must include entrypoint_context,
+  activation_triggers, non_activation_inputs, deterministic_prechecks,
+  llm_intent_check, minimum_required_slots, clarification_policy,
+  direct_response_policy, hitl_policy, expensive_action_policy and
+  required_interaction_tests.
+- entrypoint_context must be one of general_chat, dedicated_workflow,
+  tool_invoked or subworkflow.
+- If entrypoint_context=general_chat, the first logical runtime node cannot be a
+  planner, provider executor, HITL node or tool executor. It must route through
+  intent_gate_node, conversation_router_node or activation_policy_node. The
+  recommended graph pattern is:
+  START -> normalize_user_input -> intent_gate -> routes for greeting, thanks,
+  small_talk, ambiguous, simple_question and workflow_request.
+- The workflow_request route may continue to domain_planning_node. greeting,
+  thanks and small_talk must return Event(message=...) natural responses.
+  ambiguous must route to clarification_node. simple_question must route to
+  direct_answer_node.
+- For research/search/provider/costly workflows, planner/provider/tool work may
+  only activate on explicit intent such as "investiga", "busca fuentes", "haz
+  research", "compara", "analiza en profundidad", "consulta la web" or
+  "prepara un informe". Inputs like "Hola", "ADK", "que tal", "gracias" or
+  standalone "si" without context must not activate research.
+- Use a mixed activation pattern: deterministic prechecks first for empty input,
+  greetings, thanks, standalone confirmations and clear commands; LLM intent
+  classifier only for ambiguous cases; costly workflow only after intent and
+  minimum_required_slots are clear; HITL only when policy requires it.
+- HITL RequestInput must not be mandatory after every plan. Use it only for
+  sensitive external action, relevant cost/risk, irreversible side effect, low
+  confidence, truly ambiguous scope decision or when the user asked to review or
+  approve. User-facing HITL messages must be natural and brief; do not expose
+  internal schemas or require fields such as approved_plan unless an advanced
+  reviewer mode is explicitly justified.
+- Required interaction tests must include: "Hola" returns natural Event(message)
+  and creates no plan; "Gracias" returns natural response and does not execute
+  workflow; empty/whitespace asks for useful input without a plan; "ADK" asks
+  clarification and does not execute providers; "Investiga ADK 2.0 Workflow con
+  fuentes" activates planner; first node accepts Content; no RequestInput before
+  intent_gate; tools/providers do not run for greetings, small talk or ambiguous
+  inputs.
+- Every ADK 2.0 workflow plan must include runtime_node_contracts. Separate:
+  semantic contract, ADK runtime contract and Pydantic schema contract.
+- For each runtime node contract include node_id, runtime_boundary_type,
+  semantic_input, adk_runtime_input, recommended_function_signature,
+  normalization_required, output_event_contract, state_keys_written,
+  route_values_emitted and required_tests.
+- START-connected nodes receive google.genai.types.Content at runtime. Use
+  node_input: Any or node_input: Content and normalize Content.parts -> str ->
+  semantic schema. Do not recommend str, Pydantic models or narrow unions as the
+  direct FunctionNode signature for START nodes.
+- Nodes after JoinNode receive Any and must normalize dict, list, tuple,
+  Event.output and model instances. Every branch flowing to JoinNode must emit a
+  BranchResult even when skipped or failed.
+- HITL nodes must specify stable interrupt_id, rerun_on_resume=True,
+  ctx.resume_inputs[interrupt_id] forms (string, dict or schema) and a normalizer
+  before emitting approved, rejected or revise routes.
 - Keep low-risk recurring actions compressed.
 - Expand tasks when they hide decisions, multiple executors, risk or weak verification.
 - Prefer meso-level tasks over tiny mechanical steps.
@@ -199,7 +257,9 @@ is intentionally flattened for serving: express preconditions and
 postconditions as strings, dependencies as task ids, and executor/verifier as
 type/id or type/instruction fields. Use build_status, runtime_status and
 runtime_execution_mode when runtime inputs, mocks or real provider execution
-matter. A deterministic normalizer will expand this draft into the full internal
+matter. Add interaction_activation_contract for semantic activation policy and
+runtime_node_contracts for the actual ADK 2.0 runtime node boundaries. A
+deterministic normalizer will expand this draft into the full internal
 TaskGraph.
 """
 
@@ -235,6 +295,18 @@ the goal: graph contract, explicit Workflow edges/routes, JoinNode or convergenc
 design for fan-out/fan-in, Event output/state/message data contracts, Pydantic
 schemas, deterministic import/route/join tests and a final markdown
 implementation document.
+
+Also treat runtime_node_contracts as core. A plan is incomplete if it does not
+separate semantic input, ADK runtime input and Pydantic schema contract. START
+contracts must mention Content or Any plus Content.parts normalization.
+
+Also treat Interaction Activation Contract as core for every ADK 2.0 workflow
+spec. Mark coverage incomplete if it is missing, if general_chat starts directly
+at planner/tool/provider/HITL, if routes for greeting/small_talk/ambiguous are
+missing, if greetings can reach a planner, or if RequestInput can appear before
+intent_gate. For research/search/provider/costly workflows, require explicit
+activation triggers and a policy that blocks tools/providers for greetings,
+thanks, small talk, empty messages and ambiguous inputs.
 """
 
 
@@ -326,6 +398,12 @@ For ADK 2.0 workflow plans, verify the executor can implement google-adk>=2.0.0b
 Workflow code with explicit graph edges. Flag dynamic workflows and collaborative
 agents as missing opt-in unless the goal explicitly requests them or the graph
 contains a justification/approval task.
+
+For general_chat entrypoints, flag any runtime path where the first logical node
+is planner/tool/provider/HITL instead of normalize_user_input plus intent_gate,
+conversation_router_node or activation_policy_node. Flag RequestInput before
+validated intent. Flag any tool/provider executor that can run before explicit
+workflow_request intent and minimum_required_slots are satisfied.
 """
 
 
@@ -351,6 +429,25 @@ A task is weak if its success criteria or postconditions are vague.
 For ADK 2.0 workflow plans, verification should include deterministic tests for
 module import, root_agent export, route keys, Event output/state contracts,
 JoinNode convergence and HITL/auth resume behavior when applicable.
+
+Verify runtime_node_contracts specifically:
+- START node tests call planning_node(Content(role="user", parts=[Part(text="topic")]))
+  and expect Event(output=ResearchPlan) or equivalent semantic schema.
+- root_agent imports and is Workflow.
+- emitted route keys exactly match route dictionary keys.
+- every branch toward JoinNode emits BranchResult, including skipped/failed branches.
+- post-join nodes normalize dict, list, tuple, Event.output and model instances.
+- HITL covers first pause and resume with ctx.resume_inputs[interrupt_id].
+
+Verify Interaction Activation Contract specifically:
+- "Hola" returns a natural Event(message=...) and creates no plan.
+- "Gracias" returns a natural response and does not execute workflow.
+- Empty or whitespace asks for useful input without a plan.
+- "ADK" asks clarification and does not execute providers.
+- "Investiga ADK 2.0 Workflow con fuentes" activates planner.
+- The first node accepts Content.
+- No RequestInput is emitted before passing intent_gate.
+- Tools/providers do not execute for greetings, small talk or ambiguous inputs.
 
 Return a VerifiabilityReport.
 """
@@ -392,6 +489,16 @@ unless the quality reports show it is structurally unsalvageable.
 You must either apply concrete repairs from repair_suggestions or explicitly set
 requires_user_clarification. Do not return the same graph unchanged when reports
 contain add_task, split_task, add_dependency, add_verifier or strengthen checks.
+If reports mention add_runtime_node_contracts,
+add_start_runtime_input_contract or semantic_input_without_adk_runtime_contract,
+repair runtime_node_contracts without changing the high-level graph unless needed.
+If reports mention add_interaction_activation_contract,
+add_conversation_intent_gate, add_conversation_routes,
+add_non_activation_policy, add_required_interaction_tests,
+add_explicit_activation_triggers, gate_expensive_actions,
+move_hitl_after_intent_gate or simplify_user_hitl_message, repair the
+interaction_activation_contract and graph routing so chat inputs cannot reach
+planner/tool/provider/HITL before activation intent is validated.
 
 Allowed operations:
 - add_task
@@ -409,6 +516,14 @@ Preserve valid structure. Keep task ids stable when possible. Explain every
 repair through repair_operations. If the goal cannot be safely decomposed
 without user input, set requires_user_clarification to true and add a
 clarification task.
+
+Preserve the current philosophy: ADK 2.0 Workflow by default, explicit edges,
+static routing, JoinNode, provider abstraction, and no dynamic workflows or
+collaborative agents unless explicitly opted in.
+Preserve the interaction philosophy: conversation first for general chat,
+deterministic cheap prechecks before LLM intent classification, costly workflow
+only after explicit intent and minimum slots, HITL only by policy, and
+Event(message=...) direct responses for greetings, thanks and small talk.
 
 Return the repaired graph using the same flattened graph schema as the planner.
 Repair operations should be concise operation/target/reason/suggested_change

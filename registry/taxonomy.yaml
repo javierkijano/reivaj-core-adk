@@ -101,6 +101,12 @@ taxonomy:
     meaning: Vertex AI, RAG Engine, Vector Search, Agent Runtime
   - tag: integration:google-search
     meaning: Google Search grounding or web search
+  - tag: integration:exa-search
+    meaning: Exa web search and answer APIs
+  - tag: integration:tavily-search
+    meaning: Tavily web search, extract, crawl, map, and research APIs
+  - tag: integration:brave-search
+    meaning: Brave Search web search API and search skills
   - tag: integration:google-maps
     meaning: Maps / Places / routing
   - tag: integration:apigee
